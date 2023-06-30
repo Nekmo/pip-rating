@@ -1,2 +1,7 @@
 mypy
 black
+build
+bump2version
+Pygments
+docutils
+twine
