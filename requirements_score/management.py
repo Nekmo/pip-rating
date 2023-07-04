@@ -32,7 +32,7 @@ from requirements_score.requirements import Requirements
 def manage(requirements_file: str, cache_dir: str, index_url: str, extra_index_url: str):
     requirements = Requirements(requirements_file, cache_dir, index_url, extra_index_url)
     packages = requirements.get_packages()
-    score = list(packages.values())[0].rating.rating_score
+    score = list(packages.values())[0].rating.global_rating_score
     pass
 
 

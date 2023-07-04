@@ -36,6 +36,9 @@ class ScoreBase:
     def __int__(self) -> int:
         raise NotImplementedError
 
+    def __repr__(self) -> str:
+        raise NotImplementedError
+
 
 class ScoreValue(ScoreBase):
     def __init__(self, value: int):
@@ -49,6 +52,9 @@ class ScoreValue(ScoreBase):
 
     def __int__(self) -> int:
         return self.value
+
+    def __repr__(self) -> str:
+        return f"{self.value}"
 
 
 class Max(ScoreBase):
@@ -67,6 +73,9 @@ class Max(ScoreBase):
 
     def __int__(self) -> int:
         return self.current_score
+
+    def __repr__(self) -> str:
+        return f"<Max current: {self.current_score} max: {self.max_score}>"
 
 
 class PackageBreakdown:
@@ -161,9 +170,20 @@ class PackageRating:
         ]
 
     @cached_property
+    def descendant_rating_scores(self) -> List[Tuple["Package", int]]:
+        return [
+            (package, package.rating.rating_score)
+            for package in self.package.get_descendant_packages()
+        ]
+
+    @cached_property
     def rating_score(self):
         scores = dict(self.breakdown_scores).values()
         value = ScoreValue(0)
         for score in scores:
             value += score
         return int(value)
+
+    @cached_property
+    def global_rating_score(self):
+        return min([self.rating_score] + list(dict(self.descendant_rating_scores).values()), default=0)

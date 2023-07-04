@@ -40,3 +40,6 @@ class Package:
 
     def add_node(self, node: Node):
         self.nodes.add(node)
+
+    def __repr__(self) -> str:
+        return f"<Package {self.name}>"
