@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Iterator, Set
 
 from anytree import Node
 
+from requirements_score.rating import PackageRating
 from requirements_score.sourcerank import SourceRank
 
 if TYPE_CHECKING:
@@ -24,6 +25,10 @@ class Package:
     @cached_property
     def sourcerank(self) -> SourceRank:
         return SourceRank(self.name)
+
+    @cached_property
+    def rating(self) -> "PackageRating":
+        return PackageRating(self)
 
     def get_descendant_packages(self) -> Iterator["Package"]:
         for descendant in self.first_node.descendants:
