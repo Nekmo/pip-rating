@@ -1,6 +1,0 @@
-#!/usr/bin/env python
-from requirements_score.exceptions import catch
-from requirements_score.management import manage
-
-if __name__ == '__main__':
-    catch(manage)()
