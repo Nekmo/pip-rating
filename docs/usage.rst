@@ -7,7 +7,7 @@ Usage
 
 To see the available help run::
 
-    $ requirements_score --help
+    $ requirements_rating --help
 
 
 Example::
@@ -17,10 +17,10 @@ Example::
 
 To see the help of a command::
 
-    $ requirements_score <command> --help
+    $ requirements_rating <command> --help
 
 For example::
 
-    $ requirements_score ...
+    $ requirements_rating ...
 
 

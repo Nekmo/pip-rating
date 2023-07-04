@@ -1,8 +1,8 @@
-Welcome to requirements-score's documentation!
-======================================
-Check the health of your project's requirements and get a score for each dependency.
+Welcome to requirements-rating's documentation!
+===============================================
+Check the health of your project's requirements and get a rating for each dependency.
 
-To **install** requirements-score, run this command in your terminal:
+To **install** requirements-rating, run this command in your terminal:
 
 .. code-block:: console
 

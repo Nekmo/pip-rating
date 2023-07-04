@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING, Iterator, Set
 
 from anytree import Node
 
-from requirements_score.rating import PackageRating
-from requirements_score.sourcerank import SourceRank
+from requirements_rating.rating import PackageRating
+from requirements_rating.sourcerank import SourceRank
 
 if TYPE_CHECKING:
-    from requirements_score.requirements import Requirements
+    from requirements_rating.requirements import Requirements
 
 
 class Package:

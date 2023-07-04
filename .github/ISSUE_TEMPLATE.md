@@ -1,4 +1,4 @@
-* requirements-score version:
+* requirements-rating version:
 * Python version:
 * Operating System:
 

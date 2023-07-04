@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from platformdirs import user_cache_dir
 
-SOURCERANK_CACHE_DIR = Path(user_cache_dir()) / "requirements-score" / "sourcerank"
+SOURCERANK_CACHE_DIR = Path(user_cache_dir()) / "requirements-rating" / "sourcerank"
 SOURCERANK_URL = "https://libraries.io/pypi/{package_name}/sourcerank"
 BREAKDOWN_MAPPING = {
     "Basic info present?": "basic_info_present",

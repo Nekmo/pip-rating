@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Exceptions for requirements-score."""
+"""Exceptions for requirements-rating."""
 import sys
 
 
@@ -24,5 +24,5 @@ def catch(fn):
         try:
             fn(*args, **kwargs)
         except RequirementsScoreError as e:
-            sys.stderr.write('[Error] requirements-score Exception:\n{}\n'.format(e))
+            sys.stderr.write('[Error] requirements-rating Exception:\n{}\n'.format(e))
     return wrap

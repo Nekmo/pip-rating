@@ -8,13 +8,13 @@ from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple
 from platformdirs import user_cache_dir
 from requests import __version__
 
-from requirements_score.sourcerank import SourceRankBreakdown
+from requirements_rating.sourcerank import SourceRankBreakdown
 
 if TYPE_CHECKING:
-    from requirements_score.packages import Package
+    from requirements_rating.packages import Package
 
 
-RATING_CACHE_DIR = Path(user_cache_dir()) / "requirements-score" / "rating"
+RATING_CACHE_DIR = Path(user_cache_dir()) / "requirements-rating" / "rating"
 MAX_CACHE_AGE = datetime.timedelta(days=7)
 
 

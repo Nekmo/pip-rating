@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Top-level package for requirements-score."""
+"""Top-level package for requirements-rating."""
 
 __author__ = """Nekmo"""
 __email__ = 'contacto@nekmo.com'

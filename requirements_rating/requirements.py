@@ -12,7 +12,7 @@ from pipgrip.libs.mixology.result import SolverResult
 from pipgrip.libs.mixology.version_solver import VersionSolver
 from pipgrip.package_source import PackageSource
 
-from requirements_score.packages import Package
+from requirements_rating.packages import Package
 
 COMMENT_REGEX = re.compile(r"(#.*)")
 version_resolver_threads = os.environ.get("VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2))
