@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Union, List
+from typing import Union, List, Optional
 
 from requirements_rating.req_files.base import ReqFileBase
 
@@ -15,7 +15,7 @@ REQUIREMENTS_FILES = [
 class RequirementsReqFile(ReqFileBase):
     """Requirements requirement file."""
     @classmethod
-    def find_in_directory(cls, directory: Union[str, Path]) -> "ReqFileBase":
+    def find_in_directory(cls, directory: Union[str, Path]) -> Optional["ReqFileBase"]:
         """Find requirement file in the given directory."""
         if isinstance(directory, str):
             directory = Path(directory)
@@ -33,7 +33,7 @@ class RequirementsReqFile(ReqFileBase):
         """Check if the given path is a valid requirement file."""
         if isinstance(path, str):
             path = Path(path)
-        return path.exists()
+        return path.exists() and path.suffix in [".txt", ".in"]
 
     def get_dependencies(self) -> List[str]:
         """Get the dependencies from the requirements file."""

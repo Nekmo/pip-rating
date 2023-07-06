@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union, List
+from typing import Union, List, Optional
 
 
 class ReqFileBase(list):
@@ -14,7 +14,7 @@ class ReqFileBase(list):
         super().__init__(self.get_dependencies())
 
     @classmethod
-    def find_in_directory(cls, directory: Union[str, Path]) -> "ReqFileBase":
+    def find_in_directory(cls, directory: Union[str, Path]) -> Optional["ReqFileBase"]:
         """Find requirement file in the given directory."""
         raise NotImplementedError
 
@@ -24,6 +24,7 @@ class ReqFileBase(list):
         raise NotImplementedError
 
     def get_dependencies(self) -> List[str]:
+        """Get the dependencies from the file."""
         raise NotImplementedError
 
     def __str__(self) -> str:

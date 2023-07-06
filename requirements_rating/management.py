@@ -6,11 +6,10 @@ from pathlib import Path
 from typing import Optional
 
 import click
-from pip._internal.locations import USER_CACHE_DIR
 
+from requirements_rating._compat import USER_CACHE_DIR
 from requirements_rating.dependencies import Dependencies
 from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES
-from requirements_rating.req_files.requirements import RequirementsReqFile
 
 
 @click.group()

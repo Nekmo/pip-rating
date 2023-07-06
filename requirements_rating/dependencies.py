@@ -2,7 +2,7 @@ import os.path
 import re
 from functools import cached_property
 from multiprocessing import cpu_count
-from typing import Optional, Union, Dict
+from typing import Optional, Union, Dict, TYPE_CHECKING
 
 from anytree import Node
 from pipgrip.cli import build_tree
@@ -13,7 +13,11 @@ from pipgrip.libs.mixology.version_solver import VersionSolver
 from pipgrip.package_source import PackageSource
 
 from requirements_rating.packages import Package
-from requirements_rating.req_files.base import ReqFileBase
+
+
+if TYPE_CHECKING:
+    from requirements_rating.req_files.base import ReqFileBase
+
 
 COMMENT_REGEX = re.compile(r"(#.*)")
 version_resolver_threads = os.environ.get("VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2))
@@ -23,7 +27,7 @@ class Dependencies:
     """
     Dependencies class. This class is responsible for getting the packages tree.
     """
-    def __init__(self, req_file: ReqFileBase, cache_dir: Optional[str] = None, index_url: Optional[str] = None,
+    def __init__(self, req_file: "ReqFileBase", cache_dir: Optional[str] = None, index_url: Optional[str] = None,
                  extra_index_url: Optional[str] = None, pre: bool = False):
         """Initialize the Dependencies class using the given req_file.
 
