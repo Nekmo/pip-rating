@@ -2,11 +2,15 @@
 
 """Console script for requirements-rating."""
 import os
+from pathlib import Path
+from typing import Optional
 
 import click
 from pip._internal.locations import USER_CACHE_DIR
 
-from requirements_rating.requirements import Requirements
+from requirements_rating.dependencies import Dependencies
+from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES
+from requirements_rating.req_files.requirements import RequirementsReqFile
 
 
 @click.group()
@@ -38,10 +42,16 @@ def common_options(function):
 
 
 @cli.command()
-@click.argument('requirements_file', type=click.Path(exists=True))
+@click.argument('file', type=click.Path(exists=True, dir_okay=False))
+@click.option('--file-type', type=click.Choice(list(REQ_FILE_CLASSES.keys())), default=None)
 @common_options
-def analyze_file(requirements_file: str, cache_dir: str, index_url: str, extra_index_url: str):
-    requirements = Requirements(requirements_file, cache_dir, index_url, extra_index_url)
+def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url: str, extra_index_url: str):
+    file = Path(file)
+    if file_type is None:
+        req_file_cls = get_req_file_cls(file)
+    else:
+        req_file_cls = REQ_FILE_CLASSES[file_type]
+    requirements = Dependencies(req_file_cls(file), cache_dir, index_url, extra_index_url)
     packages = requirements.get_packages()
     score = list(packages.values())[0].rating.global_rating_score
     pass
@@ -51,7 +61,7 @@ def analyze_file(requirements_file: str, cache_dir: str, index_url: str, extra_i
 @click.argument('package_name')
 @common_options
 def analyze_package(package_name: str, cache_dir: str, index_url: str, extra_index_url: str):
-    requirements = Requirements(None, cache_dir, index_url, extra_index_url)
+    requirements = Dependencies(None, cache_dir, index_url, extra_index_url)
     package = requirements.get_package(package_name)
     score = package.rating.global_rating_score
     pass

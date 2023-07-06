@@ -2,7 +2,7 @@ import os.path
 import re
 from functools import cached_property
 from multiprocessing import cpu_count
-from typing import Optional, List, Union, Dict
+from typing import Optional, Union, Dict
 
 from anytree import Node
 from pipgrip.cli import build_tree
@@ -13,45 +13,32 @@ from pipgrip.libs.mixology.version_solver import VersionSolver
 from pipgrip.package_source import PackageSource
 
 from requirements_rating.packages import Package
+from requirements_rating.req_files.base import ReqFileBase
 
 COMMENT_REGEX = re.compile(r"(#.*)")
 version_resolver_threads = os.environ.get("VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2))
 
 
-class Requirements:
+class Dependencies:
     """
-    Requirements class. This class is responsible for parsing the requirements file and
-    getting the packages tree.
+    Dependencies class. This class is responsible for getting the packages tree.
     """
-    def __init__(self, requirements_file: str, cache_dir: Optional[str] = None, index_url: Optional[str] = None,
+    def __init__(self, req_file: ReqFileBase, cache_dir: Optional[str] = None, index_url: Optional[str] = None,
                  extra_index_url: Optional[str] = None, pre: bool = False):
-        """Initialize the Requirements class using the given requirements file.
+        """Initialize the Dependencies class using the given req_file.
 
-        :param requirements_file: The requirements file path.
+        :param req_file: Dependencies list as req_file.
         :param cache_dir: The cache directory path.
         :param index_url: The index URL.
         :param extra_index_url: The extra index URL.
         :param pre: Whether to include pre-release and development versions. Defaults to False.
         """
-        self.requirements_file = requirements_file
+        self.req_file = req_file
         self.cache_dir = cache_dir
         self.index_url = index_url
         self.extra_index_url = extra_index_url
         self.pre = pre
         self.packages = {}  # type: Dict[str, Package]
-
-    @cached_property
-    def main_requirements(self) -> List[str]:
-        """Get the requirements from the requirements file."""
-        if not os.path.lexists(self.requirements_file):
-            raise IOError(f"Requirements file {self.requirements_file} does not exist")
-        lines = []
-        with open(self.requirements_file) as f:
-            for line in f:
-                line = re.sub(COMMENT_REGEX, "", line).strip()
-                if line:
-                    lines.append(line)
-        return lines
 
     @cached_property
     def package_source(self) -> PackageSource:
@@ -69,7 +56,7 @@ class Requirements:
         set of package versions that satisfy the root package's dependencies.
         """
         solver = VersionSolver(self.package_source, threads=version_resolver_threads)
-        for root_dependency in self.main_requirements:
+        for root_dependency in self.req_file:
             self.package_source.root_dep(root_dependency)
         try:
             return solver.solve()

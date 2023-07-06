@@ -7,13 +7,13 @@ from requirements_rating.rating import PackageRating
 from requirements_rating.sourcerank import SourceRank
 
 if TYPE_CHECKING:
-    from requirements_rating.requirements import Requirements
+    from requirements_rating.dependencies import Dependencies
 
 
 class Package:
     nodes: Set[Node]
 
-    def __init__(self, requirements: "Requirements", name: str):
+    def __init__(self, requirements: "Dependencies", name: str):
         self.name = name
         self.requirements = requirements
         self.nodes = set()
