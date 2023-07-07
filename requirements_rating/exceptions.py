@@ -4,7 +4,7 @@
 import sys
 
 
-class RequirementsScoreError(Exception):
+class RequirementsRatingError(Exception):
     body = ''
 
     def __init__(self, extra_body=''):
@@ -19,10 +19,14 @@ class RequirementsScoreError(Exception):
         return msg
 
 
+class RequirementsRatingParseError(RequirementsRatingError):
+    pass
+
+
 def catch(fn):
     def wrap(*args, **kwargs):
         try:
             fn(*args, **kwargs)
-        except RequirementsScoreError as e:
+        except RequirementsRatingParseError as e:
             sys.stderr.write('[Error] requirements-rating Exception:\n{}\n'.format(e))
     return wrap
