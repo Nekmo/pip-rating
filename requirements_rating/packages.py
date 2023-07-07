@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Iterator, Set
 from anytree import Node
 
 from requirements_rating.rating import PackageRating
-from requirements_rating.sourcerank import SourceRank
+from requirements_rating.sources.sourcerank import SourceRank
 
 if TYPE_CHECKING:
     from requirements_rating.dependencies import Dependencies

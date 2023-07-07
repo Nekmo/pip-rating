@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple
 from platformdirs import user_cache_dir
 from requests import __version__
 
-from requirements_rating.sourcerank import SourceRankBreakdown
+from requirements_rating.sources.sourcerank import SourceRankBreakdown
 
 if TYPE_CHECKING:
     from requirements_rating.packages import Package
