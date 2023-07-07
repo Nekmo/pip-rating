@@ -23,6 +23,10 @@ class RequirementsRatingParseError(RequirementsRatingError):
     pass
 
 
+class RequirementsRatingInvalidFile(RequirementsRatingError):
+    pass
+
+
 def catch(fn):
     def wrap(*args, **kwargs):
         try:

@@ -3,3 +3,4 @@ pip-audit
 platformdirs
 beautifulsoup4
 setuptools
+pipfile
