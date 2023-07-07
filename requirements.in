@@ -4,3 +4,4 @@ platformdirs
 beautifulsoup4
 setuptools
 pipfile
+tomlkit; python_version < '3.11'

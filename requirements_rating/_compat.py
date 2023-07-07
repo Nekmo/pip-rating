@@ -16,3 +16,9 @@ if PIP_VERSION < [10]:
     from pip.locations import USER_CACHE_DIR
 else:
     from pip._internal.locations import USER_CACHE_DIR  # noqa:F401
+
+
+try:
+    import tomllib
+except ImportError:
+    import tomlkit as tomllib
