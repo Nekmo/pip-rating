@@ -118,3 +118,4 @@ class Dependencies:
                 final_global_rating_score = global_rating_score
             else:
                 final_global_rating_score = min(global_rating_score, final_global_rating_score)
+        return final_global_rating_score

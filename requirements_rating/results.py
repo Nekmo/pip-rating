@@ -1,8 +1,11 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from rich.console import Console
 from rich.progress import Progress, TaskID, TaskProgressColumn, TextColumn, BarColumn, TimeRemainingColumn
 from rich.status import Status
+
+if TYPE_CHECKING:
+    from requirements_rating.dependencies import Dependencies
 
 
 class Results:
@@ -41,5 +44,31 @@ class Results:
             self.task = self.progress.add_task("Analizing packages...", total=total)
             self.progress.start()
         self.progress.update(
-            self.task, description=f"Analizing package [bold blue]{package}[/bold blue]...", advance=1
+            self.task, description=f"Analizing package [bold blue]{package}[/bold blue]...", advance=1, refresh=True,
         )
+
+    def show_packages_results(self, dependencies: "Dependencies"):
+        global_rating_score = dependencies.get_global_rating_score()
+        if self.progress:
+            self.progress.update(self.task, description="[bold green]Analyzed all packages[/bold green]", refresh=True)
+            self.progress.stop()
+        for package in dependencies.packages.values():
+            if package.name not in dependencies.req_file:
+                continue
+            if package.rating.global_rating_score >= package.rating.rating_score:
+                print_score = f"{package.rating.global_rating_score}"
+            else:
+                print_score = f"{package.rating.rating_score} -> {package.rating.global_rating_score}"
+            self.console.print(
+                f"Package [bold blue]{package.name}[/bold blue]: " + print_score
+            )
+            for key, value in package.rating.breakdown_scores:
+                self.console.print(f"  {key}: {value}")
+            if package.rating.global_rating_score < package.rating.rating_score:
+                self.console.print(
+                    f"  Low rating dependencies: "
+                    f"{', '.join([f'{dep.name} ({score})' for dep, score in package.rating.low_rating_dependencies])}"
+                )
+            self.console.print("")
+        self.console.print("")
+        self.console.print(f"Global rating score: [bold blue]{global_rating_score}[/bold blue]")

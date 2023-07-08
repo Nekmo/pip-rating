@@ -54,7 +54,7 @@ def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url:
         req_file_cls = REQ_FILE_CLASSES[file_type]
     results.status.update(f"Read requirements file [bold green]{file}[/bold green]")
     dependencies = Dependencies(results, req_file_cls(file), cache_dir, index_url, extra_index_url)
-    dependencies.get_global_rating_score()
+    results.show_packages_results(dependencies)
 
 
 @cli.command()
