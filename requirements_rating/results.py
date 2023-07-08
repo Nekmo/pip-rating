@@ -3,7 +3,7 @@ from typing import Optional, TYPE_CHECKING, Union
 from rich.console import Console
 from rich.progress import Progress, TaskID, TaskProgressColumn, TextColumn, BarColumn, TimeRemainingColumn
 from rich.status import Status
-
+from rich.table import Table
 
 if TYPE_CHECKING:
     from requirements_rating.rating import ScoreBase
@@ -124,18 +124,21 @@ class Results:
             else:
                 print_score = f"{rating_score_letter} -> {global_rating_score_letter}"
             self.console.print(
-                f"Package [bold blue]{package.name}[/bold blue]: " + print_score
+                f":package: Package [bold blue]{package.name}[/bold blue]: " + print_score
             )
             for key, value in package.rating.breakdown_scores:
-                self.console.print(f"  {key}: {colorize_score(value)}")
+                key = key.split(".")[-1].replace("iso_dt", "").replace("_", " ").capitalize()
+                self.console.print(f"  :black_medium-small_square: {key}: {colorize_score(value)}")
             if package.rating.global_rating_score < package.rating.rating_score:
                 low_rating_dependences = [
                     f'{pkg.name} ({colorize_rating(score)})' for pkg, score
                     in package.rating.descendant_rating_scores if colorize_rating(score) < rating_score_letter
                 ]
                 self.console.print(
-                    f"  Low rating dependencies: {', '.join(low_rating_dependences)}"
+                    f"  :arrow_lower_right: Low rating dependencies: {', '.join(low_rating_dependences)}"
                 )
             self.console.print("")
         self.console.print("")
-        self.console.print(f"Global rating score: {colorize_rating(global_rating_score)}")
+        table = Table(show_header=False)
+        table.add_row(f"Global rating score: {colorize_rating(global_rating_score)}")
+        self.console.print(table)
