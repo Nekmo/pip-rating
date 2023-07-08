@@ -10,6 +10,7 @@ import click
 from requirements_rating._compat import USER_CACHE_DIR
 from requirements_rating.dependencies import Dependencies
 from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES
+from requirements_rating.results import Results
 
 
 @click.group()
@@ -45,15 +46,15 @@ def common_options(function):
 @click.option('--file-type', type=click.Choice(list(REQ_FILE_CLASSES.keys())), default=None)
 @common_options
 def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url: str, extra_index_url: str):
+    results = Results()
     file = Path(file)
     if file_type is None:
         req_file_cls = get_req_file_cls(file)
     else:
         req_file_cls = REQ_FILE_CLASSES[file_type]
-    dependencies = Dependencies(req_file_cls(file), cache_dir, index_url, extra_index_url)
-    packages = dependencies.get_packages()
-    score = list(packages.values())[0].rating.global_rating_score
-    pass
+    results.status.update(f"Read requirements file [bold green]{file}[/bold green]")
+    dependencies = Dependencies(results, req_file_cls(file), cache_dir, index_url, extra_index_url)
+    dependencies.get_global_rating_score()
 
 
 @cli.command()

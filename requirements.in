@@ -5,4 +5,5 @@ beautifulsoup4
 setuptools
 pipfile
 requests
+rich
 tomlkit; python_version < '3.11'
