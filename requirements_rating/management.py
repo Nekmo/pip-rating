@@ -23,7 +23,7 @@ def common_options(function):
         "--cache-dir",
         envvar="PIP_CACHE_DIR",
         type=click.Path(exists=False, file_okay=False, dir_okay=True, resolve_path=True),
-        default=os.path.join(USER_CACHE_DIR, "wheels", "pipgrip"),
+        default=os.path.join(USER_CACHE_DIR, "wheels", "requirements-rating"),
         help="Use a custom cache dir.",
     )(function)
     function = click.option(
@@ -50,8 +50,8 @@ def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url:
         req_file_cls = get_req_file_cls(file)
     else:
         req_file_cls = REQ_FILE_CLASSES[file_type]
-    requirements = Dependencies(req_file_cls(file), cache_dir, index_url, extra_index_url)
-    packages = requirements.get_packages()
+    dependencies = Dependencies(req_file_cls(file), cache_dir, index_url, extra_index_url)
+    packages = dependencies.get_packages()
     score = list(packages.values())[0].rating.global_rating_score
     pass
 

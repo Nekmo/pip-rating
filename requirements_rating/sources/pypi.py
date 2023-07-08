@@ -1,6 +1,7 @@
 import datetime
 from functools import cached_property
-from typing import TypedDict, Optional
+from itertools import chain
+from typing import TypedDict, Optional, List
 
 import requests
 
@@ -38,7 +39,7 @@ class PyPackageInfo(TypedDict):
     yanked_reason: Optional[str]
 
 
-class PypiPackageRelease(TypedDict):
+class PypiPackageReleaseUpload(TypedDict):
     comment_text: str
     digests: dict[str, str]
     downloads: int
@@ -59,7 +60,7 @@ class PypiPackageRelease(TypedDict):
 class PypiPackage(TypedDict):
     info: PyPackageInfo
     last_serial: int
-    releases: dict[str, list[PypiPackageRelease]]
+    releases: dict[str, list[PypiPackageReleaseUpload]]
 
 
 class PypiCacheDict(TypedDict):
@@ -69,6 +70,7 @@ class PypiCacheDict(TypedDict):
 
 
 class Pypi(SourceBase):
+    source_name = "pypi"
 
     def get_cache_data(self) -> dict:
         return {
@@ -84,6 +86,34 @@ class Pypi(SourceBase):
         else:
             sourcerank_cache = self.save_to_cache()
         return sourcerank_cache["package"]
+
+    @cached_property
+    def uploads(self) -> List[PypiPackageReleaseUpload]:
+        uploads = chain(*list(self.package["releases"].values()))
+        return sorted(
+            uploads,
+            key=lambda upload: upload.get("upload_time_iso_8601")
+        )
+
+    @property
+    def latest_upload(self) -> Optional[PypiPackageReleaseUpload]:
+        return self.uploads[-1] if self.uploads else None
+
+    @property
+    def first_upload(self) -> Optional[PypiPackageReleaseUpload]:
+        return self.uploads[0] if self.uploads else None
+
+    @property
+    def latest_upload_iso_dt(self) -> Optional[str]:
+        if self.latest_upload:
+            return self.latest_upload["upload_time_iso_8601"]
+        return None
+
+    @property
+    def first_upload_iso_dt(self) -> Optional[str]:
+        if self.first_upload:
+            return self.first_upload["upload_time_iso_8601"]
+        return None
 
     def get_package(self) -> PypiPackage:
         with requests.get(URL.format(package_name=self.package_name)) as response:

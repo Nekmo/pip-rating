@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Iterator, Set
 from anytree import Node
 
 from requirements_rating.rating import PackageRating
+from requirements_rating.sources.pypi import Pypi
 from requirements_rating.sources.sourcerank import SourceRank
 
 if TYPE_CHECKING:
@@ -25,6 +26,10 @@ class Package:
     @cached_property
     def sourcerank(self) -> SourceRank:
         return SourceRank(self.name)
+
+    @cached_property
+    def pypi(self) -> "Pypi":
+        return Pypi(self.name)
 
     @cached_property
     def rating(self) -> "PackageRating":

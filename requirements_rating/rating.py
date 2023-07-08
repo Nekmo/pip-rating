@@ -3,7 +3,7 @@ import json
 import os
 from functools import cached_property
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple
+from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple, Dict
 
 from platformdirs import user_cache_dir
 from requests import __version__
@@ -18,8 +18,14 @@ RATING_CACHE_DIR = Path(user_cache_dir()) / "requirements-rating" / "rating"
 MAX_CACHE_AGE = datetime.timedelta(days=7)
 
 
+class PypiPackage(TypedDict):
+    latest_upload_iso_dt: Optional[str]
+    first_upload_iso_dt: Optional[str]
+
+
 class PackageRatingParams(TypedDict):
     sourcerank_breakdown: SourceRankBreakdown
+    pypi_package: PypiPackage
 
 
 class PackageRatingCache(TypedDict):
@@ -78,16 +84,23 @@ class Max(ScoreBase):
         return f"<Max current: {self.current_score} max: {self.max_score}>"
 
 
-class PackageBreakdown:
-    def __init__(self, breakdown_key: str, score: Optional[Union[int, Max]] = None):
-        self.breakdown_key = breakdown_key
-        self._score = score
+class BreakdownBase:
+    breakdown_key: str
 
-    def get_breakdown_value(self, package_rating: "PackageRating") -> Union[int, bool]:
+    def get_score(self, package_rating: "PackageRating") -> ScoreBase:
+        raise NotImplementedError
+
+    def get_breakdown_value(self, package_rating: "PackageRating") -> Union[int, bool, str]:
         value = package_rating.params
         for subkey in self.breakdown_key.split("."):
             value = value[subkey]
         return value
+
+
+class PackageBreakdown(BreakdownBase):
+    def __init__(self, breakdown_key: str, score: Optional[Union[int, Max]] = None):
+        self.breakdown_key = breakdown_key
+        self._score = score
 
     def get_score(self, package_rating: "PackageRating") -> ScoreBase:
         value = self.get_breakdown_value(package_rating)
@@ -100,6 +113,25 @@ class PackageBreakdown:
         return ScoreValue(value)
 
 
+class DateBreakdown(BreakdownBase):
+
+    def __init__(self, breakdown_key: str, scores: Dict[datetime.timedelta, int], default: int):
+        self.breakdown_key = breakdown_key
+        self.scores = scores
+        self.default = default
+
+    def get_score(self, package_rating: "PackageRating") -> ScoreBase:
+        iso_dt = self.get_breakdown_value(package_rating)
+        if not iso_dt:
+            return ScoreValue(0)
+        dt = datetime.datetime.fromisoformat(iso_dt)
+        dt_delta = datetime.datetime.now(datetime.timezone.utc) - dt
+        for delta, score in self.scores.items():
+            if dt_delta < delta:
+                return ScoreValue(score)
+        return ScoreValue(self.default)
+
+
 BREAKDOWN_SCORES = [
     PackageBreakdown("sourcerank_breakdown.basic_info_present", 1),
     PackageBreakdown("sourcerank_breakdown.source_repository_present", 1),
@@ -110,6 +142,32 @@ BREAKDOWN_SCORES = [
     PackageBreakdown("sourcerank_breakdown.dependent_repositories"),
     PackageBreakdown("sourcerank_breakdown.stars"),
     PackageBreakdown("sourcerank_breakdown.contributors"),
+    DateBreakdown(
+        "pypi_package.latest_upload_iso_dt",
+        {
+            datetime.timedelta(days=30 * 4): 4,
+            datetime.timedelta(days=30 * 6): 3,
+            datetime.timedelta(days=365): 2,
+            datetime.timedelta(days=365 + (30 * 6)): 1,
+            datetime.timedelta(days=365 * 3): 0,
+            datetime.timedelta(days=365 * 4): -2,
+        },
+        default=-4
+    ),
+    DateBreakdown(
+        "pypi_package.first_upload_iso_dt",
+        {
+            datetime.timedelta(days=15): Max(0),
+            datetime.timedelta(days=30): -3,
+            datetime.timedelta(days=60): -2,
+            datetime.timedelta(days=90): -1,
+            datetime.timedelta(days=180): 0,
+            datetime.timedelta(days=360): 1,
+            datetime.timedelta(days=360 * 2): 2,
+            datetime.timedelta(days=360 * 4): 3,
+        },
+        default=4
+    )
 ]
 
 
@@ -121,7 +179,7 @@ class PackageRating:
             self.save_to_cache()
         elif not params:
             params = self.get_params_from_cache()
-        self.params = params
+        self.params: PackageRatingParams = params
 
     @property
     def is_cache_expired(self) -> bool:
@@ -160,6 +218,10 @@ class PackageRating:
     def get_params_from_package(self) -> PackageRatingParams:
         return {
             "sourcerank_breakdown": self.package.sourcerank.breakdown,
+            "pypi_package": {
+                "latest_upload_iso_dt": self.package.pypi.latest_upload_iso_dt,
+                "first_upload_iso_dt": self.package.pypi.first_upload_iso_dt,
+            },
         }
 
     @cached_property

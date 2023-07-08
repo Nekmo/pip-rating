@@ -52,6 +52,7 @@ class SourceRankCacheDict(TypedDict):
 
 
 class SourceRank(SourceBase):
+    source_name = "sourcerank"
 
     def get_cache_data(self) -> dict:
         return {
