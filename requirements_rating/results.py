@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Union
 
 from rich.console import Console
 from rich.progress import Progress, TaskID, TaskProgressColumn, TextColumn, BarColumn, TimeRemainingColumn
@@ -10,13 +10,64 @@ if TYPE_CHECKING:
     from requirements_rating.dependencies import Dependencies
 
 
-def colorize_score(score: "ScoreBase") -> str:
+def colorize_score(score: Union["ScoreBase", int]) -> str:
     """Colorize the score."""
     if int(score) < 0:
         return f"[bold red]{score}[/bold red]"
     if int(score) > 0:
         return f"[bold green]+{score}[/bold green]"
     return f"[bold bright_black]{score}[/bold bright_black]"
+
+
+def colorize_rating(score: Union["ScoreBase", int]) -> "RatingLetter":
+    """Colorize the rating."""
+    for rating_letter in RATING_LETTERS:
+        if max(0, int(score)) >= rating_letter.score:
+            return rating_letter
+
+
+class RatingLetter:
+    """Rating letter."""
+
+    def __init__(self, letter: str, score: int, color: str):
+        self.letter = letter
+        self.score = score
+        self.color = color
+
+    def __lt__(self, other):
+        return self.score < other.score
+
+    def __gt__(self, other):
+        return self.score > other.score
+
+    def __le__(self, other):
+        return self.score <= other.score
+
+    def __ge__(self, other):
+        return self.score >= other.score
+
+    def __eq__(self, other):
+        return self.score == other.score
+
+    def __ne__(self, other):
+        return self.score != other.score
+
+    def __str__(self) -> str:
+        return f"[bold {self.color}]{self.letter}[/bold {self.color}]"
+
+    def __repr__(self) -> str:
+        return f"<RatingLetter {self.letter}>"
+
+
+RATING_LETTERS = [
+    RatingLetter("S", 30, "bright_cyan"),
+    RatingLetter("A", 25, "green3"),
+    RatingLetter("B", 20, "green_yellow"),
+    RatingLetter("C", 15, "gold1"),
+    RatingLetter("D", 10, "orange1"),
+    RatingLetter("E", 5, "orange_red1"),
+    RatingLetter("F", 0, "bright_red"),
+]
 
 
 class Results:
@@ -66,20 +117,25 @@ class Results:
         for package in dependencies.packages.values():
             if package.name not in dependencies.req_file:
                 continue
-            if package.rating.global_rating_score >= package.rating.rating_score:
-                print_score = f"{package.rating.global_rating_score}"
+            global_rating_score_letter = colorize_rating(package.rating.global_rating_score)
+            rating_score_letter = colorize_rating(package.rating.rating_score)
+            if global_rating_score_letter >= rating_score_letter:
+                print_score = f"{global_rating_score_letter}"
             else:
-                print_score = f"{package.rating.rating_score} -> {package.rating.global_rating_score}"
+                print_score = f"{rating_score_letter} -> {global_rating_score_letter}"
             self.console.print(
                 f"Package [bold blue]{package.name}[/bold blue]: " + print_score
             )
             for key, value in package.rating.breakdown_scores:
                 self.console.print(f"  {key}: {colorize_score(value)}")
             if package.rating.global_rating_score < package.rating.rating_score:
+                low_rating_dependences = [
+                    f'{pkg.name} ({colorize_rating(score)})' for pkg, score
+                    in package.rating.descendant_rating_scores if colorize_rating(score) < rating_score_letter
+                ]
                 self.console.print(
-                    f"  Low rating dependencies: "
-                    f"{', '.join([f'{dep.name} ({score})' for dep, score in package.rating.low_rating_dependencies])}"
+                    f"  Low rating dependencies: {', '.join(low_rating_dependences)}"
                 )
             self.console.print("")
         self.console.print("")
-        self.console.print(f"Global rating score: [bold blue]{global_rating_score}[/bold blue]")
+        self.console.print(f"Global rating score: {colorize_rating(global_rating_score)}")

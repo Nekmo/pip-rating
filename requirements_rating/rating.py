@@ -252,9 +252,3 @@ class PackageRating:
     @cached_property
     def global_rating_score(self) -> int:
         return min([self.rating_score] + list(dict(self.descendant_rating_scores).values()), default=0)
-
-    @cached_property
-    def low_rating_dependencies(self) -> List[Tuple["Package", int]]:
-        return [
-            (package, score) for package, score in self.descendant_rating_scores if score < self.rating_score
-        ]

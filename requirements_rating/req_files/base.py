@@ -35,6 +35,7 @@ class ReqFileBase(list):
             package = Requirement(package)
             if (not req.specifier and package.name.lower() == req.name.lower()) or package == req:
                 return True
+        return False
 
     def __str__(self) -> str:
         return self.path.name
