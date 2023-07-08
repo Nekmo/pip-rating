@@ -4,8 +4,19 @@ from rich.console import Console
 from rich.progress import Progress, TaskID, TaskProgressColumn, TextColumn, BarColumn, TimeRemainingColumn
 from rich.status import Status
 
+
 if TYPE_CHECKING:
+    from requirements_rating.rating import ScoreBase
     from requirements_rating.dependencies import Dependencies
+
+
+def colorize_score(score: "ScoreBase") -> str:
+    """Colorize the score."""
+    if int(score) < 0:
+        return f"[bold red]{score}[/bold red]"
+    if int(score) > 0:
+        return f"[bold green]+{score}[/bold green]"
+    return f"[bold bright_black]{score}[/bold bright_black]"
 
 
 class Results:
@@ -63,7 +74,7 @@ class Results:
                 f"Package [bold blue]{package.name}[/bold blue]: " + print_score
             )
             for key, value in package.rating.breakdown_scores:
-                self.console.print(f"  {key}: {value}")
+                self.console.print(f"  {key}: {colorize_score(value)}")
             if package.rating.global_rating_score < package.rating.rating_score:
                 self.console.print(
                     f"  Low rating dependencies: "

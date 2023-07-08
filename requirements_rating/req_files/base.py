@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Union, List, Optional
 
+from pkg_resources import Requirement
+
 
 class ReqFileBase(list):
     """Base class for requirement files."""
@@ -26,6 +28,13 @@ class ReqFileBase(list):
     def get_dependencies(self) -> List[str]:
         """Get the dependencies from the file."""
         raise NotImplementedError
+
+    def __contains__(self, item: str) -> bool:
+        req = Requirement(item)
+        for package in self:
+            package = Requirement(package)
+            if (not req.specifier and package.name.lower() == req.name.lower()) or package == req:
+                return True
 
     def __str__(self) -> str:
         return self.path.name
