@@ -1,9 +1,9 @@
-pipgrip
-pip-audit
-platformdirs
-beautifulsoup4
-setuptools
-pipfile
-requests
-rich
-tomlkit; python_version < '3.11'
+pipgrip>=0.10.0,<0.11.0
+pip-audit>=2.0.0,<3.0.0
+platformdirs>=3.5.1,<4.0.0
+beautifulsoup4>=4.8.1,<5.0.0
+setuptools>=66.1.0
+pipfile>=0.0.2,<0.1.0
+requests >=2.20.0,<3.0.0
+rich>=12.0.0
+tomlkit>=0.5.1,<1.0.0; python_version < '3.11'
