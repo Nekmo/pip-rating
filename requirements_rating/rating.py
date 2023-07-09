@@ -38,16 +38,6 @@ class PackageRatingCache(TypedDict):
     params: PackageRatingParams
 
 
-def get_node_from_parent(package: "Package", from_package: "Package") -> Optional["Node"]:
-    """Given a package and a parent package, return the node in the package that
-    is a descendant of the parent package
-    """
-    for node in package.nodes:
-        for parent_node in from_package.nodes:
-            if node in parent_node.descendants:
-                return node
-
-
 class ScoreBase:
     def __add__(self, other: "ScoreBase"):
         raise NotImplementedError
@@ -266,7 +256,7 @@ class PackageRating:
     def get_vulnerabilities(self, from_package: Optional["Package"] = None) -> List["Vulnerability"]:
         node = None
         if from_package is not None:
-            node = get_node_from_parent(self.package, from_package)
+            node = self.package.get_node_from_parent(from_package)
         elif from_package is None:
             node = self.package.first_node
         # get_audit requires a node, so we only call it if we have one and this is used

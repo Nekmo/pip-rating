@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterator, Set
+from typing import TYPE_CHECKING, Iterator, Set, Optional
 
 from anytree import Node
 
@@ -42,6 +42,17 @@ class Package:
     @cached_property
     def rating(self) -> "PackageRating":
         return PackageRating(self)
+
+    def get_node_from_parent(self, from_package: Optional["Package"]) -> Optional["Node"]:
+        """Given this package and a parent package, return the node in the package that
+        is a descendant of the parent package
+        """
+        if from_package is None:
+            return self.first_node
+        for node in self.nodes:
+            for parent_node in from_package.nodes:
+                if node in parent_node.descendants:
+                    return node
 
     def get_descendant_packages(self) -> Iterator["Package"]:
         for descendant in self.first_node.descendants:

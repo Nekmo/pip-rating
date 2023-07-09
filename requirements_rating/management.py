@@ -44,6 +44,14 @@ def common_options(function):
         # envvar="PIP_EXTRA_INDEX_URL",  # let pip discover
         help="Extra URLs of package indexes to use in addition to --index-url.",
     )(function)
+    function = click.option(
+        "--format",
+        "-f",
+        "format_name",
+        # envvar="PIP_EXTRA_INDEX_URL",  # let pip discover
+        default="text",
+        help="Extra URLs of package indexes to use in addition to --index-url.",
+    )(function)
     return function
 
 
@@ -51,7 +59,8 @@ def common_options(function):
 @click.argument('file', type=click.Path(exists=True, dir_okay=False))
 @click.option('--file-type', type=click.Choice(list(REQ_FILE_CLASSES.keys())), default=None)
 @common_options
-def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url: str, extra_index_url: str):
+def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url: str, extra_index_url: str,
+                 format_name: str):
     results = Results()
     file = Path(file)
     if file_type is None:
@@ -60,13 +69,13 @@ def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url:
         req_file_cls = REQ_FILE_CLASSES[file_type]
     results.status.update(f"Read requirements file [bold green]{file}[/bold green]")
     dependencies = Dependencies(results, req_file_cls(file), cache_dir, index_url, extra_index_url)
-    results.show_packages_results(dependencies)
+    results.show_results(dependencies, format_name)
 
 
 @cli.command()
 @click.argument('package_names', nargs=-1, required=True)
 @common_options
-def analyze_package(package_names: List[str], cache_dir: str, index_url: str, extra_index_url: str):
+def analyze_package(package_names: List[str], cache_dir: str, index_url: str, extra_index_url: str, format_name: str):
     results = Results()
     req_file = PackageList(package_names)
     dependencies = Dependencies(results, req_file, cache_dir, index_url, extra_index_url)
@@ -74,7 +83,7 @@ def analyze_package(package_names: List[str], cache_dir: str, index_url: str, ex
         nodes = dependencies.dependencies_tree.children[0].children
         packages = PackageList(list(package_names) + [f"{node.name}=={node.version}" for node in nodes])
         dependencies = Dependencies(results, packages, cache_dir, index_url, extra_index_url)
-    results.show_packages_results(dependencies)
+    results.show_results(dependencies, format_name)
 
 
 if __name__ == '__main__':
