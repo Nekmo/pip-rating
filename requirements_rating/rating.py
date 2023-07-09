@@ -177,6 +177,13 @@ BREAKDOWN_SCORES = [
 ]
 
 
+class PackageRatingJson(TypedDict):
+    rating_score: int
+    global_rating_score: int
+    vulnerabilities: List[Vulnerability]
+    params: PackageRatingParams
+
+
 class PackageRating:
     def __init__(self, package: "Package", params: Optional[PackageRatingParams] = None):
         self.package = package
@@ -276,3 +283,11 @@ class PackageRating:
             [self.get_rating_score(from_package)] + list(dict(self.descendant_rating_scores).values()),
             default=0
         )
+
+    def as_json(self, from_package: Optional["Package"] = None) -> PackageRatingJson:
+        return {
+            "rating_score": self.get_rating_score(from_package),
+            "global_rating_score": self.get_global_rating_score(from_package),
+            "vulnerabilities": self.get_vulnerabilities(from_package),
+            "params": self.params,
+        }

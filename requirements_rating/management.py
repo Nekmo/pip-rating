@@ -12,7 +12,7 @@ from requirements_rating.dependencies import Dependencies
 from requirements_rating.exceptions import catch
 from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES, find_in_directory
 from requirements_rating.req_files.package_list import PackageList
-from requirements_rating.results import Results
+from requirements_rating.results import Results, FORMATS
 
 
 @click.group(invoke_without_command=True)
@@ -48,6 +48,7 @@ def common_options(function):
         "--format",
         "-f",
         "format_name",
+        type=click.Choice(FORMATS),
         # envvar="PIP_EXTRA_INDEX_URL",  # let pip discover
         default="text",
         help="Extra URLs of package indexes to use in addition to --index-url.",

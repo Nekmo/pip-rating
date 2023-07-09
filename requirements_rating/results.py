@@ -1,5 +1,8 @@
-from typing import Optional, TYPE_CHECKING, Union
+import datetime
+import json
+from typing import Optional, TYPE_CHECKING, Union, TypedDict, List
 
+from requests import __version__
 from rich.console import Console
 from rich.progress import Progress, TaskID, TaskProgressColumn, TextColumn, BarColumn, TimeRemainingColumn
 from rich.status import Status
@@ -14,7 +17,7 @@ if TYPE_CHECKING:
 
 
 MIN_PACKAGE_NAME = 15
-FORMATS = ["text", "tree"]
+FORMATS = ["text", "tree", "json"]
 
 
 def colorize_score(score: Union["ScoreBase", int]) -> str:
@@ -101,6 +104,17 @@ RATING_LETTERS = [
 ]
 
 
+class JsonResults(TypedDict):
+    """JSON results"""
+
+    requirements: List[str]
+    updated_at: str
+    schema_version: str
+    global_rating_letter: str
+    global_rating_score: int
+    packages: List[dict]
+
+
 class Results:
     """Print requirements-ratings results to the terminal."""
     _status: Optional[Status]
@@ -133,6 +147,7 @@ class Results:
                 BarColumn(complete_style="blue"),
                 TaskProgressColumn(),
                 TimeRemainingColumn(),
+                console=self.console,
             )
             self.task = self.progress.add_task("Analizing packages...", total=total)
             self.progress.start()
@@ -158,6 +173,10 @@ class Results:
             self.show_packages_results(dependencies)
         elif format_name == "tree":
             self.show_tree_results(dependencies)
+        elif format_name == "json":
+            self.show_json_results(dependencies)
+        else:
+            raise ValueError(f"Format name must be one of {', '.join(FORMATS)}")
 
     def show_packages_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
@@ -208,3 +227,20 @@ class Results:
                 continue
             add_tree_node(dependencies, tree, package)
         self.console.print(tree)
+
+    def get_json_results(self, dependencies: "Dependencies"):
+        global_rating_score = self.get_global_rating_score(dependencies)
+        packages = [package for package in dependencies.packages.values() if package.name in dependencies.req_file]
+        return {
+            "requirements": dependencies.req_file,
+            "updated_at": datetime.datetime.now().isoformat(),
+            "schema_version": __version__,
+            "global_rating_letter": colorize_rating(global_rating_score).letter,
+            "global_rating_score": global_rating_score,
+            "packages": [package.as_json() for package in packages]
+        }
+
+    def show_json_results(self, dependencies: "Dependencies"):
+        self.console = Console(stderr=True)
+        results = self.get_json_results(dependencies)
+        print(json.dumps(results, indent=4, sort_keys=False))

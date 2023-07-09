@@ -1,15 +1,27 @@
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterator, Set, Optional
+from typing import TYPE_CHECKING, Iterator, Set, Optional, TypedDict, List
 
 from anytree import Node
 
-from requirements_rating.rating import PackageRating
-from requirements_rating.sources.audit import Audit
+from requirements_rating.rating import PackageRating, PackageRatingJson
+from requirements_rating.sources.audit import Audit, Vulnerability
 from requirements_rating.sources.pypi import Pypi
 from requirements_rating.sources.sourcerank import SourceRank
 
 if TYPE_CHECKING:
     from requirements_rating.dependencies import Dependencies
+    from requirements_rating.sources.sourcerank import SourceRankBreakdown
+    from requirements_rating.sources.pypi import PypiPackage
+
+
+class PackageJson(TypedDict):
+    name: str
+    version: str
+    sourcerank_breakdown: "SourceRankBreakdown"
+    pypi_package: "PypiPackage"
+    audit_vulnerabilities: List[Vulnerability]
+    rating: PackageRatingJson
+    dependencies: List["PackageJson"]
 
 
 class Package:
@@ -64,6 +76,18 @@ class Package:
 
     def add_node(self, node: Node):
         self.nodes.add(node)
+
+    def as_json(self, from_package: Optional["Package"] = None) -> PackageJson:
+        node = self.get_node_from_parent(from_package)
+        return {
+            "name": self.name,
+            "version": node.version,
+            "sourcerank_breakdown": self.sourcerank.breakdown,
+            "pypi_package": self.pypi.package,
+            "audit_vulnerabilities": self.get_audit(node).vulnerabilities,
+            "rating": self.rating.as_json(from_package),
+            "dependencies": [self.dependencies.packages[subnode.name].as_json(self) for subnode in node.children],
+        }
 
     def __repr__(self) -> str:
         return f"<Package {self.name}>"

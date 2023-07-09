@@ -47,7 +47,7 @@ class Audit(SourceBase):
         return self.cache_dir / f"{self.package_name}_{sha1(self.version.encode('utf-8')).hexdigest()}.json"
 
     @cached_property
-    def vulnerabilities(self):
+    def vulnerabilities(self) -> List[Vulnerability]:
         if not self.is_cache_expired:
             sourcerank_cache = self.get_from_cache()
         else:
