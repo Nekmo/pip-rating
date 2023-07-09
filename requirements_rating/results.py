@@ -117,9 +117,13 @@ class Results:
         for package in dependencies.packages.values():
             if package.name not in dependencies.req_file:
                 continue
-            global_rating_score_letter = colorize_rating(package.rating.global_rating_score)
+            global_rating_score = package.rating.get_global_rating_score()
+            global_rating_score_letter = colorize_rating(global_rating_score)
             rating_score_letter = colorize_rating(package.rating.rating_score)
-            if global_rating_score_letter >= rating_score_letter:
+            vulnerabilities = []
+            if not global_rating_score:
+                vulnerabilities = package.rating.get_vulnerabilities()
+            if vulnerabilities or global_rating_score_letter >= rating_score_letter:
                 print_score = f"{global_rating_score_letter}"
             else:
                 print_score = f"{rating_score_letter} -> {global_rating_score_letter}"
@@ -129,13 +133,18 @@ class Results:
             for key, value in package.rating.breakdown_scores:
                 key = key.split(".")[-1].replace("iso_dt", "").replace("_", " ").capitalize()
                 self.console.print(f"  :black_medium-small_square: {key}: {colorize_score(value)}")
-            if package.rating.global_rating_score < package.rating.rating_score:
+            if global_rating_score < package.rating.rating_score:
                 low_rating_dependences = [
                     f'{pkg.name} ({colorize_rating(score)})' for pkg, score
                     in package.rating.descendant_rating_scores if colorize_rating(score) < rating_score_letter
                 ]
                 self.console.print(
                     f"  :arrow_lower_right: Low rating dependencies: {', '.join(low_rating_dependences)}"
+                )
+            if vulnerabilities:
+                self.console.print(
+                    f"  :biohazard: Vulnerabilities found: [bold grey53]"
+                    f"{', '.join([vuln['id'] for vuln in vulnerabilities])}[/bold grey53]"
                 )
             self.console.print("")
         self.console.print("")

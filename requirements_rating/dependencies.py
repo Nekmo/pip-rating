@@ -113,7 +113,7 @@ class Dependencies:
         packages = dict(self.get_packages()).values()
         for package in packages:
             self.results.analizing_package(package.name, len(packages))
-            global_rating_score = package.rating.global_rating_score
+            global_rating_score = package.rating.get_global_rating_score()
             if final_global_rating_score is None:
                 final_global_rating_score = global_rating_score
             else:

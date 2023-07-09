@@ -5,8 +5,11 @@ from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple, Dict
 
+from anytree import Node
 from platformdirs import user_cache_dir
 from requests import __version__
+from requirements_rating._compat import cache
+from requirements_rating.sources.audit import Vulnerability
 
 from requirements_rating.sources.sourcerank import SourceRankBreakdown
 
@@ -33,6 +36,16 @@ class PackageRatingCache(TypedDict):
     updated_at: str
     schema_version: str
     params: PackageRatingParams
+
+
+def get_node_from_parent(package: "Package", from_package: "Package") -> Optional["Node"]:
+    """Given a package and a parent package, return the node in the package that
+    is a descendant of the parent package
+    """
+    for node in package.nodes:
+        for parent_node in from_package.nodes:
+            if node in parent_node.descendants:
+                return node
 
 
 class ScoreBase:
@@ -237,7 +250,7 @@ class PackageRating:
     @cached_property
     def descendant_rating_scores(self) -> List[Tuple["Package", int]]:
         return [
-            (package, package.rating.rating_score)
+            (package, package.rating.get_rating_score(self.package))
             for package in self.package.get_descendant_packages()
         ]
 
@@ -249,6 +262,26 @@ class PackageRating:
             value += score
         return int(value)
 
-    @cached_property
-    def global_rating_score(self) -> int:
-        return min([self.rating_score] + list(dict(self.descendant_rating_scores).values()), default=0)
+    @cache
+    def get_vulnerabilities(self, from_package: Optional["Package"] = None) -> List["Vulnerability"]:
+        node = None
+        if from_package is not None:
+            node = get_node_from_parent(self.package, from_package)
+        elif from_package is None:
+            node = self.package.first_node
+        # get_audit requires a node, so we only call it if we have one and this is used
+        # instead of the package's own rating score
+        if node is not None:
+            return self.package.get_audit(node).vulnerabilities
+        return []
+
+    def get_rating_score(self, from_package: Optional["Package"] = None) -> int:
+        if len(self.get_vulnerabilities(from_package)):
+            return 0
+        return self.rating_score
+
+    def get_global_rating_score(self, from_package: Optional["Optional"] = None) -> int:
+        return min(
+            [self.get_rating_score(from_package)] + list(dict(self.descendant_rating_scores).values()),
+            default=0
+        )

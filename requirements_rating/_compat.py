@@ -22,3 +22,9 @@ try:
     import tomllib
 except ImportError:
     import tomlkit as tomllib
+
+
+try:
+    from functools import cache
+except ImportError:
+    from functools import lru_cache as cache

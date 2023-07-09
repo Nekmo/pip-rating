@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Iterator, Set
 from anytree import Node
 
 from requirements_rating.rating import PackageRating
+from requirements_rating.sources.audit import Audit
 from requirements_rating.sources.pypi import Pypi
 from requirements_rating.sources.sourcerank import SourceRank
 
@@ -21,7 +22,7 @@ class Package:
 
     @cached_property
     def first_node(self) -> Node:
-        return next(iter(self.nodes))
+        return next(iter(sorted(self.nodes, key=lambda n: n.depth)))
 
     @property
     def first_node_with_version(self) -> str:
@@ -34,6 +35,9 @@ class Package:
     @cached_property
     def pypi(self) -> "Pypi":
         return Pypi(self.name)
+
+    def get_audit(self, node: Node) -> "Audit":
+        return Audit(self.name, node.version)
 
     @cached_property
     def rating(self) -> "PackageRating":
