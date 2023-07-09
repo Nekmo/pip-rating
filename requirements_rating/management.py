@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 """Console script for requirements-rating."""
 import os
+import platform
+import sys
 from pathlib import Path
 from typing import Optional, List
 
 import click
+import requests
+from requests import RequestException
 from rich.console import Console
+from pkg_resources import parse_version
 
+import requirements_rating
+from requirements_rating import project_name, __version__
 from requirements_rating._compat import USER_CACHE_DIR
 from requirements_rating.dependencies import Dependencies
 from requirements_rating.exceptions import catch
@@ -15,11 +22,34 @@ from requirements_rating.req_files.package_list import PackageList
 from requirements_rating.results import Results, FORMATS
 
 
+def is_last_version() -> Optional[bool]:
+    try:
+        with requests.get(f"https://pypi.org/pypi/{project_name}/json") as response:
+            response.raise_for_status()
+            return parse_version(__version__) >= parse_version(response.json()["info"]["version"])
+    except RequestException:
+        return None
+
+
 @click.group(invoke_without_command=True)
+@click.option("--version", "-v", is_flag=True, help="Show version and exit.")
 @click.pass_context
-def cli(ctx: click.Context):
+def cli(ctx: click.Context, version: bool):
     """Console script for requirements-rating."""
-    if ctx.invoked_subcommand is None:
+    if version:
+        latest_version = is_last_version()
+        console = Console()
+        console.print(f"[bold]{project_name}[/bold] [bold green]{__version__}[/bold green]")
+        console.print(
+            "  :top_arrow: This is the latest version." if latest_version
+    else f"  :boom: There is a newer version available. Update it using 'pip install -U {project_name}'"
+        )
+        console.print(f"  :snake: Python version: {sys.version.split()[0]}")
+        console.print(f"  :computer: Platform: [bold blue]{platform.platform()}[/bold blue]")
+        console.print(f"  :package: Installation path: {os.path.dirname(requirements_rating.__file__)}")
+        console.print(f"  :file_folder: Current path: {os.getcwd()}")
+        ctx.exit(0)
+    elif ctx.invoked_subcommand is None:
         req_file = find_in_directory(Path.cwd())
         Console().print(f"Autodetected requirements file: [bold green]{req_file}[/bold green]")
         ctx.invoke(analyze_file, file=str(req_file.path))
