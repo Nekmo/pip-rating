@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 MIN_PACKAGE_NAME = 15
-FORMATS = ["text", "tree", "json"]
+FORMATS = ["text", "tree", "json", "only-rating"]
 
 
 def colorize_score(score: Union["ScoreBase", int]) -> str:
@@ -175,6 +175,8 @@ class Results:
             self.show_tree_results(dependencies)
         elif format_name == "json":
             self.show_json_results(dependencies)
+        elif format_name == "only-rating":
+            self.show_only_rating_results(dependencies)
         else:
             raise ValueError(f"Format name must be one of {', '.join(FORMATS)}")
 
@@ -244,3 +246,9 @@ class Results:
         self.console = Console(stderr=True)
         results = self.get_json_results(dependencies)
         print(json.dumps(results, indent=4, sort_keys=False))
+
+    def show_only_rating_results(self, dependencies: "Dependencies"):
+        self.console = Console(stderr=True)
+        global_rating_score = self.get_global_rating_score(dependencies)
+        self.console = Console()
+        self.console.print(f"{colorize_rating(global_rating_score)}")
