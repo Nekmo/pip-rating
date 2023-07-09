@@ -23,6 +23,10 @@ class Package:
     def first_node(self) -> Node:
         return next(iter(self.nodes))
 
+    @property
+    def first_node_with_version(self) -> str:
+        return f"{self.first_node.name}=={self.first_node.version}"
+
     @cached_property
     def sourcerank(self) -> SourceRank:
         return SourceRank(self.name)

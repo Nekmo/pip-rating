@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-
 """Console script for requirements-rating."""
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import click
 
 from requirements_rating._compat import USER_CACHE_DIR
 from requirements_rating.dependencies import Dependencies
 from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES
+from requirements_rating.req_files.package_list import PackageList
 from requirements_rating.results import Results
 
 
@@ -58,13 +58,17 @@ def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url:
 
 
 @cli.command()
-@click.argument('package_name')
+@click.argument('package_names', nargs=-1, required=True)
 @common_options
-def analyze_package(package_name: str, cache_dir: str, index_url: str, extra_index_url: str):
-    requirements = Dependencies(None, cache_dir, index_url, extra_index_url)
-    package = requirements.get_package(package_name)
-    score = package.rating.global_rating_score
-    pass
+def analyze_package(package_names: List[str], cache_dir: str, index_url: str, extra_index_url: str):
+    results = Results()
+    req_file = PackageList(package_names)
+    dependencies = Dependencies(results, req_file, cache_dir, index_url, extra_index_url)
+    if len(package_names) == 1:
+        nodes = dependencies.dependencies_tree.children[0].children
+        packages = PackageList(list(package_names) + [f"{node.name}=={node.version}" for node in nodes])
+        dependencies = Dependencies(results, packages, cache_dir, index_url, extra_index_url)
+    results.show_packages_results(dependencies)
 
 
 if __name__ == '__main__':
