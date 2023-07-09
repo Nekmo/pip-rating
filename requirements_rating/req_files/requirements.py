@@ -23,8 +23,8 @@ class RequirementsReqFile(ReqFileBase):
             if isinstance(requirements_file, str) and (directory / requirements_file).exists():
                 return cls(directory / requirements_file)
             if isinstance(requirements_file, re.Pattern):
-                requirements_file = next(filter(lambda pattern: re.match(pattern, requirements_file),
-                                                directory.iterdir()))
+                requirements_file = next(filter(lambda file: requirements_file.match(str(file)),
+                                                directory.iterdir()), None)
                 if requirements_file:
                     return cls(requirements_file)
 

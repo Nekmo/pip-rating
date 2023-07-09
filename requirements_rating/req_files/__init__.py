@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union, Type
 
-from requirements_rating.exceptions import RequirementsRatingInvalidFile
+from requirements_rating.exceptions import RequirementsRatingInvalidFile, RequirementsRatingMissingReqFile
 from requirements_rating.req_files.base import ReqFileBase
 from requirements_rating.req_files.pipfile import PipfileReqFile
 from requirements_rating.req_files.pyproject import PyprojectReqFile
@@ -25,3 +25,14 @@ def get_req_file_cls(path: Union[str, Path]) -> Type[ReqFileBase]:
         if req_file_cls.is_valid(path):
             return req_file_cls
     raise RequirementsRatingInvalidFile(f"Could not find requirement file class for {path}")
+
+
+def find_in_directory(directory: Union[str, Path]) -> ReqFileBase:
+    """Find requirement file in the given directory."""
+    if isinstance(directory, str):
+        directory = Path(directory)
+    for req_file_cls in REQ_FILE_CLASSES.values():
+        req_file = req_file_cls.find_in_directory(directory)
+        if req_file:
+            return req_file
+    raise RequirementsRatingMissingReqFile(str(directory))

@@ -5,18 +5,24 @@ from pathlib import Path
 from typing import Optional, List
 
 import click
+from rich.console import Console
 
 from requirements_rating._compat import USER_CACHE_DIR
 from requirements_rating.dependencies import Dependencies
-from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES
+from requirements_rating.exceptions import catch
+from requirements_rating.req_files import get_req_file_cls, REQ_FILE_CLASSES, find_in_directory
 from requirements_rating.req_files.package_list import PackageList
 from requirements_rating.results import Results
 
 
-@click.group()
-def cli():
+@click.group(invoke_without_command=True)
+@click.pass_context
+def cli(ctx: click.Context):
     """Console script for requirements-rating."""
-    pass
+    if ctx.invoked_subcommand is None:
+        req_file = find_in_directory(Path.cwd())
+        Console().print(f"Autodetected requirements file: [bold green]{req_file}[/bold green]")
+        ctx.invoke(analyze_file, file=str(req_file.path))
 
 
 def common_options(function):
@@ -72,4 +78,4 @@ def analyze_package(package_names: List[str], cache_dir: str, index_url: str, ex
 
 
 if __name__ == '__main__':
-    cli()
+    catch(cli)()
