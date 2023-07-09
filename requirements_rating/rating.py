@@ -276,6 +276,7 @@ class PackageRating:
         return []
 
     def get_rating_score(self, from_package: Optional["Package"] = None) -> int:
+        self.package.dependencies.results.analizing_package(self.package.name, self.package.dependencies.total_size)
         if len(self.get_vulnerabilities(from_package)):
             return 0
         return self.rating_score

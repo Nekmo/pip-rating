@@ -10,6 +10,9 @@ if TYPE_CHECKING:
     from requirements_rating.dependencies import Dependencies
 
 
+MIN_PACKAGE_NAME = 15
+
+
 def colorize_score(score: Union["ScoreBase", int]) -> str:
     """Colorize the score."""
     if int(score) < 0:
@@ -93,7 +96,7 @@ class Results:
     def processing_package(self, package):
         self.status.update(f"Processing package [bold green]{package}[/bold green]...")
 
-    def analizing_package(self, package, total: int):
+    def analizing_package(self, package: str, total: int):
         if self._status:
             self._status.stop()
         if not self.progress:
@@ -105,8 +108,12 @@ class Results:
             )
             self.task = self.progress.add_task("Analizing packages...", total=total)
             self.progress.start()
+        spaces = " " * (MIN_PACKAGE_NAME - len(package))
         self.progress.update(
-            self.task, description=f"Analizing package [bold blue]{package}[/bold blue]...", advance=1, refresh=True,
+            self.task,
+            description=f"Analizing package [bold blue]{package}[/bold blue]..." + spaces,
+            advance=1,
+            refresh=True,
         )
 
     def show_packages_results(self, dependencies: "Dependencies"):

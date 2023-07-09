@@ -15,9 +15,9 @@ if TYPE_CHECKING:
 class Package:
     nodes: Set[Node]
 
-    def __init__(self, requirements: "Dependencies", name: str):
+    def __init__(self, dependencies: "Dependencies", name: str):
         self.name = name
-        self.requirements = requirements
+        self.dependencies = dependencies
         self.nodes = set()
 
     @cached_property
@@ -45,11 +45,11 @@ class Package:
 
     def get_descendant_packages(self) -> Iterator["Package"]:
         for descendant in self.first_node.descendants:
-            yield self.requirements.add_node_package(descendant)
+            yield self.dependencies.add_node_package(descendant)
 
     def get_child_packages(self) -> Iterator["Package"]:
         for child in self.first_node.children:
-            yield self.requirements.add_node_package(child)
+            yield self.dependencies.add_node_package(child)
 
     def add_node(self, node: Node):
         self.nodes.add(node)

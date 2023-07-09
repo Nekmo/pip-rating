@@ -108,11 +108,14 @@ class Dependencies:
             self.add_node_package(dependency_node)
         return self.packages
 
+    @cached_property
+    def total_size(self):
+        return sum(sum([node.size for node in package.nodes]) for package in self.packages.values())
+
     def get_global_rating_score(self):
         final_global_rating_score = None
         packages = dict(self.get_packages()).values()
         for package in packages:
-            self.results.analizing_package(package.name, len(packages))
             global_rating_score = package.rating.get_global_rating_score()
             if final_global_rating_score is None:
                 final_global_rating_score = global_rating_score
