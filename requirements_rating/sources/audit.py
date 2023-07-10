@@ -49,10 +49,10 @@ class Audit(SourceBase):
     @cached_property
     def vulnerabilities(self) -> List[Vulnerability]:
         if not self.is_cache_expired:
-            sourcerank_cache = self.get_from_cache()
+            cache = self.get_from_cache()
         else:
-            sourcerank_cache = self.save_to_cache()
-        return sourcerank_cache["vulnerabilities"]
+            cache = self.save_to_cache()
+        return cache["vulnerabilities"]
 
     @cached_property
     def is_vulnerable(self) -> bool:

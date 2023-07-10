@@ -82,10 +82,10 @@ class Pypi(SourceBase):
     @cached_property
     def package(self) -> PypiPackage:
         if not self.is_cache_expired:
-            sourcerank_cache = self.get_from_cache()
+            cache = self.get_from_cache()
         else:
-            sourcerank_cache = self.save_to_cache()
-        return sourcerank_cache["package"]
+            cache = self.save_to_cache()
+        return cache["package"]
 
     @cached_property
     def uploads(self) -> List[PypiPackageReleaseUpload]:

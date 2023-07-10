@@ -64,10 +64,10 @@ class SourceRank(SourceBase):
     @cached_property
     def breakdown(self) -> SourceRankBreakdown:
         if not self.is_cache_expired:
-            sourcerank_cache = self.get_from_cache()
+            cache = self.get_from_cache()
         else:
-            sourcerank_cache = self.save_to_cache()
-        return sourcerank_cache["breakdown"]
+            cache = self.save_to_cache()
+        return cache["breakdown"]
 
     def get_breakdown(self) -> Iterator[Tuple[str, int]]:
         with requests.get(SOURCERANK_URL.format(package_name=self.package_name)) as response:
