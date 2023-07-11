@@ -6,7 +6,7 @@ To **install** requirements-rating, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install amazon_dash
+    $ pip install requirements-rating
 
 
 Contents

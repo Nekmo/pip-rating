@@ -120,9 +120,9 @@ html_theme = 'alabaster'
 # documentation.
 html_theme_options = {
     'logo': 'logo.png',
-    'description': 'Hack your Amazon Dash to run what you want',
+    'description': 'Are the dependencies (and their dependencies) of your project secure and maintained?',
     'github_user': 'Nekmo',
-    'github_repo': 'requirements_rating',
+    'github_repo': 'requirements-rating',
     'github_type': 'star',
     'github_banner': True,
     'travis_button': False,

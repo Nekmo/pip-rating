@@ -176,3 +176,15 @@ It indicates what each of the ratings probably means.
 :Name: *F*
 :Description: The status of the project is very bad. Maybe there are vulnerabilities, the project is not
               maintained, etc.
+
+Sources
+-------
+This project uses different sources & projects to get the information needed to calculate the score. The sources are:
+
+* `Pipgrip <https://pypi.org/project/pipgrip/>`_. Dependency tree.
+* `Libraries.io sourcerank <https://libraries.io/>`_. Dependent projects, dependent repositories, stars, basic info...
+* `PyPi <https://pypi.org/>`_. Source code repository, upload dates...
+* `GitHub <https://github.com/>`_. Source code readme.
+* `Advisory-database <https://github.com/pypa/advisory-database>`_. Vulnerabilities. Uses the
+  `pip-audit <https://pypi.org/project/pip-audit/>`_ dependency.
+* `OSV <https://osv.dev/>`_. Vulnerabilities. Uses the `pip-audit <https://pypi.org/project/pip-audit/>`_ dependency.
