@@ -57,58 +57,59 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `requirements-rating` for local development.
+Ready to contribute? Here's how to set up ``requirements-rating`` for local development.
 
-1. Fork the `requirements-rating` repo on GitHub.
-2. Clone your fork locally::
+#. Fork the ``requirements-rating`` repo on GitHub.
+#. Clone your fork locally::
 
     $ git clone git@github.com:your_name_here/requirements-rating.git
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+#. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
     $ mkvirtualenv requirements-rating
     $ cd requirements-rating/
-    $ python setup.py develop
+    $ pip install -r requirements.txt
 
-4. Create a branch for local development::
+#. Create a branch for local development::
 
     $ git checkout -b name-of-your-bugfix-or-feature
 
    Now you can make your changes locally.
 
-5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
+#. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
     $ flake8 requirements_rating tests
-    $ python setup.py test or py.test
+    $ python -m unittest
     $ tox
 
    To get flake8 and tox, just pip install them into your virtualenv.
 
-6. Commit your changes and push your branch to GitHub::
+#. Commit your changes and push your branch to GitHub::
 
     $ git add .
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
 
-7. Submit a pull request through the GitHub website.
+#. Submit a pull request through the GitHub website.
 
 Pull Request Guidelines
 -----------------------
 
 Before you submit a pull request, check that it meets these guidelines:
 
-1. The pull request should include tests.
-2. If the pull request adds functionality, the docs should be updated. Put
-   your new functionality into a function with a docstring, and add the
-   feature to the list in README.rst.
-3. The pull request should work for Python 3.5, 3.6, 3.7, 3.8 and for PyPy. Check
-   https://travis-ci.org/Nekmo/requirements-rating/pull_requests
+#. The pull request should include tests.
+#. If the pull request adds functionality, the docs should be updated. Put
+   your new functionality into a function with a docstring, update the docs
+   directory and add the feature to the list in README.rst.
+#. The code must follow the PEP8 style guide, be clean, easy to read, elegant
+   and be consistent with the rest of the code in the repository.
+#. The pull request should work for Python 3.8, 3.9, 3.10, 3.11 and for PyPy. Check
+   https://github.com/Nekmo/requirements-rating/actions
    and make sure that the tests pass for all supported Python versions.
 
 Tips
 ----
 
 To run a subset of tests::
-
 
     $ python -m unittest tests.test_requirements_rating
