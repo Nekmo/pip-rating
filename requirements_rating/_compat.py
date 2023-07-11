@@ -1,6 +1,7 @@
 import warnings
 
 from pkg_resources import parse_version
+
 # Force patch of distutils, which is vendored into setuptools
 import setuptools  # noqa:F401
 

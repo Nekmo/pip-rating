@@ -35,7 +35,14 @@ def is_last_version() -> Optional[bool]:
 @click.option("--version", "-v", is_flag=True, help="Show version and exit.")
 @click.pass_context
 def cli(ctx: click.Context, version: bool):
-    """Console script for requirements-rating."""
+    """Are the dependencies (and their dependencies) of your project secure and maintained?
+    Running this command without arguments detects the dependencies file of your project
+    (it supports *requirements.in, requirements.txt, setup.py, setup.cfg, Pipenv and pyproject.toml*)
+    and analyzes it.
+
+    If your file is not detected (or you want to parse another file, like your development dependencies)
+    you can use the ``analyze-file`` command.
+    """
     if version:
         latest_version = is_last_version()
         console = Console()
@@ -81,7 +88,7 @@ def common_options(function):
         type=click.Choice(FORMATS),
         # envvar="PIP_EXTRA_INDEX_URL",  # let pip discover
         default="text",
-        help="Extra URLs of package indexes to use in addition to --index-url.",
+        help=f"Output format. Supported formats: {', '.join(FORMATS)}. By default it uses 'text'.",
     )(function)
     return function
 
@@ -92,6 +99,10 @@ def common_options(function):
 @common_options
 def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url: str, extra_index_url: str,
                  format_name: str):
+    """Analyze a requirements file. A requirements file is required as argument. By default, it tries to detect the
+    type of the file, but you can force it using the ``--file-type`` option. The supported file types are:
+    *requirements.txt, requirements.in, setup.py, setup.cfg, Pipfile and pyproject.toml*.
+    """
     results = Results()
     file = Path(file)
     if file_type is None:
@@ -107,6 +118,9 @@ def analyze_file(file: str, file_type: Optional[str], cache_dir: str, index_url:
 @click.argument('package_names', nargs=-1, required=True)
 @common_options
 def analyze_package(package_names: List[str], cache_dir: str, index_url: str, extra_index_url: str, format_name: str):
+    """Analyze a package. A package name is required as argument. The syntax is the same as pip install. For example:
+    ``Django==4.2.3``. If only one package is specified, it will show their dependencies in detail.
+    """
     results = Results()
     req_file = PackageList(package_names)
     dependencies = Dependencies(results, req_file, cache_dir, index_url, extra_index_url)
