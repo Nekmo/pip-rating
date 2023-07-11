@@ -1,12 +1,12 @@
-Welcome to requirements-rating's documentation!
+Welcome to pip-rating's documentation!
 ===============================================
 Check the health of your project's requirements and get a rating for each dependency.
 
-To **install** requirements-rating, run this command in your terminal:
+To **install** pip-rating, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install requirements-rating
+    $ pip install pip-rating
 
 
 Contents

@@ -4,8 +4,8 @@
 Usage
 #####
 
-.. click:: requirements_rating.management:cli
-   :prog: requirements-rating
+.. click:: pip_rating.management:cli
+   :prog: pip-rating
    :show-nested:
 
 Formats

@@ -4,7 +4,7 @@
 ========
 Overview
 ========
-**Requirements-rating** is an app for developers to rate the requirements of a project recursively according to
+**pip-rating** is an app for developers to rate the requirements of a project recursively according to
 security criteria. *Do any of the dependencies have known vulnerabilities? Are they still maintained? Do they have
 community support?* These are some of the questions that the app will help you answer.
 
@@ -70,7 +70,7 @@ will be the final score of the dependency. There are currently 5 points between 
 
 Scores breakdown
 ----------------
-Below are descriptions of all requirements-rating breakdown points.
+Below are descriptions of all pip-rating breakdown points.
 
 :Score: +1
 :Name: *Basic info present*

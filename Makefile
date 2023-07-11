@@ -52,7 +52,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 
 lint: ## check style with flake8
-	flake8 requirements_rating tests
+	flake8 pip_rating tests
 
 test: ## run tests quickly with the default Python
 
@@ -62,15 +62,15 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source requirements_rating setup.py test
+	coverage run --source pip_rating setup.py test
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/requirements_rating.rst
+	rm -f docs/pip_rating.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ requirements_rating
+	sphinx-apidoc -o docs/ pip_rating
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html

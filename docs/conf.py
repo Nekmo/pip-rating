@@ -9,7 +9,7 @@ import setuptools  # noqa: F401
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'requirements-rating'
+project = 'pip-rating'
 copyright = '2023, Nekmo'
 author = 'Nekmo'
 
@@ -22,16 +22,16 @@ project_root = os.path.dirname(cwd)
 # version is used.
 sys.path.insert(0, project_root)
 
-import requirements_rating
+import pip_rating
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
 # the built documents.
 #
 # The short X.Y version.
-version = requirements_rating.__version__
+version = pip_rating.__version__
 # The full version, including alpha/beta/rc tags.
-release = requirements_rating.__version__
+release = pip_rating.__version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -51,13 +51,13 @@ html_theme_options = {
     'logo': 'logo.png',
     'description': 'Are the dependencies (and their dependencies) of your project secure and maintained?',
     'github_user': 'Nekmo',
-    'github_repo': 'requirements-rating',
+    'github_repo': 'pip-rating',
     'github_type': 'star',
     'github_banner': "forkme_right_darkblue_121621.png",
     'travis_button': False,
     'codecov_button': True,
     'analytics_id': 'UA-62276079-1',
-    'canonical_url': 'http://docs.nekmo.org/requirements-rating/'
+    'canonical_url': 'http://docs.nekmo.org/pip-rating/'
 }
 
 html_css_files = [

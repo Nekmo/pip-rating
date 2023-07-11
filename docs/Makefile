@@ -20,4 +20,4 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 autodoc:
-	sphinx-apidoc -o . ../requirements_rating
+	sphinx-apidoc -o . ../pip_rating

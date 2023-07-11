@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/Nekmo/requirements-rating/issues.
+Report bugs at https://github.com/Nekmo/pip-rating/issues.
 
 If you are reporting a bug, please include:
 
@@ -38,14 +38,14 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-requirements-rating could always use more documentation, whether as part of the
-official requirements-rating docs, in docstrings, or even on the web in blog posts,
+pip-rating could always use more documentation, whether as part of the
+official pip-rating docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/Nekmo/requirements-rating/issues.
+The best way to send feedback is to file an issue at https://github.com/Nekmo/pip-rating/issues.
 
 If you are proposing a feature:
 
@@ -57,17 +57,17 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up ``requirements-rating`` for local development.
+Ready to contribute? Here's how to set up ``pip-rating`` for local development.
 
-#. Fork the ``requirements-rating`` repo on GitHub.
+#. Fork the ``pip-rating`` repo on GitHub.
 #. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/requirements-rating.git
+    $ git clone git@github.com:your_name_here/pip-rating.git
 
 #. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv requirements-rating
-    $ cd requirements-rating/
+    $ mkvirtualenv pip-rating
+    $ cd pip-rating/
     $ pip install -r requirements.txt
 
 #. Create a branch for local development::
@@ -78,7 +78,7 @@ Ready to contribute? Here's how to set up ``requirements-rating`` for local deve
 
 #. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
-    $ flake8 requirements_rating tests
+    $ flake8 pip_rating tests
     $ python -m unittest
     $ tox
 
@@ -104,7 +104,7 @@ Before you submit a pull request, check that it meets these guidelines:
 #. The code must follow the PEP8 style guide, be clean, easy to read, elegant
    and be consistent with the rest of the code in the repository.
 #. The pull request should work for Python 3.8, 3.9, 3.10, 3.11 and for PyPy. Check
-   https://github.com/Nekmo/requirements-rating/actions
+   https://github.com/Nekmo/pip-rating/actions
    and make sure that the tests pass for all supported Python versions.
 
 Tips
@@ -112,4 +112,4 @@ Tips
 
 To run a subset of tests::
 
-    $ python -m unittest tests.test_requirements_rating
+    $ python -m unittest tests.test_pip_rating
