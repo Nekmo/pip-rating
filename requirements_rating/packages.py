@@ -6,6 +6,7 @@ from anytree import Node
 from requirements_rating.rating import PackageRating, PackageRatingJson
 from requirements_rating.sources.audit import Audit, Vulnerability
 from requirements_rating.sources.pypi import Pypi
+from requirements_rating.sources.sourcecode_page import SourcecodePage
 from requirements_rating.sources.sourcerank import SourceRank
 
 if TYPE_CHECKING:
@@ -47,6 +48,10 @@ class Package:
     @cached_property
     def pypi(self) -> "Pypi":
         return Pypi(self.name)
+
+    @cached_property
+    def sourcecode_page(self) -> "SourcecodePage":
+        return SourcecodePage(self)
 
     def get_audit(self, node: Node) -> "Audit":
         return Audit(self.name, node.version)

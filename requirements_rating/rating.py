@@ -5,7 +5,6 @@ from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple, Dict
 
-from anytree import Node
 from platformdirs import user_cache_dir
 from requests import __version__
 from requirements_rating._compat import cache
@@ -26,9 +25,14 @@ class PypiPackage(TypedDict):
     first_upload_iso_dt: Optional[str]
 
 
+class SourcecodePage(TypedDict):
+    package_in_readme: Optional[bool]
+
+
 class PackageRatingParams(TypedDict):
     sourcerank_breakdown: SourceRankBreakdown
     pypi_package: PypiPackage
+    sourcecode_page: SourcecodePage
 
 
 class PackageRatingCache(TypedDict):
@@ -84,7 +88,10 @@ class Max(ScoreBase):
         return self
 
     def __int__(self) -> int:
-        return self.current_score
+        return self.max_score
+
+    def __str__(self):
+        return f"Max({self.max_score})"
 
     def __repr__(self) -> str:
         return f"<Max current: {self.current_score} max: {self.max_score}>"
@@ -138,6 +145,16 @@ class DateBreakdown(BreakdownBase):
         return ScoreValue(self.default)
 
 
+class NullBoolBreakdown(BreakdownBase):
+    def __init__(self, breakdown_key: str, scores: Dict[bool, ScoreBase]):
+        self.breakdown_key = breakdown_key
+        self.scores = scores
+
+    def get_score(self, package_rating: "PackageRating") -> ScoreBase:
+        value = self.get_breakdown_value(package_rating)
+        return self.scores[value]
+
+
 BREAKDOWN_SCORES = [
     PackageBreakdown("sourcerank_breakdown.basic_info_present", 1),
     PackageBreakdown("sourcerank_breakdown.source_repository_present", 1),
@@ -173,7 +190,11 @@ BREAKDOWN_SCORES = [
             datetime.timedelta(days=360 * 4): 3,
         },
         default=4
-    )
+    ),
+    NullBoolBreakdown(
+        "sourcecode_page.package_in_readme",
+        {True: ScoreValue(1), False: Max(0), None: ScoreValue(0)}
+    ),
 ]
 
 
@@ -235,6 +256,9 @@ class PackageRating:
                 "latest_upload_iso_dt": self.package.pypi.latest_upload_iso_dt,
                 "first_upload_iso_dt": self.package.pypi.first_upload_iso_dt,
             },
+            "sourcecode_page": {
+                "package_in_readme": self.package.sourcecode_page.package_in_readme,
+            }
         }
 
     @cached_property
