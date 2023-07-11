@@ -177,6 +177,11 @@ It indicates what each of the ratings probably means.
 :Description: The status of the project is very bad. Maybe there are vulnerabilities, the project is not
               maintained, etc.
 
+The rating is calculated using the :ref:`scores-breakdown`. However, if the dependecy has a indirect dependency with
+a lower rating, the rating will be lowered to the rating of the indirect dependency. For example, if the dependency
+has a rating of *A*, but has an indirect dependency with a rating of *C*, the rating will be lowered to *C*. These
+cases are indicated using the syntax *A* -> *C*.
+
 Sources
 -------
 This project uses different sources & projects to get the information needed to calculate the score. The sources are:
