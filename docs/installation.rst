@@ -4,7 +4,6 @@
 Installation
 ============
 
-
 Stable release
 --------------
 
@@ -12,7 +11,7 @@ To install requirements-rating, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install requirements_rating
+    $ pip install requirements-rating
 
 This is the preferred method to install requirements-rating, as it will always install the most recent stable release.
 
@@ -32,9 +31,6 @@ You can install other versions from Pypi using::
 For versions that are not in Pypi (it is a development version)::
 
     $ pip install git+https://github.com/Nekmo/requirements-rating@<branch>#egg=requirements-rating
-
-
-
 
 From sources
 ------------

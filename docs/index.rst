@@ -17,6 +17,7 @@ Contents
 
    readme
    installation
+   overview
    usage
    troubleshooting
    modules
