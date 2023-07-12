@@ -131,5 +131,10 @@ def analyze_package(package_names: List[str], cache_dir: str, index_url: str, ex
     results.show_results(dependencies, format_name)
 
 
-if __name__ == '__main__':
+def manage():
+    """Entry point for the console script."""
     catch(cli)()
+
+
+if __name__ == '__main__':
+    manage()
