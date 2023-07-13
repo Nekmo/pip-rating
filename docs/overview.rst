@@ -77,17 +77,25 @@ Below are descriptions of all pip-rating breakdown points.
 :Description: The project have a description, homepage, repository link, keywords... Professional projects
               should have these indicators.
 
+|
+
 :Score: +1
 :Name: *Source repository present*
 :Description: The project have the repository link. Allows the community to check the source code.
+
+|
 
 :Score: +1
 :Name: *Readme present*
 :Description: The project have a readme file. Professional projects should have documentation.
 
+|
+
 :Score: +1
 :Name: *License present*
 :Description: The project have a license file. Professional projects should have a license.
+
+|
 
 :Score: +3
 :Name: *Has muliple versions*
@@ -95,30 +103,42 @@ Below are descriptions of all pip-rating breakdown points.
               one version is probably not maintained and a malicious application probably will not have
               multiple versions.
 
+|
+
 :Score: +log(dependent_projects)*2
 :Name: *Dependent projects*
 :Description: The project have dependent projects. The projects used by the community give confidence and
               security to the life of the project.
+
+|
 
 :Score: +log(dependent_repositories)
 :Name: *Dependent repositories*
 :Description: The project have dependent repositories. The dependences used by the community give confidence
               and security to the life of the project.
 
+|
+
 :Score: +log(stars)/2
 :Name: *Stars*
 :Description: The project have stars. The stars are a good indicator of the popularity of the project.
+
+|
 
 :Score: +log(contributors)/2
 :Name: *Contributors*
 :Description: The project have contributors. The contributors are a good indicator of the popularity of
               the project and ensures that it will be maintained after abandonment by the main developer.
 
+|
+
 :Score: From -4 to +4
 :Name: *Latest upload*
 :Description: The project have a recent upload. The latest upload is a good indicator of the maintenance
               of the project. 4 months ago is +4, 6 months ago is +3, 1 year ago is +2, 1.5 years ago is
               +1, 3 years ago is 0, 4 years ago is -2. Otherwise is -4.
+
+|
 
 :Score: From max(0) to +4
 :Name: *First upload*
@@ -127,10 +147,14 @@ Below are descriptions of all pip-rating breakdown points.
               -3, less than 2 months is -2, less than 3 months is -1, less than half-year is 0, less than
               1 year is +1, less than 2 years is +2, less than 4 years is +3. Otherwise is +4.
 
+|
+
 :Score: Max(0) or zero.
 :Name: *Vulnerabilities*
 :Description: The dependency version have vulnerabilities. If the version has vulnerabilities it is
               considered critical.. If the project have vulnerabilities the score is Max(0) (F).
+
+|
 
 :Score: Max(0), 0 or +1
 :Name: *Package in readme*
@@ -149,28 +173,40 @@ It indicates what each of the ratings probably means.
 :Description: The project is almost perfect. It is well maintained, has a good community and has no
               vulnerabilities.
 
+|
+
 :Score: +25
 :Name: *A*
 :Description: The status of the project is very good. It is well maintained, has a good community and has
               no vulnerabilities.
+
+|
 
 :Score: +20
 :Name: *B*
 :Description: The status of the project is good. It is well maintained, has a good community and has no
               vulnerabilities.
 
+|
+
 :Score: +15
 :Name: *C*
 :Description: The status of the project is not bad. It can still be improved on some points.
+
+|
 
 :Score: +10
 :Name: *D*
 :Description: It is recommended to review the status project.
 
+|
+
 :Score: +5
 :Name: *E*
 :Description: The status of the project is bad. There is probably some problem with maintenance, community,
               etc.
+
+|
 
 :Score: 0
 :Name: *F*
