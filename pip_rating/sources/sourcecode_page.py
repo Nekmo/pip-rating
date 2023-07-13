@@ -16,9 +16,9 @@ if TYPE_CHECKING:
 GITHUB_REPOSITORY_URL = "https://github.com/([^/]+)/([^/]+).*"
 GITHUB_README_URL = "https://api.github.com/repos/{owner}/{repo}/readme"
 PIP_INSTALL_PATTERNS = [
-    re.compile(r"pip3? +install +(?:-U +|--upgrade +|)(\S+)"),
-    re.compile(r"poetry +add +(\S+)"),
-    re.compile(r"pipenv +install +(\S+)"),
+    re.compile(r"pip3? +install +(?:-U +|--upgrade +|)([A-Za-z0-9_\-]+)"),
+    re.compile(r"poetry +add +([A-Za-z0-9_\-]+)"),
+    re.compile(r"pipenv +install +([A-Za-z0-9_\-]+)"),
 ]
 
 
@@ -54,6 +54,8 @@ def search_in_readme(content: str, package_name: str) -> Optional[bool]:
     for pattern in PIP_INSTALL_PATTERNS:
         results = pattern.findall(content)
         for result in results:
+            if result.startswith("-"):
+                continue
             package_in_readme = result.lower().replace("_", "-") == package_name.lower().replace("_", "-")
             if package_in_readme:
                 return True
