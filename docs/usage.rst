@@ -17,12 +17,22 @@ Text
 The text format is a simple, human-readable format. It is the default format. Using this format all direct dependencies
 are described. If there are indirect dependencies that lower the rating, they are indicated in the description.
 
+.. image:: pip-rating-text.gif
+    :width: 100%
+    :target: https://asciinema.org/a/596583
+    :alt: pip-rating text format
+
 Tree
 ----
 The tree format list all direct dependencies and their direct dependencies. The rating is indicated by each dependency.
 Note that a dependency can appear multiple times. This is because a dependency can be a direct dependency of multiple
 other dependencies. However, each dependency can be resolved as different versions. It may happen that one resolved
 version is vulnerable but another is not, with the same package having different ratings.
+
+.. image:: pip-rating-tree.gif
+    :width: 100%
+    :target: https://asciinema.org/a/596597
+    :alt: pip-rating tree format
 
 json
 ----

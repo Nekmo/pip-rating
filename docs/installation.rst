@@ -49,11 +49,11 @@ Or download the `tarball`_:
 
     $ curl -OL https://github.com/Nekmo/pip-rating/tarball/master
 
-Once you have a copy of the source, you can install it with:
+Once you have a copy of the source, you can install it using the source directory:
 
 .. code-block:: console
 
-    $ python setup.py install
+    $ pip install /path/to/pip-rating
 
 
 .. _Github repo: https://github.com/Nekmo/pip-rating
