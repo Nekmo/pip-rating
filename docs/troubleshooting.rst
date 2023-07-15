@@ -1,7 +1,7 @@
 Troubleshooting
 ===============
 
-What is pip rating used for?
+What is pip-rating used for?
 ----------------------------
 Pip-rating is useful in many different scenarios:
 
