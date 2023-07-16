@@ -1,0 +1,34 @@
+name: Docs
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+      - name: Build docs
+        run: |
+          cd docs/
+          make html
+      - name: Publish docs
+        run: |
+          mv _build /tmp/
+          git config --global user.name 'Pip-rating docs'
+          git config --global user.email 'contacto@nekmo.com'
+          git checkout --orphan docs
+          cd ..
+          rm -rf * .gitignore .github
+          mv /tmp/_build/html/* .
+          touch .nojekyll
+          git add --all
+          git commit -am "Updated docs at $(date)" || echo "Already updated"
+          git push --force origin presentation
