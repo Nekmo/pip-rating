@@ -1,3 +1,8 @@
+.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/master/logo.png
+    :width: 100%
+
+|
+
 .. image:: https://img.shields.io/github/actions/workflow/status/Nekmo/pip-rating/test.yml?style=flat-square&maxAge=2592000&branch=master
   :target: https://github.com/Nekmo/pip-rating/actions?query=workflow%3ATests
   :alt: Latest Tests CI build status
@@ -67,8 +72,9 @@ To check the dependencies of a specific requirements file (pip-rating supports t
     $ pip-rating analyze-file <requirements_file>
 
 .. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/master/docs/pip-rating-text.gif
-    :alt: pip-rating text output
     :width: 100%
+    :target: https://asciinema.org/a/596583
+    :alt: pip-rating text output
 
 By default, pip-rating shows the results in *text format*. You can also get the results in other formats like tree:
 
@@ -77,8 +83,9 @@ By default, pip-rating shows the results in *text format*. You can also get the 
     $ pip-rating analyze-file --format tree <requirements_file>
 
 .. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/master/docs/pip-rating-tree.gif
-    :alt: pip-rating tree output
     :width: 100%
+    :target: https://asciinema.org/a/596597
+    :alt: pip-rating tree output
 
 Pip-rating supports other formats like *json* or *only-rating*. You can see more examples in the documentation.
 
@@ -97,7 +104,7 @@ To analyze one or more packages, you can use the command ``pip-rating analyze-pa
 * Rating according to the **age of the project** and the **date of the last release**.
 * Use of **stars**, number of **contributors**, and other criteria to define a **community rating**.
 * Detect the **impersonalization** of the dependencies using cross references.
-* Support for multiple formats: text, tree, json or only-rating.
+* Support for **multiple formats**: text, tree, json or only-rating.
 
 ❤️ Thanks
 =========
