@@ -21,11 +21,10 @@ jobs:
           make html
       - name: Publish docs
         run: |
-          mv _build /tmp/
+          mv ./docs/_build /tmp/
           git config --global user.name 'Pip-rating docs'
           git config --global user.email 'contacto@nekmo.com'
           git checkout --orphan docs
-          cd ..
           rm -rf * .gitignore .github
           mv /tmp/_build/html/* .
           touch .nojekyll
