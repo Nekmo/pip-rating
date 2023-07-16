@@ -30,4 +30,4 @@ jobs:
           touch .nojekyll
           git add --all
           git commit -am "Updated docs at $(date)" || echo "Already updated"
-          git push --force origin presentation
+          git push --force origin docs
