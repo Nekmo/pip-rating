@@ -37,6 +37,19 @@ If you don't have `pip <https://pip.pypa.io>`_ installed, this
 `Python installation guide <http://docs.python-guide.org/en/latest/starting/installation/>`_ can guide you through
 the process. 🐍 **Python 3.7-3.11** are tested and supported.
 
+.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/master/docs/dependency.png
+    :alt: Dependency XKCD comic
+    :align: right
+
+Pip-rating is a tool **to check the security and maintenance of the dependencies of your project**. It will check the
+requirements of your project and **their dependencies recursively**, and will show you a rating for each of them. The
+rating is based on multiple factors, like their *last release date*, the *community activity*, well-known *security
+vulnerabilities* & more.
+
+The rating for each dependency is **limited to the lowest rating of its dependencies**. For example, if you have a
+package with a rating of *A*, but it depends on a package with a rating of *C*, the final rating of the package will be
+*C*. This principle is based on the XKCD comic called `Dependency <https://xkcd.com/2347/>`_.
+
 Usage
 =====
 To check the dependencies of your project (pip-rating will detect your requirements file automatically) run this
@@ -52,6 +65,28 @@ To check the dependencies of a specific requirements file (pip-rating supports t
 .. code-block:: console
 
     $ pip-rating analyze-file <requirements_file>
+
+.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/master/docs/pip-rating-text.gif
+    :alt: pip-rating text output
+    :width: 100%
+
+By default, pip-rating shows the results in *text format*. You can also get the results in other formats like tree:
+
+.. code-block:: console
+
+    $ pip-rating analyze-file --format tree <requirements_file>
+
+.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/master/docs/pip-rating-tree.gif
+    :alt: pip-rating tree output
+    :width: 100%
+
+Pip-rating supports other formats like *json* or *only-rating*. You can see more examples in the documentation.
+
+To analyze one or more packages, you can use the command ``pip-rating analyze-package``:
+
+.. code-block:: console
+
+    $ pip-rating analyze-package <package_name>[ <other_package_name>]
 
 
 Features
