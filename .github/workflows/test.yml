@@ -21,7 +21,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox-gh-actions tomlkit
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-        pip install setuptools>=66.1.0
+        pip install 'setuptools>=66.1.0'
     - name: Test with coverage
       run: |
           python -m unittest discover
