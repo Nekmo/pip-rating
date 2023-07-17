@@ -7,3 +7,4 @@ Pygments
 docutils
 Sphinx
 sphinx-click
+pre-commit
