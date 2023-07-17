@@ -42,6 +42,22 @@ You can see the analysis of your package in more detail using::
 Please note that pip-rating uses open source such as Github. Pip-rating may not detect your source, and some scores may
 not add up to your rating.
 
+why the github limit is exceeded?
+---------------------------------
+Pip-rating uses Github to obtain information about the packages. Github has a limit of 60 requests per hour for
+unauthenticated users. If you exceed this limit, you will see an error like this::
+
+    $ pip-rating
+    GitHub rate limit exceeded. Set GITHUB_TOKEN environment variable to increase the limit.
+
+This error is not critial and you can ignore it. But some information will not be available. If you want to increase
+the limit, you can create a Github token and use it as an environment variable::
+
+    $ export GITHUB_TOKEN=your-token
+    $ pip-rating
+
+For read more about Github tokens, see `this Github documentation <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens>`_.
+
 I am having errors with Pip-rating. How can I report them?
 ----------------------------------------------------------
 You can report it on `the issues page on Github <https://github.com/Nekmo/pip-rating/issues>`_. Before reporting, check

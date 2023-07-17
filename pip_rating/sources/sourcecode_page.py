@@ -1,9 +1,11 @@
 import base64
 import datetime
+import os
 import re
 from functools import cached_property
 from typing import TYPE_CHECKING, TypedDict, Optional
 
+import click
 import requests
 
 from pip_rating.sources.base import SourceBase
@@ -22,13 +24,48 @@ PIP_INSTALL_PATTERNS = [
 ]
 
 
+github_token = os.environ.get("GITHUB_TOKEN", "")
+github_warning = False
+
+
 def get_github_readme(owner: str, repo: str) -> str:
+    """Get the readme content from GitHub."""
+    headers = {}
+    if github_token:
+        headers["Authorization"] = f"Bearer {github_token}"
     try:
-        with requests.get(GITHUB_README_URL.format(owner=owner, repo=repo)) as response:
+        with requests.get(
+            GITHUB_README_URL.format(owner=owner, repo=repo), headers=headers
+        ) as response:
             response.raise_for_status()
             content = response.json().get("content", "")
             return base64.b64decode(content).decode("utf-8") if content else ""
-    except requests.RequestException:
+    except requests.RequestException as e:
+        global github_warning
+        if (
+            e.response is not None
+            and e.response.status_code == 403
+            and e.response.reason == "rate limit exceeded"
+            and not github_token
+            and not github_warning
+        ):
+            click.echo(
+                "GitHub rate limit exceeded. Set GITHUB_TOKEN environment variable to increase the limit.",
+                err=True,
+            )
+            github_warning = True
+        elif (
+            e.response is not None
+            and e.response.status_code == 403
+            and e.response.reason == "rate limit exceeded"
+            and github_token
+            and not github_warning
+        ):
+            click.echo(
+                "GitHub rate limit exceeded. Check your GITHUB_TOKEN environment variable.",
+                err=True,
+            )
+            github_warning = True
         return ""
 
 
