@@ -75,11 +75,15 @@ class Package:
 
     def get_descendant_packages(self) -> Iterator["Package"]:
         for descendant in self.first_node.descendants:
-            yield self.dependencies.add_node_package(descendant)
+            package = self.dependencies.add_node_package(descendant)
+            if package:
+                yield package
 
     def get_child_packages(self) -> Iterator["Package"]:
         for child in self.first_node.children:
-            yield self.dependencies.add_node_package(child)
+            package = self.dependencies.add_node_package(child)
+            if package:
+                yield package
 
     def add_node(self, node: Node):
         self.nodes.add(node)

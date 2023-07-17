@@ -3,6 +3,7 @@
 import os
 import platform
 import sys
+import warnings
 from pathlib import Path
 from typing import Optional, List
 
@@ -10,7 +11,10 @@ import click
 import requests
 from requests import RequestException
 from rich.console import Console
-from pkg_resources import parse_version
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from pkg_resources import parse_version
 
 import pip_rating
 from pip_rating import project_name, __version__
@@ -103,6 +107,13 @@ def common_options(function):
         default="text",
         help=f"Output format. Supported formats: {', '.join(FORMATS)}. By default it uses 'text'.",
     )(function)
+    function = click.option(
+        "--ignore-package",
+        "ignore_packages",
+        type=str,
+        multiple=True,
+        help="Ignore a package. You can use this option multiple times.",
+    )(function)
     return function
 
 
@@ -119,6 +130,7 @@ def analyze_file(
     index_url: str,
     extra_index_url: str,
     format_name: str,
+    ignore_packages: List[str],
 ):
     """Analyze a requirements file. A requirements file is required as argument. By default, it tries to detect the
     type of the file, but you can force it using the ``--file-type`` option. The supported file types are:
@@ -132,7 +144,12 @@ def analyze_file(
         req_file_cls = REQ_FILE_CLASSES[file_type]
     results.status.update(f"Read requirements file [bold green]{file}[/bold green]")
     dependencies = Dependencies(
-        results, req_file_cls(file), cache_dir, index_url, extra_index_url
+        results,
+        req_file_cls(file),
+        cache_dir,
+        index_url,
+        extra_index_url,
+        ignore_packages=ignore_packages,
     )
     results.show_results(dependencies, format_name)
 
@@ -146,6 +163,7 @@ def analyze_package(
     index_url: str,
     extra_index_url: str,
     format_name: str,
+    ignore_packages: List[str],
 ):
     """Analyze a package. A package name is required as argument. The syntax is the same as pip install. For example:
     ``Django==4.2.3``. If only one package is specified, it will show their dependencies in detail.
@@ -153,7 +171,12 @@ def analyze_package(
     results = Results()
     req_file = PackageList(package_names)
     dependencies = Dependencies(
-        results, req_file, cache_dir, index_url, extra_index_url
+        results,
+        req_file,
+        cache_dir,
+        index_url,
+        extra_index_url,
+        ignore_packages=ignore_packages,
     )
     if len(package_names) == 1:
         nodes = dependencies.dependencies_tree.children[0].children
@@ -161,7 +184,12 @@ def analyze_package(
             list(package_names) + [f"{node.name}=={node.version}" for node in nodes]
         )
         dependencies = Dependencies(
-            results, packages, cache_dir, index_url, extra_index_url
+            results,
+            packages,
+            cache_dir,
+            index_url,
+            extra_index_url,
+            ignore_packages=ignore_packages,
         )
     results.show_results(dependencies, format_name)
 

@@ -68,6 +68,8 @@ def add_tree_node(
             f"[bold]:package: {package.name} ({colorize_rating_package(package)})[/bold]"
         )
     for child in package.get_node_from_parent(parent_package).children:
+        if child.name not in dependencies.packages:
+            continue
         subpackage = dependencies.packages[child.name]
         subtree_package = tree.add(
             f"[bold]{child.name} ({colorize_rating_package(subpackage, package)})[/bold]"

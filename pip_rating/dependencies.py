@@ -49,6 +49,7 @@ class Dependencies:
         index_url: Optional[str] = None,
         extra_index_url: Optional[str] = None,
         pre: bool = False,
+        ignore_packages: Optional[list] = None,
     ):
         """Initialize the Dependencies class using the given req_file.
 
@@ -58,6 +59,7 @@ class Dependencies:
         :param index_url: The index URL.
         :param extra_index_url: The extra index URL.
         :param pre: Whether to include pre-release and development versions. Defaults to False.
+        :param ignore_packages: List of packages to ignore.
         """
         self.results = results
         self.req_file = req_file
@@ -66,6 +68,7 @@ class Dependencies:
         self.extra_index_url = extra_index_url
         self.pre = pre
         self.packages = {}  # type: Dict[str, Package]
+        self.ignore_packages = ignore_packages or []
 
     @cached_property
     def package_source(self) -> PackageSource:
@@ -108,8 +111,10 @@ class Dependencies:
         )
         return tree_root
 
-    def add_node_package(self, node: Node) -> Package:
+    def add_node_package(self, node: Node) -> Optional[Package]:
         """Add the package as a node to the packages' dict."""
+        if node.name in self.ignore_packages:
+            return
         if node.name not in self.packages:
             self.packages[node.name] = Package(self, node.name)
         self.packages[node.name].add_node(node)
