@@ -45,6 +45,7 @@ This is the preferred method to install pip-rating, as it will always install th
 If you don't have `pip <https://pip.pypa.io>`_ installed, this
 `Python installation guide <http://docs.python-guide.org/en/latest/starting/installation/>`_ can guide you through
 the process. 🐍 **Python 3.8-3.11** are tested and supported.
+`More info in the documentation <https://docs.nekmo.org/pip-rating/installation.html>`_.
 
 Pip-rating is a tool **to check the security and maintenance of the dependencies of your project**. It will check the
 requirements of your project and **their dependencies recursively**, and will show you a rating for each of them. The
@@ -53,7 +54,8 @@ vulnerabilities* & more.
 
 The rating for each dependency is **limited to the lowest rating of its dependencies**. For example, if you have a
 package with a rating of *A*, but it depends on a package with a rating of *C*, the final rating of the package will be
-*C*. This principle is based on the XKCD comic called `Dependency <https://xkcd.com/2347/>`_.
+*C*. This principle is based on `the XKCD comic called Dependency <https://xkcd.com/2347/>`_.
+Read more about `how pip-rating works <https://docs.nekmo.org/pip-rating/overview.html>`_.
 
 ❓ Usage
 ========
@@ -87,7 +89,8 @@ By default, pip-rating shows the results in *text format*. You can also get the 
     :target: https://asciinema.org/a/596597
     :alt: pip-rating tree output
 
-Pip-rating supports other formats like *json* or *only-rating*. You can see more examples in the documentation.
+Pip-rating supports other formats like *json* or *only-rating*. You can see
+`more examples in the documentation <https://docs.nekmo.org/pip-rating/usage.html>`_.
 
 To analyze one or more packages, you can use the command ``pip-rating analyze-package``:
 
@@ -105,6 +108,8 @@ To analyze one or more packages, you can use the command ``pip-rating analyze-pa
 * Use of **stars**, number of **contributors**, and other criteria to define a **community rating**.
 * Detect the **impersonalization** of the dependencies using cross references.
 * Support for **multiple formats**: text, tree, json or only-rating.
+
+Read more `about pip-rating in the documentation <https://docs.nekmo.org/pip-rating/>`_.
 
 ❤️ Thanks
 =========
