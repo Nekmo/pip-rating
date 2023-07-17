@@ -7,18 +7,18 @@ from rich.console import Console
 
 
 class RequirementsRatingError(Exception):
-    body = ''
+    body = ""
     exit_code = 10
 
-    def __init__(self, extra_body=''):
+    def __init__(self, extra_body=""):
         self.extra_body = extra_body
 
     def __str__(self):
         msg = self.__class__.__name__
         if self.body:
-            msg += ': {}'.format(self.body)
+            msg += ": {}".format(self.body)
         if self.extra_body:
-            msg += ('. {}' if self.body else ': {}').format(self.extra_body)
+            msg += (". {}" if self.body else ": {}").format(self.extra_body)
         return msg
 
 
@@ -44,17 +44,20 @@ def catch(fn):
         try:
             fn(*args, **kwargs)
         except RequirementsRatingMissingReqFile as e:
-            command = sys.argv[0].split('/')[-1]
+            command = sys.argv[0].split("/")[-1]
             console.print(
-                ":exclamation:  Requirements file not found in [bold orange1]{}[/bold orange1]".format(e.directory)
+                ":exclamation:  Requirements file not found in [bold orange1]{}[/bold orange1]".format(
+                    e.directory
+                )
             )
             console.print(
                 ":information:  You can specify the requirements file using "
-                f"\"[bold]{command} analyze-file --req-file [grey53]<requirements_file>[/grey53][/bold]\"",
-                highlight=False
+                f'"[bold]{command} analyze-file --req-file [grey53]<requirements_file>[/grey53][/bold]"',
+                highlight=False,
             )
             sys.exit(e.exit_code)
         except RequirementsRatingError as e:
-            sys.stderr.write('[Error] pip-rating Exception:\n{}\n'.format(e))
+            sys.stderr.write("[Error] pip-rating Exception:\n{}\n".format(e))
             sys.exit(e.exit_code)
+
     return wrap

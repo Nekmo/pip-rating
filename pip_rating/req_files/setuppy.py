@@ -8,6 +8,7 @@ from pip_rating.req_files import ReqFileBase
 
 class SetuppyReqFile(ReqFileBase):
     """Parse install_requires from Setup.py file."""
+
     @classmethod
     def find_in_directory(cls, directory: Union[str, Path]) -> "SetuppyReqFile":
         """Find setup.py in the given directory."""
@@ -26,18 +27,22 @@ class SetuppyReqFile(ReqFileBase):
 
     def get_dependencies(self) -> List[str]:
         """Get the dependencies from the setup.py file."""
-        with patch("setuptools.setup") as mock_setuptools_setup, \
-             patch("distutils.core.setup") as mock_distutils_setup, \
-             open(self.path, "r") as file:
+        with patch("setuptools.setup") as mock_setuptools_setup, patch(
+            "distutils.core.setup"
+        ) as mock_distutils_setup, open(self.path, "r") as file:
             try:
                 exec(file.read())
             except Exception as e:
-                raise RequirementsRatingParseError(f"Error executing '{self.path}' to parse dependencies.") from e
+                raise RequirementsRatingParseError(
+                    f"Error executing '{self.path}' to parse dependencies."
+                ) from e
             mock_setup = None
             if mock_setuptools_setup.call_count:
                 mock_setup = mock_setuptools_setup
             elif mock_distutils_setup.call_count:
                 mock_setup = mock_distutils_setup
             if mock_setup is None:
-                raise RequirementsRatingParseError(f"setup() function not called in '{self.path}'.")
+                raise RequirementsRatingParseError(
+                    f"setup() function not called in '{self.path}'."
+                )
             return mock_setup.mock_calls[0].kwargs.get("install_requires") or []

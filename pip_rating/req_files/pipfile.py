@@ -8,6 +8,7 @@ from pip_rating.req_files import ReqFileBase
 
 class PipfileReqFile(ReqFileBase):
     """Parse packages from Pipfile file."""
+
     @classmethod
     def find_in_directory(cls, directory: Union[str, Path]) -> "PipfileReqFile":
         """Find setup.cfg in the given directory."""

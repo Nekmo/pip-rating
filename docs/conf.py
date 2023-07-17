@@ -9,9 +9,9 @@ import setuptools  # noqa: F401
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'pip-rating'
-copyright = '2023, Nekmo'
-author = 'Nekmo'
+project = "pip-rating"
+copyright = "2023, Nekmo"
+author = "Nekmo"
 
 directory = os.path.dirname(__file__)
 cwd = os.getcwd()
@@ -36,32 +36,32 @@ release = pip_rating.__version__
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx_click.ext']
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.viewcode", "sphinx_click.ext"]
 
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
-html_static_path = ['_static']
+html_theme = "alabaster"
+html_static_path = ["_static"]
 
 html_theme_options = {
-    'logo': 'logo.png',
-    'description': 'Are the dependencies (and their dependencies) of your project secure and maintained?',
-    'github_user': 'Nekmo',
-    'github_repo': 'pip-rating',
-    'github_type': 'star',
-    'github_banner': "forkme_right_darkblue_121621.png",
-    'travis_button': False,
-    'codecov_button': True,
-    'analytics_id': 'UA-62276079-1',
-    'canonical_url': 'http://docs.nekmo.org/pip-rating/'
+    "logo": "logo.png",
+    "description": "Are the dependencies (and their dependencies) of your project secure and maintained?",
+    "github_user": "Nekmo",
+    "github_repo": "pip-rating",
+    "github_type": "star",
+    "github_banner": "forkme_right_darkblue_121621.png",
+    "travis_button": False,
+    "codecov_button": True,
+    "analytics_id": "UA-62276079-1",
+    "canonical_url": "http://docs.nekmo.org/pip-rating/",
 }
 
 html_css_files = [
-    'custom.css',
+    "custom.css",
 ]
 
-html_favicon = 'favicon.ico'
+html_favicon = "favicon.ico"

@@ -18,11 +18,16 @@ def poetry_version(version: Union[str, dict, None]) -> str:
         output = poetry_version(version_value)
         markers = []
         if version.get("python"):
-            python_version = poetry_version(version['python']).split(",")
-            python_version = [re.sub(r"(\d.*)", r"'\1'", version.strip()) for version in python_version]
-            markers.append(" and ".join(f"python_version {version}" for version in python_version))
+            python_version = poetry_version(version["python"]).split(",")
+            python_version = [
+                re.sub(r"(\d.*)", r"'\1'", version.strip())
+                for version in python_version
+            ]
+            markers.append(
+                " and ".join(f"python_version {version}" for version in python_version)
+            )
         if version.get("markers"):
-            markers.append(version['markers'])
+            markers.append(version["markers"])
         if version.get("platform"):
             markers.append(f"platform_system=='{version['platform']}'")
         if markers:
@@ -38,7 +43,7 @@ def poetry_version(version: Union[str, dict, None]) -> str:
             return f">={version},<{version.major}.{version.minor}.{version.micro + 1}"
         else:
             raise RequirementsRatingParseError(f"Invalid version '{version}'")
-    if version and (version[0].isdigit() or version[0].startswith('*.')):
+    if version and (version[0].isdigit() or version[0].startswith("*.")):
         return f"=={version}"
     if version and version[0] in "=<>!":
         return version
@@ -47,6 +52,7 @@ def poetry_version(version: Union[str, dict, None]) -> str:
 
 class PyprojectReqFile(ReqFileBase):
     """Parse dependencies from pyproject.toml file."""
+
     @classmethod
     def find_in_directory(cls, directory: Union[str, Path]) -> "PyprojectReqFile":
         """Find pyproject.toml in the given directory."""
@@ -71,10 +77,15 @@ class PyprojectReqFile(ReqFileBase):
         project_dependencies = data.get("project", {}).get("dependencies") or sentinel
         if project_dependencies is not sentinel:
             return project_dependencies
-        poetry_dependencies = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+        poetry_dependencies = (
+            data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+        )
         if poetry_dependencies is not sentinel:
             return [
                 f"{name}{poetry_version(version)}"
-                for name, version in poetry_dependencies.items() if name != "python"
+                for name, version in poetry_dependencies.items()
+                if name != "python"
             ]
-        raise RequirementsRatingParseError(f"Dependencies not found in the file '{self.path}'.")
+        raise RequirementsRatingParseError(
+            f"Dependencies not found in the file '{self.path}'."
+        )

@@ -60,7 +60,9 @@ class Package:
     def rating(self) -> "PackageRating":
         return PackageRating(self)
 
-    def get_node_from_parent(self, from_package: Optional["Package"]) -> Optional["Node"]:
+    def get_node_from_parent(
+        self, from_package: Optional["Package"]
+    ) -> Optional["Node"]:
         """Given this package and a parent package, return the node in the package that
         is a descendant of the parent package
         """
@@ -91,7 +93,10 @@ class Package:
             "pypi_package": self.pypi.package,
             "audit_vulnerabilities": self.get_audit(node).vulnerabilities,
             "rating": self.rating.as_json(from_package),
-            "dependencies": [self.dependencies.packages[subnode.name].as_json(self) for subnode in node.children],
+            "dependencies": [
+                self.dependencies.packages[subnode.name].as_json(self)
+                for subnode in node.children
+            ],
         }
 
     def __repr__(self) -> str:

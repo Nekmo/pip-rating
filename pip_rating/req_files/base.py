@@ -6,6 +6,7 @@ from pkg_resources import Requirement
 
 class ReqFileBase(list):
     """Base class for requirement files."""
+
     def __init__(self, path: Union[str, Path]):
         """Initialize the requirement file."""
         if isinstance(path, str):
@@ -33,7 +34,9 @@ class ReqFileBase(list):
         req = Requirement(item)
         for package in self:
             package = Requirement(package)
-            if (not req.specifier and package.name.lower() == req.name.lower()) or package == req:
+            if (
+                not req.specifier and package.name.lower() == req.name.lower()
+            ) or package == req:
                 return True
         return False
 

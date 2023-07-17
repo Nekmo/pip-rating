@@ -56,7 +56,9 @@ def search_in_readme(content: str, package_name: str) -> Optional[bool]:
         for result in results:
             if result.startswith("-"):
                 continue
-            package_in_readme = result.lower().replace("_", "-") == package_name.lower().replace("_", "-")
+            package_in_readme = result.lower().replace(
+                "_", "-"
+            ) == package_name.lower().replace("_", "-")
             if package_in_readme:
                 return True
     return package_in_readme
@@ -75,7 +77,9 @@ class SourcecodePage(SourceBase):
         for url in project_urls.values():
             github_match = re.match(GITHUB_REPOSITORY_URL, url)
             if github_match:
-                content = get_github_readme(github_match.group(1), github_match.group(2))
+                content = get_github_readme(
+                    github_match.group(1), github_match.group(2)
+                )
                 break
         package_in_readme = search_in_readme(content, self.package.name)
         return {

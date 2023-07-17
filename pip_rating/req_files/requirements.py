@@ -7,24 +7,35 @@ from pip_rating.req_files.base import ReqFileBase
 
 COMMENT_REGEX = re.compile(r"(#.*)")
 REQUIREMENTS_FILES = [
-    "requirements.in", "requirements.txt",
-    re.compile(r".*requirements.*\.in"), re.compile(r".*requirements.*\.txt")
+    "requirements.in",
+    "requirements.txt",
+    re.compile(r".*requirements.*\.in"),
+    re.compile(r".*requirements.*\.txt"),
 ]
 
 
 class RequirementsReqFile(ReqFileBase):
     """Requirements requirement file."""
+
     @classmethod
     def find_in_directory(cls, directory: Union[str, Path]) -> Optional["ReqFileBase"]:
         """Find requirement file in the given directory."""
         if isinstance(directory, str):
             directory = Path(directory)
         for requirements_file in REQUIREMENTS_FILES:
-            if isinstance(requirements_file, str) and (directory / requirements_file).exists():
+            if (
+                isinstance(requirements_file, str)
+                and (directory / requirements_file).exists()
+            ):
                 return cls(directory / requirements_file)
             if isinstance(requirements_file, re.Pattern):
-                requirements_file = next(filter(lambda file: requirements_file.match(str(file)),
-                                                directory.iterdir()), None)
+                requirements_file = next(
+                    filter(
+                        lambda file: requirements_file.match(str(file)),
+                        directory.iterdir(),
+                    ),
+                    None,
+                )
                 if requirements_file:
                     return cls(requirements_file)
 

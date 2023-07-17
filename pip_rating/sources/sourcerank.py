@@ -70,7 +70,9 @@ class SourceRank(SourceBase):
         return cache["breakdown"]
 
     def get_breakdown(self) -> Iterator[Tuple[str, int]]:
-        with requests.get(SOURCERANK_URL.format(package_name=self.package_name)) as response:
+        with requests.get(
+            SOURCERANK_URL.format(package_name=self.package_name)
+        ) as response:
             response.raise_for_status()
             content = response.content
         soup = BeautifulSoup(content, "html.parser")

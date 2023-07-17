@@ -8,6 +8,7 @@ from pip_rating.req_files import ReqFileBase
 
 class SetupcfgReqFile(ReqFileBase):
     """Parse install_requires from Setup.cfg file."""
+
     @classmethod
     def find_in_directory(cls, directory: Union[str, Path]) -> "SetupcfgReqFile":
         """Find setup.cfg in the given directory."""

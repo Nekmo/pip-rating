@@ -20,7 +20,9 @@ if TYPE_CHECKING:
 
 
 COMMENT_REGEX = re.compile(r"(#.*)")
-version_resolver_threads = os.environ.get("VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2))
+version_resolver_threads = os.environ.get(
+    "VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2)
+)
 
 
 class DependenciesVersionSolver(VersionSolver):
@@ -38,8 +40,16 @@ class Dependencies:
     """
     Dependencies class. This class is responsible for getting the packages tree.
     """
-    def __init__(self, results: "Results", req_file: "ReqFileBase", cache_dir: Optional[str] = None,
-                 index_url: Optional[str] = None, extra_index_url: Optional[str] = None, pre: bool = False):
+
+    def __init__(
+        self,
+        results: "Results",
+        req_file: "ReqFileBase",
+        cache_dir: Optional[str] = None,
+        index_url: Optional[str] = None,
+        extra_index_url: Optional[str] = None,
+        pre: bool = False,
+    ):
         """Initialize the Dependencies class using the given req_file.
 
         :param results: The results instance. This instance will be used to print the results in the console.
@@ -72,7 +82,9 @@ class Dependencies:
         """Get the version solution for the packages. The version solver that finds a
         set of package versions that satisfy the root package's dependencies.
         """
-        solver = DependenciesVersionSolver(self.results, self.package_source, threads=version_resolver_threads)
+        solver = DependenciesVersionSolver(
+            self.results, self.package_source, threads=version_resolver_threads
+        )
         for root_dependency in self.req_file:
             self.package_source.root_dep(root_dependency)
         try:
@@ -110,7 +122,10 @@ class Dependencies:
 
     @cached_property
     def total_size(self):
-        return sum(sum([node.size for node in package.nodes]) for package in self.packages.values())
+        return sum(
+            sum([node.size for node in package.nodes])
+            for package in self.packages.values()
+        )
 
     def get_global_rating_score(self):
         final_global_rating_score = None
@@ -120,5 +135,7 @@ class Dependencies:
             if final_global_rating_score is None:
                 final_global_rating_score = global_rating_score
             else:
-                final_global_rating_score = min(global_rating_score, final_global_rating_score)
+                final_global_rating_score = min(
+                    global_rating_score, final_global_rating_score
+                )
         return final_global_rating_score

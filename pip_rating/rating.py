@@ -103,7 +103,9 @@ class BreakdownBase:
     def get_score(self, package_rating: "PackageRating") -> ScoreBase:
         raise NotImplementedError
 
-    def get_breakdown_value(self, package_rating: "PackageRating") -> Union[int, bool, str]:
+    def get_breakdown_value(
+        self, package_rating: "PackageRating"
+    ) -> Union[int, bool, str]:
         value = package_rating.params
         for subkey in self.breakdown_key.split("."):
             value = value[subkey]
@@ -127,8 +129,9 @@ class PackageBreakdown(BreakdownBase):
 
 
 class DateBreakdown(BreakdownBase):
-
-    def __init__(self, breakdown_key: str, scores: Dict[datetime.timedelta, int], default: int):
+    def __init__(
+        self, breakdown_key: str, scores: Dict[datetime.timedelta, int], default: int
+    ):
         self.breakdown_key = breakdown_key
         self.scores = scores
         self.default = default
@@ -175,7 +178,7 @@ BREAKDOWN_SCORES = [
             datetime.timedelta(days=365 * 3): 0,
             datetime.timedelta(days=365 * 4): -2,
         },
-        default=-4
+        default=-4,
     ),
     DateBreakdown(
         "pypi_package.first_upload_iso_dt",
@@ -189,11 +192,11 @@ BREAKDOWN_SCORES = [
             datetime.timedelta(days=360 * 2): 2,
             datetime.timedelta(days=360 * 4): 3,
         },
-        default=4
+        default=4,
     ),
     NullBoolBreakdown(
         "sourcecode_page.package_in_readme",
-        {True: ScoreValue(1), False: Max(0), None: ScoreValue(0)}
+        {True: ScoreValue(1), False: Max(0), None: ScoreValue(0)},
     ),
 ]
 
@@ -206,7 +209,9 @@ class PackageRatingJson(TypedDict):
 
 
 class PackageRating:
-    def __init__(self, package: "Package", params: Optional[PackageRatingParams] = None):
+    def __init__(
+        self, package: "Package", params: Optional[PackageRatingParams] = None
+    ):
         self.package = package
         if not params and self.is_cache_expired:
             params = self.get_params_from_package()
@@ -217,8 +222,11 @@ class PackageRating:
 
     @property
     def is_cache_expired(self) -> bool:
-        return not self.cache_path.exists() or \
-            self.cache_path.stat().st_mtime < (datetime.datetime.now() - MAX_CACHE_AGE).timestamp()
+        return (
+            not self.cache_path.exists()
+            or self.cache_path.stat().st_mtime
+            < (datetime.datetime.now() - MAX_CACHE_AGE).timestamp()
+        )
 
     @property
     def cache_path(self) -> Path:
@@ -258,7 +266,7 @@ class PackageRating:
             },
             "sourcecode_page": {
                 "package_in_readme": self.package.sourcecode_page.package_in_readme,
-            }
+            },
         }
 
     @cached_property
@@ -284,7 +292,9 @@ class PackageRating:
         return int(value)
 
     @cache
-    def get_vulnerabilities(self, from_package: Optional["Package"] = None) -> List["Vulnerability"]:
+    def get_vulnerabilities(
+        self, from_package: Optional["Package"] = None
+    ) -> List["Vulnerability"]:
         node = None
         if from_package is not None:
             node = self.package.get_node_from_parent(from_package)
@@ -297,15 +307,18 @@ class PackageRating:
         return []
 
     def get_rating_score(self, from_package: Optional["Package"] = None) -> int:
-        self.package.dependencies.results.analizing_package(self.package.name, self.package.dependencies.total_size)
+        self.package.dependencies.results.analizing_package(
+            self.package.name, self.package.dependencies.total_size
+        )
         if len(self.get_vulnerabilities(from_package)):
             return 0
         return self.rating_score
 
     def get_global_rating_score(self, from_package: Optional["Optional"] = None) -> int:
         return min(
-            [self.get_rating_score(from_package)] + list(dict(self.descendant_rating_scores).values()),
-            default=0
+            [self.get_rating_score(from_package)]
+            + list(dict(self.descendant_rating_scores).values()),
+            default=0,
         )
 
     def as_json(self, from_package: Optional["Package"] = None) -> PackageRatingJson:

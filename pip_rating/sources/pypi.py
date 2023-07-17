@@ -90,10 +90,7 @@ class Pypi(SourceBase):
     @cached_property
     def uploads(self) -> List[PypiPackageReleaseUpload]:
         uploads = chain(*list(self.package["releases"].values()))
-        return sorted(
-            uploads,
-            key=lambda upload: upload.get("upload_time_iso_8601")
-        )
+        return sorted(uploads, key=lambda upload: upload.get("upload_time_iso_8601"))
 
     @property
     def latest_upload(self) -> Optional[PypiPackageReleaseUpload]:

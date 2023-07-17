@@ -27,7 +27,9 @@ def vulns_to_dict(vulnerabilities: List[VulnerabilityResult]) -> List[Vulnerabil
             "description": vulnerability.description,
             "fix_versions": [str(version) for version in vulnerability.fix_versions],
             "aliases": list(vulnerability.aliases),
-            "published_iso_dt": vulnerability.published.isoformat() if vulnerability.published else None,
+            "published_iso_dt": vulnerability.published.isoformat()
+            if vulnerability.published
+            else None,
         }
         for vulnerability in vulnerabilities
     ]
@@ -44,7 +46,10 @@ class Audit(SourceBase):
 
     @property
     def cache_file(self) -> Path:
-        return self.cache_dir / f"{self.package_name}_{sha1(self.version.encode('utf-8')).hexdigest()}.json"
+        return (
+            self.cache_dir
+            / f"{self.package_name}_{sha1(self.version.encode('utf-8')).hexdigest()}.json"
+        )
 
     @cached_property
     def vulnerabilities(self) -> List[Vulnerability]:

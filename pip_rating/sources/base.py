@@ -9,6 +9,7 @@ from platformdirs import user_cache_dir
 
 class SourceBase:
     """Base class for all sources"""
+
     source_name: str
     max_cache_age = datetime.timedelta(days=7)
 
@@ -25,8 +26,11 @@ class SourceBase:
 
     @cached_property
     def is_cache_expired(self) -> bool:
-        return not self.cache_file.exists() or \
-            self.cache_file.stat().st_mtime < (datetime.datetime.now() - self.max_cache_age).timestamp()
+        return (
+            not self.cache_file.exists()
+            or self.cache_file.stat().st_mtime
+            < (datetime.datetime.now() - self.max_cache_age).timestamp()
+        )
 
     def get_from_cache(self) -> dict:
         with open(self.cache_file) as file:

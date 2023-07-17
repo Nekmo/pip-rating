@@ -4,7 +4,14 @@ from typing import Optional, TYPE_CHECKING, Union, TypedDict, List
 
 from requests import __version__
 from rich.console import Console
-from rich.progress import Progress, TaskID, TaskProgressColumn, TextColumn, BarColumn, TimeRemainingColumn
+from rich.progress import (
+    Progress,
+    TaskID,
+    TaskProgressColumn,
+    TextColumn,
+    BarColumn,
+    TimeRemainingColumn,
+)
 from rich.status import Status
 from rich.table import Table
 from rich.tree import Tree
@@ -36,18 +43,26 @@ def colorize_rating(score: Union["ScoreBase", int]) -> "RatingLetter":
             return rating_letter
 
 
-def colorize_rating_package(package: "Package", parent_package: Optional["Package"] = None) -> str:
+def colorize_rating_package(
+    package: "Package", parent_package: Optional["Package"] = None
+) -> str:
     """Colorize the rating of the package."""
     colorized_rating = colorize_rating(package.rating.get_rating_score(parent_package))
-    colorized_global_rating = colorize_rating(package.rating.get_global_rating_score(parent_package))
+    colorized_global_rating = colorize_rating(
+        package.rating.get_global_rating_score(parent_package)
+    )
     if colorized_rating > colorized_global_rating:
         return f"{colorized_rating} -> {colorized_global_rating}"
     else:
         return f"{colorized_rating}"
 
 
-def add_tree_node(dependencies: "Dependencies", tree: "Tree", package: "Package",
-                  parent_package: Optional["Package"] = None):
+def add_tree_node(
+    dependencies: "Dependencies",
+    tree: "Tree",
+    package: "Package",
+    parent_package: Optional["Package"] = None,
+):
     if parent_package is None:
         tree = tree.add(
             f"[bold]:package: {package.name} ({colorize_rating_package(package)})[/bold]"
@@ -117,6 +132,7 @@ class JsonResults(TypedDict):
 
 class Results:
     """Print pip-ratings results to the terminal."""
+
     _status: Optional[Status]
     progress: Optional[Progress]
     task: Optional[TaskID]
@@ -154,7 +170,8 @@ class Results:
         spaces = " " * (MIN_PACKAGE_NAME - len(package))
         self.progress.update(
             self.task,
-            description=f"Analizing package [bold blue]{package}[/bold blue]..." + spaces,
+            description=f"Analizing package [bold blue]{package}[/bold blue]..."
+            + spaces,
             advance=1,
             refresh=True,
         )
@@ -162,7 +179,11 @@ class Results:
     def get_global_rating_score(self, dependencies: "Dependencies") -> int:
         global_rating_score = dependencies.get_global_rating_score()
         if self.progress:
-            self.progress.update(self.task, description="[bold green]Analyzed all packages[/bold green]", refresh=True)
+            self.progress.update(
+                self.task,
+                description="[bold green]Analyzed all packages[/bold green]",
+                refresh=True,
+            )
             self.progress.stop()
         return global_rating_score
 
@@ -186,25 +207,41 @@ class Results:
             if package.name not in dependencies.req_file:
                 continue
             package_global_rating_score = package.rating.get_global_rating_score()
-            package_global_rating_score_letter = colorize_rating(package_global_rating_score)
+            package_global_rating_score_letter = colorize_rating(
+                package_global_rating_score
+            )
             rating_score_letter = colorize_rating(package.rating.get_rating_score())
             vulnerabilities = []
             if not package_global_rating_score:
                 vulnerabilities = package.rating.get_vulnerabilities()
-            if vulnerabilities or package_global_rating_score_letter >= rating_score_letter:
+            if (
+                vulnerabilities
+                or package_global_rating_score_letter >= rating_score_letter
+            ):
                 print_score = f"{package_global_rating_score_letter}"
             else:
-                print_score = f"{rating_score_letter} -> {package_global_rating_score_letter}"
+                print_score = (
+                    f"{rating_score_letter} -> {package_global_rating_score_letter}"
+                )
             self.console.print(
-                f":package: Package [bold blue]{package.name}[/bold blue]: " + print_score
+                f":package: Package [bold blue]{package.name}[/bold blue]: "
+                + print_score
             )
             for key, value in package.rating.breakdown_scores:
-                key = key.split(".")[-1].replace("iso_dt", "").replace("_", " ").capitalize()
-                self.console.print(f"  :black_medium-small_square: {key}: {colorize_score(value)}")
+                key = (
+                    key.split(".")[-1]
+                    .replace("iso_dt", "")
+                    .replace("_", " ")
+                    .capitalize()
+                )
+                self.console.print(
+                    f"  :black_medium-small_square: {key}: {colorize_score(value)}"
+                )
             if package_global_rating_score < package.rating.rating_score:
                 low_rating_dependences = [
-                    f'{pkg.name} ({colorize_rating(score)})' for pkg, score
-                    in package.rating.descendant_rating_scores if colorize_rating(score) < rating_score_letter
+                    f"{pkg.name} ({colorize_rating(score)})"
+                    for pkg, score in package.rating.descendant_rating_scores
+                    if colorize_rating(score) < rating_score_letter
                 ]
                 self.console.print(
                     f"  :arrow_lower_right: Low rating dependencies: {', '.join(low_rating_dependences)}"
@@ -222,8 +259,12 @@ class Results:
 
     def show_tree_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
-        req_file_name = str(dependencies.req_file) if dependencies.req_file else "Packages list"
-        tree = Tree(f"[bold]{req_file_name} ({colorize_rating(global_rating_score)})[/bold]")
+        req_file_name = (
+            str(dependencies.req_file) if dependencies.req_file else "Packages list"
+        )
+        tree = Tree(
+            f"[bold]{req_file_name} ({colorize_rating(global_rating_score)})[/bold]"
+        )
         for package in dependencies.packages.values():
             if package.name not in dependencies.req_file:
                 continue
@@ -232,14 +273,18 @@ class Results:
 
     def get_json_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
-        packages = [package for package in dependencies.packages.values() if package.name in dependencies.req_file]
+        packages = [
+            package
+            for package in dependencies.packages.values()
+            if package.name in dependencies.req_file
+        ]
         return {
             "requirements": dependencies.req_file,
             "updated_at": datetime.datetime.now().isoformat(),
             "schema_version": __version__,
             "global_rating_letter": colorize_rating(global_rating_score).letter,
             "global_rating_score": global_rating_score,
-            "packages": [package.as_json() for package in packages]
+            "packages": [package.as_json() for package in packages],
         }
 
     def show_json_results(self, dependencies: "Dependencies"):
