@@ -7,4 +7,5 @@ Pygments
 docutils
 Sphinx
 sphinx-click
+codecov
 pre-commit

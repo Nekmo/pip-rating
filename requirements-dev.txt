@@ -31,6 +31,10 @@ click==8.1.4
     #   black
     #   pipgrip
     #   sphinx-click
+codecov==2.1.13
+    # via -r requirements-dev.in
+coverage==7.2.7
+    # via codecov
 cyclonedx-python-lib==4.0.1
     # via pip-audit
 defusedxml==0.7.1
@@ -120,6 +124,7 @@ requests==2.31.0
     # via
     #   -r requirements.in
     #   cachecontrol
+    #   codecov
     #   pip-audit
     #   sphinx
 rich==13.4.2
