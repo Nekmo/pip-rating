@@ -204,3 +204,13 @@ Only-rating
 -----------
 This only returns the rating. It is useful for automation or to be used by other applications. Possible outputs: *S*,
 *A*, *B*, *C*, *D*, *E*, *F*.
+
+Ignore packages
+===============
+You can ignore packages using the ``--ignore-package`` option. You can specify multiple packages by using the option
+multiple times. For example:
+
+    $ pip-rating analyze-file --ignore-package mypackage --ignore-package mypackage2 requirements.txt
+
+Ignored packages will not be analyzed and their dependencies will not be parsed. The dependencies of the ignore package
+will be analyzed if they are in the requirements file or if it is a dependency of another package.
