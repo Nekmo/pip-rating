@@ -7,19 +7,19 @@
   :target: https://github.com/Nekmo/pip-rating/actions?query=workflow%3ATests
   :alt: Latest Tests CI build status
 
-.. image:: https://img.shields.io/pypi/v/pip-rating.svg?style=flat-srating
+.. image:: https://img.shields.io/pypi/v/pip-rating.svg?style=flat-square
   :target: https://pypi.org/project/requirements-srating
   :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/pypi/pyversions/pip-rating.svg?style=flat-srating
+.. image:: https://img.shields.io/pypi/pyversions/pip-rating.svg?style=flat-square
   :target: https://pypi.org/project/requirements-srating
   :alt: Python versions
 
-.. image:: https://img.shields.io/codeclimate/github/Nekmo/pip-rating.svg?style=flat-srating
+.. image:: https://img.shields.io/codeclimate/maintainability/Nekmo/pip-rating.svg?style=flat-square
   :target: https://codeclimate.com/github/Nekmo/pip-rating
   :alt: Code Climate
 
-.. image:: https://img.shields.io/codecov/c/github/Nekmo/pip-rating/master.svg?style=flat-srating
+.. image:: https://img.shields.io/codecov/c/github/Nekmo/pip-rating/master.svg?style=flat-square
   :target: https://codecov.io/github/Nekmo/pip-rating
   :alt: Test coverage
 
