@@ -81,14 +81,17 @@ class Max(ScoreBase):
     def __add__(self, other: ScoreBase):
         if isinstance(other, ScoreValue):
             score = self.current_score + int(other)
-            self.current_score = max(self.max_score, score)
+            self.current_score = min(self.max_score, score)
         if isinstance(other, Max) and other.max_score < self.max_score:
-            other.current_score = self.current_score
+            other.current_score += self.current_score
             return other
+        if isinstance(other, Max) and other.max_score > self.max_score:
+            self.current_score += other.current_score
+            return self
         return self
 
     def __int__(self) -> int:
-        return self.max_score
+        return min(self.current_score, self.max_score)
 
     def __str__(self):
         return f"Max({self.max_score})"
