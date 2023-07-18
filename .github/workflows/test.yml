@@ -24,5 +24,5 @@ jobs:
         pip install 'setuptools>=66.1.0'
     - name: Test with coverage
       run: |
-          python -m unittest discover
+          coverage run -m unittest discover
           codecov

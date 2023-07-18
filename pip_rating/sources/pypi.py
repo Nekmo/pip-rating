@@ -14,7 +14,7 @@ class PyPackageInfo(TypedDict):
     author: str
     author_email: str
     bugtrack_url: str
-    classifiers: list[str]
+    classifiers: List[str]
     description: str
     description_content_type: str
     docs_url: str
@@ -31,7 +31,7 @@ class PyPackageInfo(TypedDict):
     project_url: str
     project_urls: dict[str, str]
     release_url: str
-    requires_dist: list[str]
+    requires_dist: List[str]
     requires_python: Optional[str]
     summary: str
     version: str
@@ -60,7 +60,7 @@ class PypiPackageReleaseUpload(TypedDict):
 class PypiPackage(TypedDict):
     info: PyPackageInfo
     last_serial: int
-    releases: dict[str, list[PypiPackageReleaseUpload]]
+    releases: dict[str, List[PypiPackageReleaseUpload]]
 
 
 class PypiCacheDict(TypedDict):
