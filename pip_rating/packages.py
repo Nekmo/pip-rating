@@ -29,8 +29,8 @@ class Package:
     nodes: Set[Node]
 
     def __init__(self, dependencies: "Dependencies", name: str):
-        self.name = name
         self.dependencies = dependencies
+        self.name = name
         self.nodes = set()
 
     @cached_property
