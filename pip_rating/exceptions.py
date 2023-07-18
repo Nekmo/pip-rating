@@ -57,7 +57,7 @@ def catch(fn):
             )
             sys.exit(e.exit_code)
         except RequirementsRatingError as e:
-            sys.stderr.write("[Error] pip-rating Exception:\n{}\n".format(e))
+            console.print("[Error] pip-rating Exception:\n{}\n".format(e))
             sys.exit(e.exit_code)
 
     return wrap
