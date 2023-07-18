@@ -87,3 +87,102 @@ class TestPackage(unittest.TestCase):
         rating = package.rating
         mock_package_rating.assert_called_once_with(package)
         self.assertEqual(mock_package_rating.return_value, rating)
+
+    def test_get_node_from_parent(self):
+        """Test the get_node_from_parent method of Package."""
+        mock_dependencies = Mock()
+        with self.subTest("Test with from_package is None"):
+            mock_node = Mock()
+            package = Package(mock_dependencies, "name")
+            package.nodes = {mock_node}
+            self.assertEqual(mock_node, package.get_node_from_parent())
+        with self.subTest("Test with from_package is not None"):
+            mock_node = Mock()
+            parent_package = Mock()
+            mock_parent_node = Mock()
+            mock_parent_node.descendants = {mock_node}
+            parent_package.nodes = [mock_parent_node]
+            package = Package(mock_dependencies, "name")
+            package.nodes = {mock_node}
+            self.assertEqual(mock_node, package.get_node_from_parent(parent_package))
+
+    def test_get_descendant_packages(self):
+        """Test the get_descendant_packages method of Package."""
+        mock_descendant = Mock()
+        mock_node = Mock()
+        mock_node.descendants = {mock_descendant}
+        mock_dependencies = Mock()
+        package = Package(mock_dependencies, "name")
+        package.nodes = {mock_node}
+        descendant_packages = list(package.get_descendant_packages())
+        self.assertEqual(
+            [mock_dependencies.add_node_package.return_value], descendant_packages
+        )
+        mock_dependencies.add_node_package.assert_called_once_with(mock_descendant)
+
+    def test_get_child_packages(self):
+        """Test the get_child_packages method of Package."""
+        mock_child = Mock()
+        mock_node = Mock()
+        mock_node.children = {mock_child}
+        mock_dependencies = Mock()
+        package = Package(mock_dependencies, "name")
+        package.nodes = {mock_node}
+        child_packages = list(package.get_child_packages())
+        self.assertEqual(
+            [mock_dependencies.add_node_package.return_value], child_packages
+        )
+        mock_dependencies.add_node_package.assert_called_once_with(mock_child)
+
+    def test_add_node(self):
+        """Test the add_node method of Package."""
+        mock_dependencies = Mock()
+        package = Package(mock_dependencies, "name")
+        mock_node = Mock()
+        package.add_node(mock_node)
+        self.assertEqual({mock_node}, package.nodes)
+
+    @patch("pip_rating.packages.Package.rating")
+    @patch("pip_rating.packages.Package.get_audit")
+    @patch("pip_rating.packages.Package.pypi")
+    @patch("pip_rating.packages.Package.sourcerank")
+    def test_as_json(
+        self,
+        mock_sourcerank: Mock,
+        mock_pypi: Mock,
+        mock_get_audit: Mock,
+        mock_rating: Mock,
+    ):
+        """Test the as_json method of Package."""
+        mock_node = Mock()
+        mock_node_child = Mock()
+        mock_node_child.name = "dependency"
+        mock_node.children = {mock_node_child}
+        mock_dependency = Mock()
+        mock_dependencies = Mock()
+        mock_dependencies.packages = {"dependency": mock_dependency}
+        name = "name"
+        package = Package(mock_dependencies, name)
+        package.nodes = {mock_node}
+        self.assertEqual(
+            {
+                "name": name,
+                "version": mock_node.version,
+                "sourcerank_breakdown": mock_sourcerank.breakdown,
+                "pypi_package": mock_pypi.package,
+                "audit_vulnerabilities": mock_get_audit.return_value.vulnerabilities,
+                "rating": mock_rating.as_json.return_value,
+                "dependencies": [mock_dependency.as_json.return_value],
+            },
+            package.as_json(),
+        )
+        mock_get_audit.assert_called_once_with(mock_node)
+        mock_rating.as_json.assert_called_once_with(None)
+        mock_dependency.as_json.assert_called_once_with(package)
+
+    def test_repr(self):
+        """Test the __repr__ method of Package."""
+        mock_dependencies = Mock()
+        name = "name"
+        package = Package(mock_dependencies, name)
+        self.assertEqual(f"<Package {name}>", repr(package))

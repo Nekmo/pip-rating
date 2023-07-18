@@ -61,7 +61,7 @@ class Package:
         return PackageRating(self)
 
     def get_node_from_parent(
-        self, from_package: Optional["Package"]
+        self, from_package: Optional["Package"] = None
     ) -> Optional["Node"]:
         """Given this package and a parent package, return the node in the package that
         is a descendant of the parent package
