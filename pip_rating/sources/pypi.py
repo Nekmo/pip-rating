@@ -1,7 +1,7 @@
 import datetime
 from functools import cached_property
 from itertools import chain
-from typing import TypedDict, Optional, List
+from typing import TypedDict, Optional, List, Dict
 
 import requests
 
@@ -19,7 +19,7 @@ class PyPackageInfo(TypedDict):
     description_content_type: str
     docs_url: str
     download_url: str
-    downloads: dict[str, int]
+    downloads: Dict[str, int]
     home_page: str
     keywords: str
     license: str
@@ -29,7 +29,7 @@ class PyPackageInfo(TypedDict):
     package_url: str
     platform: Optional[str]
     project_url: str
-    project_urls: dict[str, str]
+    project_urls: Dict[str, str]
     release_url: str
     requires_dist: List[str]
     requires_python: Optional[str]
@@ -41,7 +41,7 @@ class PyPackageInfo(TypedDict):
 
 class PypiPackageReleaseUpload(TypedDict):
     comment_text: str
-    digests: dict[str, str]
+    digests: Dict[str, str]
     downloads: int
     filename: str
     has_sig: bool
@@ -60,7 +60,7 @@ class PypiPackageReleaseUpload(TypedDict):
 class PypiPackage(TypedDict):
     info: PyPackageInfo
     last_serial: int
-    releases: dict[str, List[PypiPackageReleaseUpload]]
+    releases: Dict[str, List[PypiPackageReleaseUpload]]
 
 
 class PypiCacheDict(TypedDict):
