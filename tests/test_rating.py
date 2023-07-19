@@ -250,3 +250,235 @@ class TestPackageRating(unittest.TestCase):
             },
             mock_open_.return_value.__enter__.return_value,
         )
+
+    @patch("pip_rating.rating.PackageRating.save_to_cache")
+    @patch("pip_rating.rating.PackageRating.get_from_cache")
+    @patch("pip_rating.rating.PackageRating.get_from_cache")
+    def test_get_params_from_cache(
+        self,
+        mock_init: MagicMock,
+        mock_get_from_cache: MagicMock,
+        mock_save_to_cache: MagicMock,
+    ):
+        """Test the get_params_from_cache method of PackageRating."""
+        mock_init.return_value = None
+        with self.subTest("Cache expired"):
+            mock_params = Mock()
+            mock_get_from_cache.return_value = None
+            mock_save_to_cache.return_value = {"params": mock_params}
+            package_rating = PackageRating(Mock())
+            self.assertEqual(mock_params, package_rating.get_params_from_cache())
+        with self.subTest("Cache not expired"):
+            mock_params = Mock()
+            mock_get_from_cache.return_value = {"params": mock_params}
+            package_rating = PackageRating(Mock())
+            self.assertEqual(mock_params, package_rating.get_params_from_cache())
+
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_get_params_from_package(self, mock_init: MagicMock):
+        """Test the get_params_from_package method of PackageRating."""
+        mock_init.return_value = None
+        mock_package = Mock()
+        package_rating = PackageRating(mock_package)
+        package_rating.package = mock_package
+        self.assertEqual(
+            {
+                "sourcerank_breakdown": mock_package.sourcerank.breakdown,
+                "pypi_package": {
+                    "latest_upload_iso_dt": mock_package.pypi.latest_upload_iso_dt,
+                    "first_upload_iso_dt": mock_package.pypi.first_upload_iso_dt,
+                },
+                "sourcecode_page": {
+                    "package_in_readme": mock_package.sourcecode_page.package_in_readme,
+                },
+            },
+            package_rating.get_params_from_package(),
+        )
+
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_breakdown_scores(self, mock_init: MagicMock):
+        """Test the breakdown_scores method of PackageRating."""
+        mock_init.return_value = None
+        mock_breakdown = Mock()
+        with patch("pip_rating.rating.BREAKDOWN_SCORES", [mock_breakdown]):
+            mock_package = Mock()
+            package_rating = PackageRating(mock_package)
+            package_rating.package = mock_package
+            breakdown_scores = package_rating.breakdown_scores
+            self.assertEqual(
+                [(mock_breakdown.breakdown_key, mock_breakdown.get_score.return_value)],
+                breakdown_scores,
+            )
+            mock_breakdown.get_score.assert_called_once_with(package_rating)
+
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_descendant_rating_scores(self, mock_init: MagicMock):
+        """Test the descendant_rating_scores method of PackageRating."""
+        mock_init.return_value = None
+        mock_package = Mock()
+        mock_descendant = MagicMock()
+        mock_package.get_descendant_packages.return_value = [mock_descendant]
+        package_rating = PackageRating(mock_package)
+        package_rating.package = mock_package
+        descendant_rating_scores = package_rating.descendant_rating_scores
+        self.assertEqual(
+            [(mock_descendant, mock_descendant.rating.get_rating_score.return_value)],
+            descendant_rating_scores,
+        )
+        mock_package.get_descendant_packages.assert_called_once_with()
+        mock_descendant.rating.get_rating_score.assert_called_once_with(mock_package)
+
+    @patch(
+        "pip_rating.rating.PackageRating.breakdown_scores", new_callable=PropertyMock
+    )
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_rating_score(self, mock_init: MagicMock, mock_breakdown_scores: MagicMock):
+        """Test the rating_score method of PackageRating."""
+        mock_init.return_value = None
+        mock_breakdown_scores.return_value = [("key", ScoreValue(1))]
+        mock_package = Mock()
+        package_rating = PackageRating(mock_package)
+        package_rating.package = mock_package
+        rating_score = package_rating.rating_score
+        self.assertEqual(1, rating_score)
+
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_get_vulnerabilities(self, mock_init: MagicMock):
+        """Test the get_vulnerabilities method of PackageRating."""
+        mock_init.return_value = None
+        mock_package = Mock()
+        with self.subTest("from_package is None"):
+            package_rating = PackageRating(mock_package)
+            package_rating.package = mock_package
+            vulnerabilities = package_rating.get_vulnerabilities()
+            mock_package.get_node_from_parent.assert_not_called()
+            self.assertEqual(
+                mock_package.get_audit.return_value.vulnerabilities, vulnerabilities
+            )
+            mock_package.get_audit.assert_called_once_with(mock_package.first_node)
+        mock_package.reset_mock()
+        with self.subTest("from_package is not None"):
+            mock_from_package = Mock()
+            package_rating = PackageRating(mock_package)
+            package_rating.package = mock_package
+            vulnerabilities = package_rating.get_vulnerabilities(mock_from_package)
+            mock_package.get_node_from_parent.assert_called_once_with(mock_from_package)
+            self.assertEqual(
+                mock_package.get_audit.return_value.vulnerabilities, vulnerabilities
+            )
+            mock_package.get_audit.assert_called_once_with(
+                mock_package.get_node_from_parent.return_value
+            )
+        mock_package.reset_mock()
+        with self.subTest("from_package is not None and node is None"):
+            mock_from_package = Mock()
+            mock_package.get_node_from_parent.return_value = None
+            package_rating = PackageRating(mock_package)
+            package_rating.package = mock_package
+            vulnerabilities = package_rating.get_vulnerabilities(mock_from_package)
+            mock_package.get_node_from_parent.assert_called_once_with(mock_from_package)
+            self.assertEqual([], vulnerabilities)
+            mock_package.get_audit.assert_not_called()
+
+    @patch("pip_rating.rating.PackageRating.get_vulnerabilities")
+    @patch("pip_rating.rating.PackageRating.rating_score", new_callable=PropertyMock)
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_get_rating_score(
+        self,
+        mock_init: MagicMock,
+        mock_rating_score: MagicMock,
+        mock_get_vulnerabilities: MagicMock,
+    ):
+        """Test the get_rating_score method of PackageRating."""
+        mock_init.return_value = None
+        mock_package = Mock()
+        mock_from_package = Mock()
+        package_rating = PackageRating(mock_package)
+        package_rating.package = mock_package
+        with self.subTest("No vulnerabilities"):
+            mock_get_vulnerabilities.return_value = []
+            rating_score = package_rating.get_rating_score(mock_from_package)
+            self.assertEqual(mock_rating_score.return_value, rating_score)
+            mock_package.dependencies.results.analizing_package.assert_called_once_with(
+                mock_package.name,
+                mock_package.dependencies.total_size,
+            )
+            mock_get_vulnerabilities.assert_called_once_with(mock_from_package)
+        mock_package.reset_mock()
+        mock_get_vulnerabilities.reset_mock()
+        with self.subTest("With vulnerabilities"):
+            mock_get_vulnerabilities.return_value = [Mock()]
+            rating_score = package_rating.get_rating_score(mock_from_package)
+            self.assertEqual(0, rating_score)
+            mock_package.dependencies.results.analizing_package.assert_called_once_with(
+                mock_package.name,
+                mock_package.dependencies.total_size,
+            )
+            mock_get_vulnerabilities.assert_called_once_with(mock_from_package)
+
+    @patch(
+        "pip_rating.rating.PackageRating.descendant_rating_scores",
+        new_callable=PropertyMock,
+    )
+    @patch("pip_rating.rating.PackageRating.get_rating_score")
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_get_global_rating_score(
+        self,
+        mock_init: MagicMock,
+        mock_get_rating_score: MagicMock,
+        mock_descendant_rating_scores: MagicMock,
+    ):
+        """Test the get_global_rating_score method of PackageRating."""
+        mock_init.return_value = None
+        mock_package = Mock()
+        mock_from_package = Mock()
+        with self.subTest("The package has the minimum score"):
+            mock_get_rating_score.return_value = 1
+            mock_descendant_rating_scores.return_value = [("key", 2)]
+            package_rating = PackageRating(mock_package)
+            package_rating.package = mock_package
+            global_rating_score = package_rating.get_global_rating_score(
+                mock_from_package
+            )
+            self.assertEqual(1, global_rating_score)
+        with self.subTest("The dependency has the minimum score"):
+            mock_get_rating_score.return_value = 2
+            mock_descendant_rating_scores.return_value = [("key", 1)]
+            package_rating = PackageRating(mock_package)
+            package_rating.package = mock_package
+            global_rating_score = package_rating.get_global_rating_score(
+                mock_from_package
+            )
+            self.assertEqual(1, global_rating_score)
+
+    @patch("pip_rating.rating.PackageRating.get_vulnerabilities")
+    @patch("pip_rating.rating.PackageRating.get_global_rating_score")
+    @patch("pip_rating.rating.PackageRating.get_rating_score")
+    @patch("pip_rating.rating.PackageRating.__init__")
+    def test_as_json(
+        self,
+        mock_init: MagicMock,
+        mock_get_rating_score: MagicMock,
+        mock_get_global_rating_score: MagicMock,
+        mock_get_vulnerabilities: MagicMock,
+    ):
+        """Test the as_json method of PackageRating."""
+        mock_init.return_value = None
+        mock_package = Mock()
+        mock_from_package = Mock()
+        package_rating = PackageRating(mock_package)
+        package_rating.package = mock_package
+        package_rating.params = Mock()
+        package_rating_json = package_rating.as_json(mock_from_package)
+        self.assertEqual(
+            {
+                "rating_score": mock_get_rating_score.return_value,
+                "global_rating_score": mock_get_global_rating_score.return_value,
+                "vulnerabilities": mock_get_vulnerabilities.return_value,
+                "params": package_rating.params,
+            },
+            package_rating_json,
+        )
+        mock_get_rating_score.assert_called_once_with(mock_from_package)
+        mock_get_global_rating_score.assert_called_once_with(mock_from_package)
+        mock_get_vulnerabilities.assert_called_once_with(mock_from_package)
