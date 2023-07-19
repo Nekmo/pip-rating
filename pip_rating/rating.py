@@ -120,12 +120,12 @@ class PackageBreakdown(BreakdownBase):
         self.breakdown_key = breakdown_key
         self._score = score
 
-    def get_score(self, package_rating: "PackageRating") -> ScoreBase:
+    def get_score(self, package_rating: "PackageRating") -> ScoreValue:
         value = self.get_breakdown_value(package_rating)
         if value and self._score:
             return ScoreValue(self._score)
         if not value and self._score:
-            return ScoreValue(0)
+            return ScoreValue(0)  # the default is 0
         if isinstance(value, bool):
             raise ValueError("Cannot calculate score for boolean value")
         return ScoreValue(value)
@@ -139,7 +139,7 @@ class DateBreakdown(BreakdownBase):
         self.scores = scores
         self.default = default
 
-    def get_score(self, package_rating: "PackageRating") -> ScoreBase:
+    def get_score(self, package_rating: "PackageRating") -> ScoreValue:
         iso_dt = self.get_breakdown_value(package_rating)
         if not iso_dt:
             return ScoreValue(0)

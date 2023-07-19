@@ -1,3 +1,4 @@
+import datetime
 import json
 import time
 import unittest
@@ -10,6 +11,10 @@ from pip_rating.rating import (
     Max,
     PackageRating,
     RATING_CACHE_DIR,
+    BreakdownBase,
+    PackageBreakdown,
+    DateBreakdown,
+    NullBoolBreakdown,
 )
 
 
@@ -51,9 +56,14 @@ class TestScoreValue(unittest.TestCase):
 
     def test_add(self):
         """Test the __add__ method of ScoreValue."""
-        score_value_1 = ScoreValue(1)
-        score_value_2 = ScoreValue(2)
-        self.assertEqual(3, int(score_value_1 + score_value_2))
+        with self.subTest("Test adding ScoreValue"):
+            score_value_1 = ScoreValue(1)
+            score_value_2 = ScoreValue(2)
+            self.assertEqual(3, int(score_value_1 + score_value_2))
+        with self.subTest("Test adding Max"):
+            score_value = ScoreValue(1)
+            max_score = Max(2)
+            self.assertEqual(max_score, score_value + max_score)
 
     def test_int(self):
         """Test the __int__ method of ScoreValue."""
@@ -114,6 +124,136 @@ class TestMax(unittest.TestCase):
         """Test the __repr__ method of Max."""
         max_score = Max(0, 1)
         self.assertEqual("<Max current: 1 max: 0>", repr(max_score))
+
+
+class TestBreakdownBase(unittest.TestCase):
+    """Tests for the BreakdownBase class."""
+
+    def test_get_score(self):
+        """Test the get_score method of BreakdownBase."""
+        mock_package_rating = Mock()
+        breakdown_base = BreakdownBase()
+        with self.assertRaises(NotImplementedError):
+            breakdown_base.get_score(mock_package_rating)
+
+    def test_get_breakdown_value(self):
+        """Test the get_breakdown_value method of BreakdownBase."""
+        mock_package_rating = Mock()
+        mock_package_rating.params = {"key": {"subkey": {"value": "test_value"}}}
+        breakdown_base = BreakdownBase()
+        breakdown_base.breakdown_key = "key.subkey.value"
+        breakdown_value = breakdown_base.get_breakdown_value(mock_package_rating)
+        self.assertEqual("test_value", breakdown_value)
+
+
+class TestPackageBreakdown(unittest.TestCase):
+    """Tests for the PackageBreakdown class."""
+
+    def test_init(self):
+        """Test the __init__ method of PackageBreakdown."""
+        package_breakdown = PackageBreakdown("test_key", 10)
+        self.assertEqual("test_key", package_breakdown.breakdown_key)
+        self.assertEqual(10, package_breakdown._score)
+
+    def test_get_score(self):
+        """Test the get_score method of PackageBreakdown."""
+        mock_package_rating = Mock()
+        with self.subTest("Test with value True and score"):
+            mock_package_rating.params = {"key": {"subkey": {"value": True}}}
+            package_breakdown = PackageBreakdown("key.subkey.value", 10)
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(10).value, score.value)
+        with self.subTest("Test with value True and score"):
+            mock_package_rating.params = {"key": {"subkey": {"value": True}}}
+            package_breakdown = PackageBreakdown("key.subkey.value", 1)
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(1).value, score.value)
+        with self.subTest("Test with value False and score"):
+            mock_package_rating.params = {"key": {"subkey": {"value": False}}}
+            package_breakdown = PackageBreakdown("key.subkey.value", 10)
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(0).value, score.value)
+        with self.subTest("Test with value True and no score"):
+            mock_package_rating.params = {"key": {"subkey": {"value": True}}}
+            package_breakdown = PackageBreakdown("key.subkey.value")
+            with self.assertRaises(ValueError):
+                package_breakdown.get_score(mock_package_rating)
+        with self.subTest("Test with integer value and no score"):
+            mock_package_rating.params = {"key": {"subkey": {"value": 5}}}
+            package_breakdown = PackageBreakdown("key.subkey.value")
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(5).value, score.value)
+
+
+class TestDateBreakdown(unittest.TestCase):
+    """Tests for the DateBreakdown class."""
+
+    def test_init(self):
+        """Test the __init__ method of DateBreakdown."""
+        breakdown_key = "test_key"
+        scores = {datetime.timedelta(days=1): 1}
+        default = 10
+        date_breakdown = DateBreakdown(breakdown_key, scores, default)
+        self.assertEqual(breakdown_key, date_breakdown.breakdown_key)
+        self.assertEqual(scores, date_breakdown.scores)
+        self.assertEqual(default, date_breakdown.default)
+
+    def test_get_score(self):
+        """Test the get_score method of DateBreakdown."""
+        with self.subTest("Test without date"):
+            mock_package_rating = Mock()
+            mock_package_rating.params = {"key": {"subkey": {"value": None}}}
+            package_breakdown = DateBreakdown("key.subkey.value", {}, 1)
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(0).value, score.value)
+        with self.subTest("Test with date below scores"):
+            mock_package_rating = Mock()
+            mock_package_rating.params = {
+                "key": {
+                    "subkey": {
+                        "value": datetime.datetime.now(
+                            datetime.timezone.utc
+                        ).isoformat()
+                    }
+                }
+            }
+            scores = {datetime.timedelta(days=1): 1}
+            package_breakdown = DateBreakdown("key.subkey.value", scores, 2)
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(1).value, score.value)
+        with self.subTest("Test with date above scores"):
+            mock_package_rating = Mock()
+            value = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
+                days=2
+            )
+            mock_package_rating.params = {
+                "key": {"subkey": {"value": value.isoformat()}}
+            }
+            scores = {datetime.timedelta(days=1): 1}
+            package_breakdown = DateBreakdown("key.subkey.value", scores, 2)
+            score = package_breakdown.get_score(mock_package_rating)
+            self.assertEqual(ScoreValue(2).value, score.value)
+
+
+class TestNullBoolBreakdown(unittest.TestCase):
+    """Tests for the NullBoolBreakdown class."""
+
+    def test_init(self):
+        """Test the __init__ method of NullBoolBreakdown."""
+        breakdown_key = "test_key"
+        scores = {True: ScoreValue(1)}
+        null_bool_breakdown = NullBoolBreakdown(breakdown_key, scores)
+        self.assertEqual(breakdown_key, null_bool_breakdown.breakdown_key)
+        self.assertEqual(scores, null_bool_breakdown.scores)
+
+    def test_get_score(self):
+        """Tests the get_score method of NullBoolBreakdown."""
+        mock_package_rating = Mock()
+        mock_package_rating.params = {"key": {"subkey": {"value": True}}}
+        score_value = ScoreValue(1)
+        null_bool_breakdown = NullBoolBreakdown("key.subkey.value", {True: score_value})
+        score = null_bool_breakdown.get_score(mock_package_rating)
+        self.assertEqual(score_value, score)
 
 
 class TestPackageRating(unittest.TestCase):
