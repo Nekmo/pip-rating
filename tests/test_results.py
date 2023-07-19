@@ -8,6 +8,7 @@ from pip_rating.results import (
     colorize_rating,
     colorize_rating_package,
     add_tree_node,
+    RatingLetter,
 )
 
 
@@ -86,3 +87,59 @@ class TestAddTreeNode(unittest.TestCase):
                 mock.call(mock_subpackage, mock_package),
             ]
         )
+
+
+class TestRatingLetter(unittest.TestCase):
+    """Tests for the RatingLetter class."""
+
+    def test_init(self):
+        """Test the __init__ method of RatingLetter."""
+        letter = "A"
+        score = 25
+        color = "green"
+        rating_letter = RatingLetter(letter, score, color)
+        self.assertEqual(letter, rating_letter.letter)
+        self.assertEqual(score, rating_letter.score)
+        self.assertEqual(color, rating_letter.color)
+
+    def test_lt(self):
+        """Test the __lt__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertLess(rating_letter, RatingLetter("S", 30, "cyan"))
+
+    def test_gt(self):
+        """Test the __gt__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertGreater(rating_letter, RatingLetter("C", 15, "gold"))
+
+    def test_le(self):
+        """Test the __le__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertLessEqual(rating_letter, RatingLetter("A", 25, "green"))
+        self.assertLessEqual(rating_letter, RatingLetter("S", 30, "cyan"))
+
+    def test_ge(self):
+        """Test the __ge__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertGreaterEqual(rating_letter, RatingLetter("A", 25, "green"))
+        self.assertGreaterEqual(rating_letter, RatingLetter("C", 15, "gold"))
+
+    def test_eq(self):
+        """Test the __eq__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertEqual(rating_letter, RatingLetter("A", 25, "green"))
+
+    def test_ne(self):
+        """Test the __ne__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertNotEqual(rating_letter, RatingLetter("S", 30, "cyan"))
+
+    def test_str(self):
+        """Test the __str__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertEqual("[bold green]A[/bold green]", str(rating_letter))
+
+    def test_repr(self):
+        """Test the __repr__ method of RatingLetter."""
+        rating_letter = RatingLetter("A", 25, "green")
+        self.assertEqual("<RatingLetter A>", repr(rating_letter))
