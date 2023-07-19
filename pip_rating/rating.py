@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple, Dict
 
 from platformdirs import user_cache_dir
-from requests import __version__
+from pip_rating import __version__
 from pip_rating._compat import cache
 from pip_rating.sources.audit import Vulnerability
 
