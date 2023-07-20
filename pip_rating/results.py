@@ -1,8 +1,8 @@
 import datetime
 import json
-from typing import Optional, TYPE_CHECKING, Union, TypedDict, List
+from typing import Optional, TYPE_CHECKING, Union, TypedDict, List, Any
 
-from requests import __version__
+from pip_rating import __version__
 from rich.console import Console
 from rich.progress import (
     Progress,
@@ -153,7 +153,7 @@ class Results:
             self._status.start()
         return self._status
 
-    def processing_package(self, package):
+    def processing_package(self, package: Any):
         self.status.update(f"Processing package [bold green]{package}[/bold green]...")
 
     def analizing_package(self, package: str, total: int):
@@ -190,8 +190,6 @@ class Results:
         return global_rating_score
 
     def show_results(self, dependencies: "Dependencies", format_name: str = "text"):
-        if format_name not in FORMATS:
-            raise ValueError(f"Format name must be one of {FORMATS}")
         if format_name == "text":
             self.show_packages_results(dependencies)
         elif format_name == "tree":

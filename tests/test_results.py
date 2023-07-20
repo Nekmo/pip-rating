@@ -1,7 +1,17 @@
+"""
+Tests for the results module.
+
+This tests can be improved. These tests do not verify the returned outputs.
+"""
 import unittest
 from unittest import mock
 from unittest.mock import patch, MagicMock, Mock
 
+from rich.console import Console
+from rich.status import Status
+from rich.tree import Tree
+
+from pip_rating import __version__
 from pip_rating.rating import ScoreValue
 from pip_rating.results import (
     colorize_score,
@@ -9,6 +19,7 @@ from pip_rating.results import (
     colorize_rating_package,
     add_tree_node,
     RatingLetter,
+    Results,
 )
 
 
@@ -143,3 +154,167 @@ class TestRatingLetter(unittest.TestCase):
         """Test the __repr__ method of RatingLetter."""
         rating_letter = RatingLetter("A", 25, "green")
         self.assertEqual("<RatingLetter A>", repr(rating_letter))
+
+
+class TestResults(unittest.TestCase):
+    """Tests for the Results class."""
+
+    def test_init(self):
+        """Test the __init__ method of Results."""
+        test_results = Results()
+        self.assertIsInstance(test_results.console, Console)
+        self.assertIsNone(test_results._status)
+        self.assertIsNone(test_results.progress)
+        self.assertIsNone(test_results.task)
+
+    def test_status(self):
+        """Test the status property of Results."""
+        test_results = Results()
+        status = test_results.status
+        self.assertEqual(status, test_results._status)
+        self.assertIsInstance(status, Status)
+
+    def test_processing_package(self):
+        """Test the processing_package method of Results."""
+        test_results = Results()
+        test_results._status = Mock()
+        test_results.processing_package("test_package")
+        test_results._status.update.assert_called_once()
+
+    @patch("pip_rating.results.Progress")
+    def test_analyzing_package(self, mock_progress: MagicMock):
+        """Test the analyzing_package method of Results."""
+        total = 100
+        test_results = Results()
+        test_results._status = Mock()
+        test_results.analizing_package("test_package", total)
+        mock_progress.assert_called_once()
+        mock_progress.return_value.add_task.assert_called_once()
+        self.assertEqual(
+            mock_progress.return_value.add_task.return_value, test_results.task
+        )
+        mock_progress.return_value.start.assert_called_once()
+        mock_progress.return_value.update.assert_called_once()
+
+    def test_get_global_rating_score(self):
+        """Test the get_global_rating_score method of Results."""
+        mock_dependencies = Mock()
+        test_results = Results()
+        test_results.progress = Mock()
+        global_rating_score = test_results.get_global_rating_score(mock_dependencies)
+        self.assertEqual(
+            mock_dependencies.get_global_rating_score.return_value, global_rating_score
+        )
+        mock_dependencies.get_global_rating_score.assert_called_once()
+        test_results.progress.update.assert_called_once()
+        test_results.progress.stop.assert_called_once()
+
+    def test_show_results(self):
+        """Test the show_results method of Results."""
+        mock_dependencies = Mock()
+        test_results = Results()
+        with self.subTest("Invalid format_name"), self.assertRaises(ValueError):
+            test_results.show_results(mock_dependencies, "invalid")
+        with self.subTest("Test text format"), patch(
+            "pip_rating.results.Results.show_packages_results"
+        ) as mock_show_packages_results:
+            test_results.show_results(mock_dependencies, "text")
+            mock_show_packages_results.assert_called_once_with(mock_dependencies)
+        with self.subTest("Test tree format"), patch(
+            "pip_rating.results.Results.show_tree_results"
+        ) as mock_show_tree_results:
+            test_results.show_results(mock_dependencies, "tree")
+            mock_show_tree_results.assert_called_once_with(mock_dependencies)
+        with self.subTest("Test json format"), patch(
+            "pip_rating.results.Results.show_json_results"
+        ) as mock_show_json_results:
+            test_results.show_results(mock_dependencies, "json")
+            mock_show_json_results.assert_called_once_with(mock_dependencies)
+        with self.subTest("Test only-rating format"), patch(
+            "pip_rating.results.Results.show_only_rating_results"
+        ) as mock_show_only_rating_results:
+            test_results.show_results(mock_dependencies, "only-rating")
+            mock_show_only_rating_results.assert_called_once_with(mock_dependencies)
+
+    def test_show_packages_results(self):
+        """Test the show_packages_results method of Results."""
+        mock_dependencies = MagicMock()
+        mock_package = MagicMock()
+        mock_package.rating.get_global_rating_score.return_value = 0
+        mock_package.rating.rating_score = 15
+        mock_package.rating.breakdown_scores = [("key", 5)]
+        mock_package.rating.get_vulnerabilities.return_value = [{"id": "CVE-2020-0001"}]
+        mock_package.name = "name"
+        mock_dependencies.packages = {"name": mock_package}
+        mock_dependencies.req_file = ["name"]
+        test_results = Results()
+        test_results.console = Mock()
+        test_results.show_packages_results(mock_dependencies)
+        self.assertEqual(7, test_results.console.print.call_count)
+
+    def test_show_tree_results(self):
+        """Test the show_tree_results method of Results."""
+        mock_dependencies = MagicMock()
+        mock_package = MagicMock()
+        mock_package.name = "name"
+        mock_dependencies.packages = {"name": mock_package, "missing": Mock()}
+        mock_dependencies.req_file = ["name"]
+        test_results = Results()
+        test_results.console = Mock()
+        test_results.show_tree_results(mock_dependencies)
+        tree = test_results.console.print.mock_calls[0].args[0]
+        self.assertEqual(1, len(tree.children))
+        self.assertIsInstance(tree.children[0], Tree)
+
+    @patch("pip_rating.results.datetime")
+    def test_get_json_results(self, mock_datetime: MagicMock):
+        """Test the get_json_results method of Results."""
+        mock_dependencies = MagicMock()
+        mock_package = MagicMock()
+        mock_package.name = "name"
+        mock_dependencies.packages = {"name": mock_package}
+        mock_dependencies.req_file = ["name"]
+        test_results = Results()
+        json_results = test_results.get_json_results(mock_dependencies)
+        self.assertEqual(
+            {
+                "requirements": mock_dependencies.req_file,
+                "updated_at": mock_datetime.datetime.now.return_value.isoformat.return_value,
+                "schema_version": __version__,
+                "global_rating_letter": "F",
+                "global_rating_score": mock_dependencies.get_global_rating_score.return_value,
+                "packages": [mock_package.as_json.return_value],
+            },
+            json_results,
+        )
+
+    @patch("pip_rating.results.json")
+    @patch("builtins.print")
+    @patch("pip_rating.results.Results.get_json_results")
+    def test_show_json_results(
+        self,
+        mock_get_json_results: MagicMock,
+        mock_print: MagicMock,
+        mock_json: MagicMock,
+    ):
+        """Test the show_json_results method of Results."""
+        mock_dependencies = MagicMock()
+        test_results = Results()
+        test_results.show_json_results(mock_dependencies)
+        mock_get_json_results.assert_called_once_with(mock_dependencies)
+        mock_json.dumps.assert_called_once_with(
+            mock_get_json_results.return_value, indent=4, sort_keys=False
+        )
+        mock_print.assert_called_once_with(mock_json.dumps.return_value)
+
+    @patch("pip_rating.results.Results.get_global_rating_score")
+    @patch("pip_rating.results.Console")
+    def test_show_only_rating_results(
+        self, mock_console: MagicMock, mock_get_global_rating_score: MagicMock
+    ):
+        """Test the show_only_rating_results method of Results."""
+        mock_dependencies = MagicMock()
+        test_results = Results()
+        test_results.show_only_rating_results(mock_dependencies)
+        mock_get_global_rating_score.assert_called_once_with(mock_dependencies)
+        mock_console.return_value.print.assert_called_once()
