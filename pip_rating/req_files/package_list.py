@@ -26,7 +26,7 @@ class PackageList(ReqFileBase):
         raise NotImplementedError
 
     def __str__(self) -> str:
-        return str(self)
+        return str(list(self))
 
     def __repr__(self) -> str:
         return f"<ReqFile ({len(self)})>"
