@@ -35,15 +35,15 @@ def poetry_version(version: Union[str, dict, None]) -> str:
         return output
     if version.startswith("^"):
         version = Version(version[1:])
-        if version.major:
+        if version.major or version.base_version == "0":
             return f">={version},<{version.major + 1}.0.0"
-        elif version.minor:
+        elif version.minor or version.base_version == "0.0":
             return f">={version},<{version.major}.{version.minor + 1}.0"
         elif version.micro:
             return f">={version},<{version.major}.{version.minor}.{version.micro + 1}"
         else:
             raise RequirementsRatingParseError(f"Invalid version '{version}'")
-    if version and (version[0].isdigit() or version[0].startswith("*.")):
+    if version and (version[0].isdigit() or version[0] == "*"):
         return f"=={version}"
     if version and version[0] in "=<>!":
         return version
@@ -78,7 +78,7 @@ class PyprojectReqFile(ReqFileBase):
         if project_dependencies is not sentinel:
             return project_dependencies
         poetry_dependencies = (
-            data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+            data.get("tool", {}).get("poetry", {}).get("dependencies", {}) or sentinel
         )
         if poetry_dependencies is not sentinel:
             return [
