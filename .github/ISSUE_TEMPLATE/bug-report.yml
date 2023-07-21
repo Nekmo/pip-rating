@@ -1,0 +1,87 @@
+name: Bug Report
+description: Create a report about a bug inside the application.
+body:
+
+  - type: textarea
+    id: reproducing-example
+    attributes:
+      label: Command that causes the issue
+      description: Provide the command that reproduces the problem. If possible, indicate the packages that produces the bug or attach the related files.
+      placeholder: |
+        ```bash
+        ~ $ pip-rating analize-package mypackage
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Explain what you should expect to happen. Include reproduction steps.
+      placeholder: |
+        "I was doing... I was expecting the following to happen..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: Explain what actually happens.
+      placeholder: |
+        "This happened instead..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Traceback
+      description: |
+        The traceback (the error), if the problem is a crash.
+      placeholder: |
+        ```
+        Traceback (most recent call last):
+          File "/usr/lib/python3.11/site-packages/pip_rating/management.py", line 199, in <module>
+            catch(cli)()
+        ```
+
+  - type: textarea
+    id: pip-rating-version
+    attributes:
+      label: Pip-rating version
+      description: |
+        The output of `pip-rating --version`, or include the pip-rating version, Python version, platform,
+        installation path and current path.
+      placeholder: |
+        ```
+        pip-rating 0.1.0
+          🔝 This is the latest version.
+          🐍 Python version: 3.11.3
+          💻 Platform: Linux-6.3.7-arch1-1-x86_64-with-glibc2.37
+          📦 Installation path: /usr/lib/python3.11/site-packages/pip-rating
+          📁 Current path: /home/user/
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-details
+    attributes:
+      label: Other details
+      placeholder: |
+        Additional details and attachments. Network condition? Is your network behind a VPN?
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Read this carefully, we will close and ignore your issue if you skimmed through this.
+      options:
+        - label: The error is in the project's code, and not in my own.
+          required: true
+        - label: I have searched for this issue before posting it and there isn't an open duplicate.
+          required: true
+        - label: I ran `pip install -U pip-rating` and triggered the bug in the latest version.
+          required: true
