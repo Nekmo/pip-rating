@@ -139,17 +139,22 @@ class Results:
     progress: Optional[Progress]
     task: Optional[TaskID]
 
-    def __init__(self):
-        self.console = Console()
-        self.console.status("[bold green]Loading...")
+    def __init__(self, to_file: Optional[str] = None):
+        results_file = None
+        if to_file:
+            results_file = open(to_file, "w")
+        self.progress_console = Console(stderr=True)
+        self.progress_console.status("[bold green]Loading...")
+        self.results_console = Console(file=results_file)
         self._status = None
         self.progress = None
         self.task = None
+        self.to_file = to_file
 
     @property
     def status(self) -> Optional[Status]:
         if not self._status:
-            self._status = self.console.status("[bold green]Waiting...")
+            self._status = self.progress_console.status("[bold green]Waiting...")
             self._status.start()
         return self._status
 
@@ -165,7 +170,7 @@ class Results:
                 BarColumn(complete_style="blue"),
                 TaskProgressColumn(),
                 TimeRemainingColumn(),
-                console=self.console,
+                console=self.progress_console,
             )
             self.task = self.progress.add_task("Analizing packages...", total=total)
             self.progress.start()
@@ -190,6 +195,11 @@ class Results:
         return global_rating_score
 
     def show_results(self, dependencies: "Dependencies", format_name: str = "text"):
+        """Show results depending on the format. Optionally save to a file.
+
+        :param dependencies: Dependencies
+        :param format_name: Format name. Choices: FORMATS
+        """
         if format_name == "text":
             self.show_packages_results(dependencies)
         elif format_name == "tree":
@@ -223,7 +233,7 @@ class Results:
                 print_score = (
                     f"{rating_score_letter} -> {package_global_rating_score_letter}"
                 )
-            self.console.print(
+            self.results_console.print(
                 f":package: Package [bold blue]{package.name}[/bold blue]: "
                 + print_score
             )
@@ -234,7 +244,7 @@ class Results:
                     .replace("_", " ")
                     .capitalize()
                 )
-                self.console.print(
+                self.results_console.print(
                     f"  :black_medium-small_square: {key}: {colorize_score(value)}"
                 )
             if package_global_rating_score < package.rating.rating_score:
@@ -243,19 +253,19 @@ class Results:
                     for pkg, score in package.rating.descendant_rating_scores
                     if colorize_rating(score) < rating_score_letter
                 ]
-                self.console.print(
+                self.results_console.print(
                     f"  :arrow_lower_right: Low rating dependencies: {', '.join(low_rating_dependences)}"
                 )
             if vulnerabilities:
-                self.console.print(
+                self.results_console.print(
                     f"  :biohazard: Vulnerabilities found: [bold grey53]"
                     f"{', '.join([vuln['id'] for vuln in vulnerabilities])}[/bold grey53]"
                 )
-            self.console.print("")
-        self.console.print("")
+            self.results_console.print("")
+        self.results_console.print("")
         table = Table(show_header=False)
         table.add_row(f"Global rating score: {colorize_rating(global_rating_score)}")
-        self.console.print(table)
+        self.results_console.print(table)
 
     def show_tree_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
@@ -269,7 +279,7 @@ class Results:
             if package.name not in dependencies.req_file:
                 continue
             add_tree_node(dependencies, tree, package)
-        self.console.print(tree)
+        self.results_console.print(tree)
 
     def get_json_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
@@ -288,12 +298,13 @@ class Results:
         }
 
     def show_json_results(self, dependencies: "Dependencies"):
-        self.console = Console(stderr=True)
         results = self.get_json_results(dependencies)
-        print(json.dumps(results, indent=4, sort_keys=False))
+        if self.to_file:
+            with open(self.to_file, "w") as file:
+                json.dump(results, file, indent=4, sort_keys=False)
+        else:
+            print(json.dumps(results, indent=4, sort_keys=False))
 
     def show_only_rating_results(self, dependencies: "Dependencies"):
-        self.console = Console(stderr=True)
         global_rating_score = self.get_global_rating_score(dependencies)
-        self.console = Console()
-        self.console.print(f"{colorize_rating(global_rating_score)}")
+        self.results_console.print(f"{colorize_rating(global_rating_score)}")

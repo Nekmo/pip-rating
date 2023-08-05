@@ -103,9 +103,14 @@ def common_options(function):
         "-f",
         "format_name",
         type=click.Choice(FORMATS),
-        # envvar="PIP_EXTRA_INDEX_URL",  # let pip discover
         default="text",
         help=f"Output format. Supported formats: {', '.join(FORMATS)}. By default it uses 'text'.",
+    )(function)
+    function = click.option(
+        "--to-file",
+        "to_file",
+        type=click.Path(exists=False, dir_okay=False, resolve_path=True),
+        help="Output file. By default output to console.",
     )(function)
     function = click.option(
         "--ignore-package",
@@ -130,13 +135,14 @@ def analyze_file(
     index_url: str,
     extra_index_url: str,
     format_name: str,
+    to_file: Optional[str],
     ignore_packages: List[str],
 ):
     """Analyze a requirements file. A requirements file is required as argument. By default, it tries to detect the
     type of the file, but you can force it using the ``--file-type`` option. The supported file types are:
     *requirements.txt, requirements.in, setup.py, setup.cfg, Pipfile and pyproject.toml*.
     """
-    results = Results()
+    results = Results(to_file)
     file = Path(file)
     if file_type is None:
         req_file_cls = get_req_file_cls(file)
@@ -163,12 +169,13 @@ def analyze_package(
     index_url: str,
     extra_index_url: str,
     format_name: str,
+    to_file: str,
     ignore_packages: List[str],
 ):
     """Analyze a package. A package name is required as argument. The syntax is the same as pip install. For example:
     ``Django==4.2.3``. If only one package is specified, it will show their dependencies in detail.
     """
-    results = Results()
+    results = Results(to_file)
     req_file = PackageList(package_names)
     dependencies = Dependencies(
         results,
