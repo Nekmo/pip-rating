@@ -4,6 +4,7 @@ Tests for the results module.
 This tests can be improved. These tests do not verify the returned outputs.
 """
 import unittest
+from io import TextIOWrapper
 from unittest import mock
 from unittest.mock import patch, MagicMock, Mock
 
@@ -161,11 +162,19 @@ class TestResults(unittest.TestCase):
 
     def test_init(self):
         """Test the __init__ method of Results."""
-        test_results = Results()
-        self.assertIsInstance(test_results.console, Console)
-        self.assertIsNone(test_results._status)
-        self.assertIsNone(test_results.progress)
-        self.assertIsNone(test_results.task)
+        with self.subTest("Test without file output"):
+            test_results = Results()
+            self.assertIsInstance(test_results.progress_console, Console)
+            self.assertIsInstance(test_results.results_console, Console)
+            self.assertTrue(test_results.progress_console.stderr)
+            self.assertIsNone(test_results._status)
+            self.assertIsNone(test_results.progress)
+            self.assertIsNone(test_results.task)
+        with self.subTest("Test with file output"):
+            to_file = "output.txt"
+            test_results = Results(to_file=to_file)
+            self.assertIsInstance(test_results.results_console.file, TextIOWrapper)
+            self.assertEqual(to_file, test_results.results_console.file.name)
 
     def test_status(self):
         """Test the status property of Results."""
@@ -248,9 +257,9 @@ class TestResults(unittest.TestCase):
         mock_dependencies.packages = {"name": mock_package}
         mock_dependencies.req_file = ["name"]
         test_results = Results()
-        test_results.console = Mock()
+        test_results.results_console = Mock()
         test_results.show_packages_results(mock_dependencies)
-        self.assertEqual(7, test_results.console.print.call_count)
+        self.assertEqual(7, test_results.results_console.print.call_count)
 
     def test_show_tree_results(self):
         """Test the show_tree_results method of Results."""
@@ -260,9 +269,9 @@ class TestResults(unittest.TestCase):
         mock_dependencies.packages = {"name": mock_package, "missing": Mock()}
         mock_dependencies.req_file = ["name"]
         test_results = Results()
-        test_results.console = Mock()
+        test_results.results_console = Mock()
         test_results.show_tree_results(mock_dependencies)
-        tree = test_results.console.print.mock_calls[0].args[0]
+        tree = test_results.results_console.print.mock_calls[0].args[0]
         self.assertEqual(1, len(tree.children))
         self.assertIsInstance(tree.children[0], Tree)
 
