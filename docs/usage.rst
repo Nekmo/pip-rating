@@ -205,6 +205,22 @@ Only-rating
 This only returns the rating. It is useful for automation or to be used by other applications. Possible outputs: *S*,
 *A*, *B*, *C*, *D*, *E*, *F*.
 
+Output to file
+==============
+You can output the results to a file using the ``--to-file`` option. For example:
+
+    $ pip-rating analyze-file --format json --to-file results.json requirements.txt
+
+You can also redirect Stdout's exit from the program to a file. For example:
+
+    $ pip-rating analyze-file --format json requirements.txt > results.json
+
+pip-rating shows the progress of the execution using the Stderr output, so the progress of the execution will not be
+displayed in the output file.
+
+.. versionadded:: 0.2
+   The ``--to-file`` option was added & the progress of the execution is redirected to Stderr.
+
 Ignore packages
 ===============
 You can ignore packages using the ``--ignore-package`` option. You can specify multiple packages by using the option
