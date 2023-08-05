@@ -308,13 +308,35 @@ class TestResults(unittest.TestCase):
     ):
         """Test the show_json_results method of Results."""
         mock_dependencies = MagicMock()
-        test_results = Results()
-        test_results.show_json_results(mock_dependencies)
-        mock_get_json_results.assert_called_once_with(mock_dependencies)
-        mock_json.dumps.assert_called_once_with(
-            mock_get_json_results.return_value, indent=4, sort_keys=False
-        )
-        mock_print.assert_called_once_with(mock_json.dumps.return_value)
+        with self.subTest("Test output to console"):
+            test_results = Results()
+            test_results.show_json_results(mock_dependencies)
+            mock_get_json_results.assert_called_once_with(mock_dependencies)
+            mock_json.dumps.assert_called_once_with(
+                mock_get_json_results.return_value, indent=4, sort_keys=False
+            )
+            mock_print.assert_called_once_with(mock_json.dumps.return_value)
+        mock_get_json_results.reset_mock()
+        mock_print.reset_mock()
+        with self.subTest("Test output to file"), patch("builtins.open") as mock_open:
+            to_file = "output.json"
+            test_results = Results(to_file=to_file)
+            test_results.show_json_results(mock_dependencies)
+            mock_get_json_results.assert_called_once_with(mock_dependencies)
+            mock_json.dump.assert_called_once_with(
+                mock_get_json_results.return_value,
+                mock_open.return_value.__enter__.return_value,
+                indent=4,
+                sort_keys=False,
+            )
+            mock_open.assert_has_calls(
+                [
+                    mock.call(to_file, "w"),  # Call in __init__
+                    mock.call(to_file, "w"),  # Call in show_json_results
+                ],
+                any_order=True,
+            )
+            mock_print.assert_not_called()
 
     @patch("pip_rating.results.Results.get_global_rating_score")
     @patch("pip_rating.results.Console")
