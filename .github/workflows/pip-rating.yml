@@ -1,0 +1,15 @@
+name: Pip-rating
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run pip-rating
+        uses: Nekmo/pip-rating@master

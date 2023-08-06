@@ -1,0 +1,107 @@
+name: 'pip-rating'
+description: |
+  Run pip-rating on the project to get the requirements rating based on criteria like freshness,
+  popularity, maintenance, etc.
+author: Nekmo
+inputs:
+  file:
+    description: |
+      Path to the requirements file.
+    required: false
+  format:
+    description: |
+      Output format. Available formats: text, tree, json, only-rating & badge.
+    required: false
+    default: 'text'
+  file_type:
+    description: |
+      Requirements file type. By default this is autodetected. Available types: requirements, setup.cfg, setup.py,
+      Pipfile & pyproject.toml
+    required: false
+    default: 'text'
+  ignore_packages:
+    description: |
+      Packages to ignore separated by spaces.
+    required: false
+    default: ''
+  create_badge:
+    description: |
+      Create a badge image with the rating.
+    required: false
+    default: false
+  badge_path:
+    description: |
+      Path to save the badge image.
+    required: false
+    default: 'pip-rating-badge.svg'
+  badge_style:
+    description: |
+      Badge style. Available styles: flat, flat-square & for-the-badge.
+    required: false
+    default: 'flat'
+  badge_s_color:
+    description: |
+      Badge color for S rating.
+    required: false
+    default: ''
+  badge_a_color:
+    description: |
+      Badge color for A rating.
+    required: false
+    default: ''
+  badge_b_color:
+    description: |
+      Badge color for B rating.
+    required: false
+    default: ''
+  badge_c_color:
+    description: |
+      Badge color for C rating.
+    required: false
+    default: ''
+  badge_d_color:
+    description: |
+      Badge color for D rating.
+    required: false
+    default: ''
+  badge_e_color:
+    description: |
+      Badge color for E rating.
+    required: false
+    default: ''
+  badge_f_color:
+    description: |
+      Badge color for F rating.
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    - name: Install pip-rating
+      run: |
+        pip install "$GITHUB_ACTION_PATH"
+      shell: bash
+    - name: Run pip-rating
+      run: |
+        badge_path="${{ inputs.badge_path }}"
+        if [[ "${{ inputs.create_badge }} == "false" ]]; then badge_path="" ; fi
+        python "$GITHUB_ACTION_PATH/_action.py" \
+          --file "${{ github.workspace }}/${{ inputs.file }}" \
+          --format "${{ inputs.format }}" \
+          --file-type "${{ inputs.file_type }}"
+      env:
+        PIP_RATING_IGNORE_PACKAGES: ${{ inputs.ignore_packages }}
+        PIP_RATING_BADGE_DEFAULT_STYLE: ${{ inputs.badge_style }}
+        PIP_RATING_BADGE_S_COLOR: ${{ inputs.badge_s_color }}
+        PIP_RATING_BADGE_A_COLOR: ${{ inputs.badge_a_color }}
+        PIP_RATING_BADGE_B_COLOR: ${{ inputs.badge_b_color }}
+        PIP_RATING_BADGE_C_COLOR: ${{ inputs.badge_c_color }}
+        PIP_RATING_BADGE_D_COLOR: ${{ inputs.badge_d_color }}
+        PIP_RATING_BADGE_E_COLOR: ${{ inputs.badge_e_color }}
+        PIP_RATING_BADGE_F_COLOR: ${{ inputs.badge_f_color }}
