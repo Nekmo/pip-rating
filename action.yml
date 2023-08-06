@@ -90,7 +90,7 @@ runs:
     - name: Run pip-rating
       run: |
         badge_path="${{ inputs.badge_path }}"
-        if [[ "${{ inputs.create_badge }} == "false" ]]; then badge_path="" ; fi
+        if [[ "${{ inputs.create_badge }}" == "false" ]]; then badge_path="" ; fi
         python "$GITHUB_ACTION_PATH/_action.py" \
           --file "${{ github.workspace }}/${{ inputs.file }}" \
           --format "${{ inputs.format }}" \
