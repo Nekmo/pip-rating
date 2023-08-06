@@ -89,13 +89,13 @@ BADGE_FOR_THE_BADGE_SVG = """\
 </svg>
 """
 PIP_RATING_BADGE_COLORS = {
-    "S": os.environ.get("PIP_RATING_BADGE_S_COLOR", "#007EC6"),
-    "A": os.environ.get("PIP_RATING_BADGE_A_COLOR", "#44CC11"),
-    "B": os.environ.get("PIP_RATING_BADGE_B_COLOR", "#97CA00"),
-    "C": os.environ.get("PIP_RATING_BADGE_C_COLOR", "#FFD700"),
-    "D": os.environ.get("PIP_RATING_BADGE_D_COLOR", "#FFAF00"),
-    "E": os.environ.get("PIP_RATING_BADGE_E_COLOR", "#FF5F00"),
-    "F": os.environ.get("PIP_RATING_BADGE_F_COLOR", "#E05D44"),
+    "S": os.environ.get("PIP_RATING_BADGE_S_COLOR") or "#007EC6",
+    "A": os.environ.get("PIP_RATING_BADGE_A_COLOR") or "#44CC11",
+    "B": os.environ.get("PIP_RATING_BADGE_B_COLOR") or "#97CA00",
+    "C": os.environ.get("PIP_RATING_BADGE_C_COLOR") or "#FFD700",
+    "D": os.environ.get("PIP_RATING_BADGE_D_COLOR") or "#FFAF00",
+    "E": os.environ.get("PIP_RATING_BADGE_E_COLOR") or "#FF5F00",
+    "F": os.environ.get("PIP_RATING_BADGE_F_COLOR") or "#E05D44",
 }
 PIP_RATING_BADGES = {
     "flat": BADGE_FLAT_SVG,
