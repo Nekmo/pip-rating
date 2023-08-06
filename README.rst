@@ -3,6 +3,10 @@
 
 |
 
+.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/pip-rating-badge/pip-rating-badge.svg
+  :target: https://github.com/Nekmo/pip-rating/actions/workflows/pip-rating.yml
+  :alt: pip-rating badge
+
 .. image:: https://img.shields.io/github/actions/workflow/status/Nekmo/pip-rating/test.yml?style=flat-square&maxAge=2592000&branch=master
   :target: https://github.com/Nekmo/pip-rating/actions?query=workflow%3ATests
   :alt: Latest Tests CI build status
@@ -22,10 +26,6 @@
 .. image:: https://img.shields.io/codecov/c/github/Nekmo/pip-rating/master.svg?style=flat-square
   :target: https://codecov.io/github/Nekmo/pip-rating
   :alt: Test coverage
-
-.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/pip-rating-badge/pip-rating-badge.svg
-  :target: https://github.com/Nekmo/pip-rating/actions/workflows/pip-rating.yml
-  :alt: pip-rating badge
 
 ##########
 pip-rating
