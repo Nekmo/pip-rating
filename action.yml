@@ -88,6 +88,7 @@ runs:
       with:
         python-version: '3.11'
         cache: 'pip'
+        cache-dependency-path: '${{ github.action_path }}/requirements.txt'
     - name: Install pip-rating
       run: |
         pip install "$GITHUB_ACTION_PATH"
