@@ -133,7 +133,13 @@ To use this github action add a file like this to your project in the path ``.gi
               badge_branch: pip-rating-badge
 
 You can see the execution of the action in the "Actions" tab of your repository. The badge is generated in the
-``pip-rating-badge`` branch, so you can access it as: ``https://raw.githubusercontent.com/<owner>/<repository>/pip-rating-badge/pip-rating-badge.svg``. For more info about the action, see the
+``pip-rating-badge`` branch, so you can access it as:
+
+.. code-block:: text
+
+    https://raw.githubusercontent.com/<owner>/<repository>/pip-rating-badge/pip-rating-badge.svg
+
+For more info about the action, see the
 `Github Action documentation <https://docs.nekmo.org/pip-rating/github-action.html>`_.
 
 💡 Features
