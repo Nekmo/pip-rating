@@ -101,6 +101,40 @@ To analyze one or more packages, you can use the command ``pip-rating analyze-pa
 
     $ pip-rating analyze-package <package_name>[ <other_package_name>]
 
+⚡ Github Action
+===============
+Pip-rating can be used as a *Github Action* to check the dependencies of your project in every commit and periodically.
+To use this github action add a file like this to your project in the path ``.github/workflows/pip-rating.yml``:
+
+.. code-block:: yaml
+
+    # .github/workflows/pip-rating.yml
+    # --------------------------------
+    name: Pip-rating
+
+    on:
+      push:
+        branches:
+          - master
+      schedule:
+        - cron: '0 0 * * SUN'
+
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        permissions: write-all
+        steps:
+          - uses: actions/checkout@v2
+          - name: Run pip-rating
+            uses: Nekmo/pip-rating@master
+            with:
+              create_badge: true
+              badge_style: flat-square
+              badge_branch: pip-rating-badge
+
+You can see the execution of the action in the "Actions" tab of your repository. The badge is generated in the
+``pip-rating-badge`` branch, so you can access it as: ``https://raw.githubusercontent.com/<owner>/<repository>/pip-rating-badge/pip-rating-badge.svg``. For more info about the action, see the
+`Github Action documentation <https://docs.nekmo.org/pip-rating/github-action.html>`_.
 
 💡 Features
 ===========
