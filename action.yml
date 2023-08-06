@@ -94,7 +94,8 @@ runs:
         python "$GITHUB_ACTION_PATH/_action.py" \
           --file "${{ inputs.file }}" \
           --format "${{ inputs.format }}" \
-          --file-type "${{ inputs.file_type }}"
+          --file-type "${{ inputs.file_type }}" \
+          --badge-path "${{ badge_path }}"
       env:
         PIP_RATING_IGNORE_PACKAGES: ${{ inputs.ignore_packages }}
         PIP_RATING_BADGE_DEFAULT_STYLE: ${{ inputs.badge_style }}
