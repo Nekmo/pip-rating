@@ -205,13 +205,87 @@ Only-rating
 This only returns the rating. It is useful for automation or to be used by other applications. Possible outputs: *S*,
 *A*, *B*, *C*, *D*, *E*, *F*.
 
+Badge
+-----
+Generates a badge with the rating as a svg image. You can use it in your README file. The image can be customized
+using environment variables:
+
+.. list-table:: Badge environment variables
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Variable
+     - Description
+   * - ``PIP_RATING_BADGE_STYLE``
+     - The style of the badge. Possible values: ``flat``, ``flat-square`` & ``for-the-badge``. Default:
+       ``flat``.
+   * - ``PIP_RATING_BADGE_S_COLOR``
+     - Background color for the **S** rating. Default: ``#007EC6``.
+   * - ``PIP_RATING_BADGE_A_COLOR``
+     - Background color for the **A** rating. Default: ``#44CC11``.
+   * - ``PIP_RATING_BADGE_B_COLOR``
+     - Background color for the **B** rating. Default: ``#97CA00``.
+   * - ``PIP_RATING_BADGE_C_COLOR``
+     - Background color for the **C** rating. Default: ``#FFD700``.
+   * - ``PIP_RATING_BADGE_D_COLOR``
+     - Background color for the **D** rating. Default: ``#FFAF00``.
+   * - ``PIP_RATING_BADGE_E_COLOR``
+     - Background color for the **E** rating. Default: ``#FF5F00``.
+   * - ``PIP_RATING_BADGE_F_COLOR``
+     - Background color for the **F** rating. Default: ``#E05D44``.
+
+Some examples of the different styles:
+
+.. list-table:: Badge examples
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Name
+     - Example
+   * - ``flat``
+     - .. image:: images/badge_flat_S.svg
+   * - ``flat-square``
+     - .. image:: images/badge_flat_square_S.svg
+   * - ``for-the-badge``
+     - .. image:: images/badge_for_the_badge_S.svg
+
+For example, to generate a badge with the ``flat-square`` style:
+
+.. code-block:: bash
+
+    $ PIP_RATING_BADGE_STYLE=flat-square pip-rating analyze-package --format badge requests
+
+Or exporting the variable:
+
+.. code-block:: bash
+
+    $ export PIP_RATING_BADGE_STYLE=flat-square
+    $ pip-rating analyze-package --format badge requests
+
+By default the image is printed to Stdout. You can save it to a file using the ``--to-file`` option. For example:
+
+.. code-block:: bash
+
+    $ pip-rating analyze-package --format badge --to-file badge.svg requests
+
+The badges are based on `shields.io <https://shields.io/>`_ badges, but the badges are generated locally, so you don't
+need to have an internet connection to generate them.
+
+.. versionadded:: 0.2
+   The ``badge`` format was added.
+
+
 Output to file
 ==============
 You can output the results to a file using the ``--to-file`` option. For example:
 
+.. code-block:: bash
+
     $ pip-rating analyze-file --format json --to-file results.json requirements.txt
 
 You can also redirect Stdout's exit from the program to a file. For example:
+
+.. code-block:: bash
 
     $ pip-rating analyze-file --format json requirements.txt > results.json
 
@@ -225,6 +299,8 @@ Ignore packages
 ===============
 You can ignore packages using the ``--ignore-package`` option. You can specify multiple packages by using the option
 multiple times. For example:
+
+.. code-block:: bash
 
     $ pip-rating analyze-file --ignore-package mypackage --ignore-package mypackage2 requirements.txt
 
