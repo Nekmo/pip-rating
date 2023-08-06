@@ -103,7 +103,7 @@ Before you submit a pull request, check that it meets these guidelines:
    directory and add the feature to the list in README.rst.
 #. The code must follow the PEP8 style guide, be clean, easy to read, elegant
    and be consistent with the rest of the code in the repository.
-#. The pull request should work for Python 3.8, 3.9, 3.10, 3.11 and for PyPy. Check
+#. The pull request should work for Python 3.8, 3.9, 3.10, 3.11, 3.12 and for PyPy. Check
    https://github.com/Nekmo/pip-rating/actions
    and make sure that the tests pass for all supported Python versions.
 

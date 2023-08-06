@@ -43,7 +43,7 @@ body:
       placeholder: |
         ```
         Traceback (most recent call last):
-          File "/usr/lib/python3.11/site-packages/pip_rating/management.py", line 199, in <module>
+          File "/usr/lib/python3.12/site-packages/pip_rating/management.py", line 199, in <module>
             catch(cli)()
         ```
 
@@ -58,9 +58,9 @@ body:
         ```
         pip-rating 0.1.0
           🔝 This is the latest version.
-          🐍 Python version: 3.11.3
+          🐍 Python version: 3.12.3
           💻 Platform: Linux-6.3.7-arch1-1-x86_64-with-glibc2.37
-          📦 Installation path: /usr/lib/python3.11/site-packages/pip-rating
+          📦 Installation path: /usr/lib/python3.12/site-packages/pip-rating
           📁 Current path: /home/user/
         ```
     validations:

@@ -47,7 +47,7 @@ To **install 🔧 pip-rating**, run this command in your terminal (in a virtuale
 This is the preferred method to install pip-rating, as it will always install the most recent stable release.
 If you don't have `pip <https://pip.pypa.io>`_ installed, this
 `Python installation guide <http://docs.python-guide.org/en/latest/starting/installation/>`_ can guide you through
-the process. 🐍 **Python 3.8-3.11** are tested and supported.
+the process. 🐍 **Python 3.8-3.12** are tested and supported.
 `More info in the documentation <https://docs.nekmo.org/pip-rating/installation.html>`_.
 
 Pip-rating is a tool **to check the security and maintenance of the dependencies of your project**. It will check the
