@@ -105,3 +105,4 @@ runs:
         PIP_RATING_BADGE_D_COLOR: ${{ inputs.badge_d_color }}
         PIP_RATING_BADGE_E_COLOR: ${{ inputs.badge_e_color }}
         PIP_RATING_BADGE_F_COLOR: ${{ inputs.badge_f_color }}
+      shell: bash
