@@ -34,6 +34,11 @@ inputs:
       Path to save the badge image.
     required: false
     default: 'pip-rating-badge.svg'
+  badge_branch:
+    description: |
+      Branch to push the badge image.
+    required: false
+    default: ''
   badge_style:
     description: |
       Badge style. Available styles: flat, flat-square & for-the-badge.
@@ -98,7 +103,7 @@ runs:
           --badge-path "$badge_path"
       env:
         PIP_RATING_IGNORE_PACKAGES: ${{ inputs.ignore_packages }}
-        PIP_RATING_BADGE_DEFAULT_STYLE: ${{ inputs.badge_style }}
+        PIP_RATING_BADGE_STYLE: ${{ inputs.badge_style }}
         PIP_RATING_BADGE_S_COLOR: ${{ inputs.badge_s_color }}
         PIP_RATING_BADGE_A_COLOR: ${{ inputs.badge_a_color }}
         PIP_RATING_BADGE_B_COLOR: ${{ inputs.badge_b_color }}
@@ -107,12 +112,26 @@ runs:
         PIP_RATING_BADGE_E_COLOR: ${{ inputs.badge_e_color }}
         PIP_RATING_BADGE_F_COLOR: ${{ inputs.badge_f_color }}
       shell: bash
-    - name: Submit rating badge
-      if: ${{ inputs.create_badge != 'false' }}
+    - name: Submit rating badge to the current branch
+      if: ${{ inputs.create_badge != 'false' }} && ${{ inputs.badge_branch == '' }}
       run: |
         git config --global user.name 'Pip-rating'
         git config --global user.email 'pip-rating@nekmo.com'
         git add "${{ inputs.badge_path }}"
         git commit -am "Updated badge at $(date)" || echo "Already updated"
         git push --force
+      shell: bash
+    - name: Submit rating badge to the badge branch
+      if: ${{ inputs.create_badge != 'false' }} && ${{ inputs.badge_branch != '' }}
+      run: |
+        mkdir /tmp/pip-rating-badge
+        mv "${{ inputs.badge_path }}" /tmp/pip-rating-badge
+        cp -r .git /tmp/pip-rating-badge
+        cd /tmp/pip-rating-badge
+        git config --global user.name 'Pip-rating'
+        git config --global user.email 'pip-rating@nekmo.com'
+        git checkout --orphan "${{ inputs.badge_branch }}"
+        git add "${{ inputs.badge_path }}"
+        git commit -am "Updated badge at $(date)" || echo "Already updated"
+        git push --force origin HEAD:"${{ inputs.badge_branch }}"
       shell: bash

@@ -18,3 +18,4 @@ jobs:
         with:
           create_badge: true
           badge_style: flat-square
+          badge_branch: pip-rating-badge
