@@ -92,7 +92,7 @@ runs:
         badge_path="${{ inputs.badge_path }}"
         if [[ "${{ inputs.create_badge }}" == "false" ]]; then badge_path="" ; fi
         python "$GITHUB_ACTION_PATH/_action.py" \
-          --file "${{ github.workspace }}/${{ inputs.file }}" \
+          --file "${{ inputs.file }}" \
           --format "${{ inputs.format }}" \
           --file-type "${{ inputs.file_type }}"
       env:
