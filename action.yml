@@ -18,7 +18,6 @@ inputs:
       Requirements file type. By default this is autodetected. Available types: requirements, setup.cfg, setup.py,
       Pipfile & pyproject.toml
     required: false
-    default: 'text'
   ignore_packages:
     description: |
       Packages to ignore separated by spaces.
