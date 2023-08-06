@@ -19,6 +19,7 @@ Contents
    installation
    overview
    usage
+   github_action
    troubleshooting
    modules
    contributing
