@@ -43,7 +43,7 @@ class Package:
 
     @cached_property
     def sourcerank(self) -> SourceRank:
-        return SourceRank(self.name)
+        return SourceRank(self)
 
     @cached_property
     def pypi(self) -> "Pypi":

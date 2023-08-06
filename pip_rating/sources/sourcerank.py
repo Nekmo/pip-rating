@@ -1,11 +1,16 @@
 import datetime
+import time
 from functools import cached_property
-from typing import Iterator, Tuple, TypedDict
+from typing import Iterator, Tuple, TypedDict, TYPE_CHECKING
 
 import requests
 from bs4 import BeautifulSoup
+from requests import RequestException
 
 from pip_rating.sources.base import SourceBase
+
+if TYPE_CHECKING:
+    from pip_rating.packages import Package
 
 SOURCERANK_URL = "https://libraries.io/pypi/{package_name}/sourcerank"
 BREAKDOWN_MAPPING = {
@@ -25,6 +30,7 @@ BREAKDOWN_MAPPING = {
     "Libraries.io subscribers": "librariesio_subscribers",
     "Total": "total",
 }
+RETRY_WAIT = 30
 
 
 class SourceRankBreakdown(TypedDict):
@@ -54,6 +60,10 @@ class SourceRankCacheDict(TypedDict):
 class SourceRank(SourceBase):
     source_name = "sourcerank"
 
+    def __init__(self, package: "Package"):
+        self.package = package
+        super().__init__(package.name)
+
     def get_cache_data(self) -> dict:
         return {
             "package_name": self.package_name,
@@ -69,13 +79,24 @@ class SourceRank(SourceBase):
             cache = self.save_to_cache()
         return cache["breakdown"]
 
-    def get_breakdown(self) -> Iterator[Tuple[str, int]]:
+    def request(self) -> bytes:
+        """Request the sourcerank page and return the content"""
         with requests.get(
             SOURCERANK_URL.format(package_name=self.package_name)
         ) as response:
-            response.raise_for_status()
-            content = response.content
-        soup = BeautifulSoup(content, "html.parser")
+            try:
+                response.raise_for_status()
+            except RequestException as e:
+                if e.response is not None and e.response.status_code == 429:
+                    self.package.dependencies.results.progress_console.print(
+                        f"Reached request limit for Sourcerank, waiting {RETRY_WAIT} seconds"
+                    )
+                    time.sleep(RETRY_WAIT)
+                    return self.request()
+            return response.content
+
+    def get_breakdown(self) -> Iterator[Tuple[str, int]]:
+        soup = BeautifulSoup(self.request(), "html.parser")
         for item in soup.find_all("li", "list-group-item"):
             stripped_strings = list(item.stripped_strings)
             if stripped_strings[1] in BREAKDOWN_MAPPING:

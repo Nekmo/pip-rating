@@ -1,8 +1,10 @@
 import unittest
+from unittest import mock
 from unittest.mock import Mock, MagicMock, patch, PropertyMock
 
-from pip_rating.sources.sourcerank import SourceRank
+import requests
 
+from pip_rating.sources.sourcerank import SourceRank, RETRY_WAIT
 
 SOURCERANK_PAGE = """
 <!DOCTYPE html>
@@ -121,15 +123,15 @@ class TestSourceRank(unittest.TestCase):
         self, mock_datetime: MagicMock, mock_get_breakdown: MagicMock
     ):
         """Test the get_cache_data method."""
-        package_name = "package_name"
+        mock_package = Mock()
         mock_get_breakdown.return_value = {"breakdown": "breakdown"}
         self.assertEqual(
             {
-                "package_name": package_name,
+                "package_name": mock_package.name,
                 "updated_at": mock_datetime.datetime.now.return_value.isoformat.return_value,
                 "breakdown": mock_get_breakdown.return_value,
             },
-            SourceRank(package_name).get_cache_data(),
+            SourceRank(mock_package).get_cache_data(),
         )
 
     @patch(
@@ -161,11 +163,42 @@ class TestSourceRank(unittest.TestCase):
             self.assertEqual(mock_breakdown, sourcerank.breakdown)
             mock_save_to_cache.assert_called_once_with()
 
+    @patch("pip_rating.sources.sourcerank.time")
+    @patch("pip_rating.sources.sourcerank.requests")
+    def test_request(self, mock_requests: MagicMock, mock_time: MagicMock):
+        """Test the request method."""
+        with self.subTest("Test successful request without 429 error"):
+            mock_requests.get.return_value.__enter__.return_value.status_code = 200
+            mock_requests.get.return_value.__enter__.return_value.content = (
+                SOURCERANK_PAGE
+            )
+            mock_package = Mock()
+            sourcerank = SourceRank(mock_package)
+            self.assertEqual(SOURCERANK_PAGE, sourcerank.request())
+            mock_requests.get.assert_called_once_with(
+                f"https://libraries.io/pypi/{mock_package.name}/sourcerank"
+            )
+        mock_requests.reset_mock()
+        with self.subTest("Test successful request with 429 error"):
+            mock_requests.get.return_value.__enter__.return_value.raise_for_status.side_effect = [
+                requests.HTTPError(response=Mock(status_code=429)),
+                Mock(),
+            ]
+            mock_package = Mock()
+            sourcerank = SourceRank(mock_package)
+            self.assertEqual(SOURCERANK_PAGE, sourcerank.request())
+            mock_requests.get.assert_has_calls(
+                [mock.call(f"https://libraries.io/pypi/{mock_package.name}/sourcerank")]
+                * 2,
+                any_order=True,
+            )
+            mock_time.sleep.assert_called_once_with(RETRY_WAIT)
+
     @patch("pip_rating.sources.sourcerank.requests")
     def test_get_breakdown(self, mock_requests: MagicMock):
         """Test the get_breakdown method."""
         mock_requests.get.return_value.__enter__.return_value.content = SOURCERANK_PAGE
-        package_name = "package_name"
+        mock_package = Mock()
         self.assertEqual(
             [
                 ("basic_info_present", 1),
@@ -184,5 +217,5 @@ class TestSourceRank(unittest.TestCase):
                 ("librariesio_subscribers", 2),
                 ("total", 32),
             ],
-            list(SourceRank(package_name).get_breakdown()),
+            list(SourceRank(mock_package).get_breakdown()),
         )

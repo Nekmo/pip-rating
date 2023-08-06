@@ -43,7 +43,7 @@ class TestPackage(unittest.TestCase):
         name = "name"
         package = Package(mock_dependencies, name)
         sourcerank = package.sourcerank
-        mock_source_rank.assert_called_once_with(name)
+        mock_source_rank.assert_called_once_with(package)
         self.assertEqual(mock_source_rank.return_value, sourcerank)
 
     @patch("pip_rating.packages.Pypi")
