@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 from typing import Optional, TYPE_CHECKING, Union, TypedDict, List, Any
 
 from pip_rating import __version__
@@ -24,7 +25,96 @@ if TYPE_CHECKING:
 
 
 MIN_PACKAGE_NAME = 15
-FORMATS = ["text", "tree", "json", "only-rating"]
+FORMATS = ["text", "tree", "json", "only-rating", "badge"]
+BADGE_FLAT_SVG = """\
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82"
+     height="20" role="img" aria-label="pip-rating: {letter}">
+    <title>pip-rating: {letter}</title>
+    <linearGradient id="s" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+        <stop offset="1" stop-opacity=".1"/>
+    </linearGradient>
+    <clipPath id="r"><rect width="82" height="20" rx="3" fill="#fff"/></clipPath>
+    <g clip-path="url(#r)">
+        <rect width="65" height="20" fill="#555"/><rect x="65" width="17" height="20" fill="{bgcolor}"/>
+        <rect width="82" height="20" fill="url(#s)"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif"
+       text-rendering="geometricPrecision" font-size="110">
+       <text aria-hidden="true" x="335" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="550">
+       pip-rating
+       </text>
+       <text x="335" y="140" transform="scale(.1)" fill="#fff" textLength="550">pip-rating</text>
+       <text aria-hidden="true" x="725" y="150" fill="{shcolor}" fill-opacity=".3" transform="scale(.1)"
+             textLength="70">
+       {letter}
+       </text>
+       <text x="725" y="140" transform="scale(.1)" fill="{color}" textLength="70">{letter}</text>
+    </g>
+</svg>
+"""
+BADGE_FLAT_SQUARE_SVG = """\
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82" height="20" role="img"
+     aria-label="pip-rating: {letter}">
+    <title>pip-rating: {letter}</title>
+    <g shape-rendering="crispEdges">
+        <rect width="65" height="20" fill="#555"/><rect x="65" width="17" height="20" fill="{bgcolor}"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif"
+       text-rendering="geometricPrecision" font-size="110">
+        <text x="335" y="140" transform="scale(.1)" fill="#fff" textLength="550">pip-rating</text>
+        <text x="725" y="140" transform="scale(.1)" fill="{color}" textLength="70">{letter}</text>
+    </g>
+</svg>
+"""
+BADGE_FOR_THE_BADGE_SVG = """\
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128.75" height="28" role="img"
+     aria-label="PIP-RATING: {letter}">
+    <title>PIP-RATING: {letter}</title>
+    <g shape-rendering="crispEdges">
+        <rect width="96.5" height="28" fill="#555"/>
+        <rect x="96.5" width="32.25" height="28" fill="{bgcolor}"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif"
+       text-rendering="geometricPrecision" font-size="100">
+        <text transform="scale(.1)" x="482.5" y="175"
+              textLength="725" fill="#fff">
+            PIP-RATING
+        </text>
+        <text transform="scale(.1)" x="1126.25" y="175" textLength="82.5" fill="{color}"
+              font-weight="bold">
+            {letter}
+        </text>
+    </g>
+</svg>
+"""
+PIP_RATING_BADGE_COLORS = {
+    "S": os.environ.get("PIP_RATING_BADGE_S_COLOR", "#007EC6"),
+    "A": os.environ.get("PIP_RATING_BADGE_A_COLOR", "#44CC11"),
+    "B": os.environ.get("PIP_RATING_BADGE_B_COLOR", "#97CA00"),
+    "C": os.environ.get("PIP_RATING_BADGE_C_COLOR", "#FFD700"),
+    "D": os.environ.get("PIP_RATING_BADGE_D_COLOR", "#FFAF00"),
+    "E": os.environ.get("PIP_RATING_BADGE_E_COLOR", "#FF5F00"),
+    "F": os.environ.get("PIP_RATING_BADGE_F_COLOR", "#E05D44"),
+}
+PIP_RATING_BADGES = {
+    "flat": BADGE_FLAT_SVG,
+    "flat-square": BADGE_FLAT_SQUARE_SVG,
+    "for-the-badge": BADGE_FOR_THE_BADGE_SVG,
+}
+PIP_RATING_BADGE_DEFAULT_STYLE = "flat"
+PIP_RATING_BADGE_STYLE = os.environ.get(
+    "PIP_RATING_BADGE_STYLE", PIP_RATING_BADGE_DEFAULT_STYLE
+)
+
+
+def get_luminance(hex_color: str) -> float:
+    """Get the luminance of a color as float."""
+    color = hex_color[1:]
+    hex_red = int(color[0:2], base=16)
+    hex_green = int(color[2:4], base=16)
+    hex_blue = int(color[4:6], base=16)
+    return hex_red * 0.2126 + hex_green * 0.7152 + hex_blue * 0.0722
 
 
 def colorize_score(score: Union["ScoreBase", int]) -> str:
@@ -208,6 +298,8 @@ class Results:
             self.show_json_results(dependencies)
         elif format_name == "only-rating":
             self.show_only_rating_results(dependencies)
+        elif format_name == "badge":
+            self.show_badge_results(dependencies)
         else:
             raise ValueError(f"Format name must be one of {', '.join(FORMATS)}")
 
@@ -308,3 +400,30 @@ class Results:
     def show_only_rating_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
         self.results_console.print(f"{colorize_rating(global_rating_score)}")
+
+    def show_badge_results(self, dependencies: "Dependencies") -> None:
+        """Show the badge depending on the global rating score.
+        The badge is printed as a svg image
+
+        :param dependencies: Dependencies
+        """
+        letter = colorize_rating(self.get_global_rating_score(dependencies)).letter
+        badge = PIP_RATING_BADGES.get(
+            PIP_RATING_BADGE_STYLE, PIP_RATING_BADGE_DEFAULT_STYLE
+        )
+        badge_color = PIP_RATING_BADGE_COLORS[letter]
+        luminance = get_luminance(badge_color)
+        if luminance < 180:
+            color = "fff"
+            shcolor = "#010101"
+        else:
+            color = "#333"
+            shcolor = "#ccc"
+        self.results_console.print(
+            badge.format(
+                letter=letter,
+                bgcolor=badge_color,
+                color=color,
+                shcolor=shcolor,
+            )
+        )
