@@ -23,6 +23,9 @@
   :target: https://codecov.io/github/Nekmo/pip-rating
   :alt: Test coverage
 
+.. image:: https://raw.githubusercontent.com/Nekmo/pip-rating/pip-rating-badge/pip-rating-badge.svg
+  :target: https://github.com/Nekmo/pip-rating/actions/workflows/pip-rating.yml
+  :alt: pip-rating badge
 
 ##########
 pip-rating
