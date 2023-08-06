@@ -113,8 +113,9 @@ runs:
         PIP_RATING_BADGE_F_COLOR: ${{ inputs.badge_f_color }}
       shell: bash
     - name: Submit rating badge to the current branch
-      if: ${{ inputs.create_badge != 'false' }} && ${{ inputs.badge_branch == '' }}
+      if: ${{ (inputs.create_badge != 'false') && (inputs.badge_branch == '') }}
       run: |
+        echo "Updating badge at current branch"
         git config --global user.name 'Pip-rating'
         git config --global user.email 'pip-rating@nekmo.com'
         git add "${{ inputs.badge_path }}"
@@ -122,8 +123,9 @@ runs:
         git push --force
       shell: bash
     - name: Submit rating badge to the badge branch
-      if: ${{ inputs.create_badge != 'false' }} && ${{ inputs.badge_branch != '' }}
+      if: ${{ (inputs.create_badge != 'false') && (inputs.badge_branch != '') }}
       run: |
+        echo "Updating badge at branch ${{ inputs.badge_branch }}"
         mkdir /tmp/pip-rating-badge
         mv "${{ inputs.badge_path }}" /tmp/pip-rating-badge
         cp -r .git /tmp/pip-rating-badge
