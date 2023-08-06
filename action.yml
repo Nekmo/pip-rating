@@ -18,6 +18,7 @@ inputs:
       Requirements file type. By default this is autodetected. Available types: requirements, setup.cfg, setup.py,
       Pipfile & pyproject.toml
     required: false
+    default: ''
   ignore_packages:
     description: |
       Packages to ignore separated by spaces.
@@ -104,4 +105,13 @@ runs:
         PIP_RATING_BADGE_D_COLOR: ${{ inputs.badge_d_color }}
         PIP_RATING_BADGE_E_COLOR: ${{ inputs.badge_e_color }}
         PIP_RATING_BADGE_F_COLOR: ${{ inputs.badge_f_color }}
+      shell: bash
+    - name: Submit rating badge
+      if: ${{ inputs.create_badge }} == 'true'
+      run: |
+        git config --global user.name 'Pip-rating'
+        git config --global user.email 'pip-rating@nekmo.com'
+        git add "${{ inputs.badge_path }}"
+        git commit -am "Updated badge at $(date)" || echo "Already updated"
+        git push --force
       shell: bash
