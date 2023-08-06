@@ -244,6 +244,11 @@ class TestResults(unittest.TestCase):
         ) as mock_show_only_rating_results:
             test_results.show_results(mock_dependencies, "only-rating")
             mock_show_only_rating_results.assert_called_once_with(mock_dependencies)
+        with self.subTest("Test badge format"), patch(
+            "pip_rating.results.Results.show_badge_results"
+        ) as mock_show_show_badge_results:
+            test_results.show_results(mock_dependencies, "badge")
+            mock_show_show_badge_results.assert_called_once_with(mock_dependencies)
 
     def test_show_packages_results(self):
         """Test the show_packages_results method of Results."""
@@ -347,5 +352,17 @@ class TestResults(unittest.TestCase):
         mock_dependencies = MagicMock()
         test_results = Results()
         test_results.show_only_rating_results(mock_dependencies)
+        mock_get_global_rating_score.assert_called_once_with(mock_dependencies)
+        mock_console.return_value.print.assert_called_once()
+
+    @patch("pip_rating.results.Results.get_global_rating_score")
+    @patch("pip_rating.results.Console")
+    def test_show_badge_results(
+        self, mock_console: MagicMock, mock_get_global_rating_score: MagicMock
+    ):
+        """Test the show_badge_results method of Results."""
+        mock_dependencies = MagicMock()
+        test_results = Results()
+        test_results.show_badge_results(mock_dependencies)
         mock_get_global_rating_score.assert_called_once_with(mock_dependencies)
         mock_console.return_value.print.assert_called_once()
