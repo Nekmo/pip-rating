@@ -107,7 +107,7 @@ runs:
         PIP_RATING_BADGE_F_COLOR: ${{ inputs.badge_f_color }}
       shell: bash
     - name: Submit rating badge
-      if: ${{ inputs.create_badge }} == 'true'
+      if: ${{ inputs.create_badge != 'false' }}
       run: |
         git config --global user.name 'Pip-rating'
         git config --global user.email 'pip-rating@nekmo.com'
