@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Troubleshooting &#8212; pip-rating 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=677304e0" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pip_rating" href="modules.html" />
+    <link rel="prev" title="GitHub Action" href="github_action.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+    <link rel="canonical" href="http://docs.nekmo.org/pip-rating/troubleshooting.html"/>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h1>
+<section id="what-is-pip-rating-used-for">
+<h2>What is pip-rating used for?<a class="headerlink" href="#what-is-pip-rating-used-for" title="Permalink to this heading">¶</a></h2>
+<p>Pip-rating is useful in many different scenarios:</p>
+<ul class="simple">
+<li><p>Avoid introducing potentially malicious dependencies into your application.</p></li>
+<li><p>Compare dependencies based on criteria such as community or age.</p></li>
+<li><p>Monitor if your dependencies are no longer supported.</p></li>
+<li><p>Check if there are vulnerabilities in any of your dependencies.</p></li>
+<li><p>Check all your dependencies and their state as a tree.</p></li>
+</ul>
+<p>Pip-rating can analyze the dependencies file of a library, a project, or a specific package.</p>
+</section>
+<section id="what-is-the-idea-behind-this-project">
+<h2>What is the idea behind this project?<a class="headerlink" href="#what-is-the-idea-behind-this-project" title="Permalink to this heading">¶</a></h2>
+<p>The idea for this project came from <a class="reference external" href="https://xkcd.com/2347/">this great XKCD comic</a>:</p>
+<a class="reference external image-reference" href="https://xkcd.com/2347/"><img alt="Dependency - from the XKCD comic 2347" class="align-center" src="_images/dependency.png" /></a>
+<p>The author of this comic is <strong>Randall Munroe</strong> from <a class="reference external" href="https://xkcd.com/">XKCD</a>.</p>
+</section>
+<section id="why-does-my-package-have-a-low-rate">
+<h2>Why does my package have a low rate?<a class="headerlink" href="#why-does-my-package-have-a-low-rate" title="Permalink to this heading">¶</a></h2>
+<p>Pip-rating determines the score based on two main criteria:</p>
+<ul class="simple">
+<li><p>The scoring criteria described in <a class="reference internal" href="overview.html#scores-breakdown"><span class="std std-ref">Scores breakdown</span></a>.</p></li>
+<li><p>The rating of the package’s dependencies. Your package rating cannot exceed the rating of its dependencies. That is,
+your package’s score is limited by your dependencies.</p></li>
+</ul>
+<p>In the last point, it is indicated with the syntax <code class="docutils literal notranslate"><span class="pre">Original</span> <span class="pre">rating</span> <span class="pre">-&gt;</span> <span class="pre">new</span> <span class="pre">rating</span></code>. For example: <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">-&gt;</span> <span class="pre">C</span></code>. In this
+example, <code class="docutils literal notranslate"><span class="pre">A</span></code> is your original score and <code class="docutils literal notranslate"><span class="pre">C</span></code> the new rating after apply this limitation.</p>
+<p>You can see the analysis of your package in more detail using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip-rating analyze-package &lt;your-package-name&gt;
+</pre></div>
+</div>
+<p>Please note that pip-rating uses open source such as Github. Pip-rating may not detect your source, and some scores may
+not add up to your rating.</p>
+</section>
+<section id="why-the-github-limit-is-exceeded">
+<h2>why the github limit is exceeded?<a class="headerlink" href="#why-the-github-limit-is-exceeded" title="Permalink to this heading">¶</a></h2>
+<p>Pip-rating uses Github to obtain information about the packages. Github has a limit of 60 requests per hour for
+unauthenticated users. If you exceed this limit, you will see an error like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip-rating
+GitHub rate limit exceeded. Set GITHUB_TOKEN environment variable to increase the limit.
+</pre></div>
+</div>
+<p>This error is not critial and you can ignore it. But some information will not be available. If you want to increase
+the limit, you can create a Github token and use it as an environment variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export GITHUB_TOKEN=your-token
+$ pip-rating
+</pre></div>
+</div>
+<p>For read more about Github tokens, see <a class="reference external" href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">this Github documentation</a>.</p>
+</section>
+<section id="i-am-having-errors-with-pip-rating-how-can-i-report-them">
+<h2>I am having errors with Pip-rating. How can I report them?<a class="headerlink" href="#i-am-having-errors-with-pip-rating-how-can-i-report-them" title="Permalink to this heading">¶</a></h2>
+<p>You can report it on <a class="reference external" href="https://github.com/Nekmo/pip-rating/issues">the issues page on Github</a>. Before reporting, check
+that is a Pip-rating error and that is not duplicated. To make it easier to close the bug, add as much information
+possible.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Are the dependencies (and their dependencies) of your project secure and maintained?</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Nekmo&repo=pip-rating&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Nekmo/pip-rating">
+    <img
+    alt="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    src="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pip-rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="github_action.html">GitHub Action</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-pip-rating-used-for">What is pip-rating used for?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-idea-behind-this-project">What is the idea behind this project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-does-my-package-have-a-low-rate">Why does my package have a low rate?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-the-github-limit-is-exceeded">why the github limit is exceeded?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-am-having-errors-with-pip-rating-how-can-i-report-them">I am having errors with Pip-rating. How can I report them?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pip_rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="github_action.html" title="previous chapter">GitHub Action</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">pip_rating</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Nekmo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/troubleshooting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/Nekmo/pip-rating" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="_static/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-62276079-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

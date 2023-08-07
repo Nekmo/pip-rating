@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pip_rating.results &#8212; pip-rating 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=677304e0" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=2389946f"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+    <link rel="canonical" href="http://docs.nekmo.org/pip-rating/_modules/pip_rating/results.html"/>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pip_rating.results</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">pip_rating</span> <span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Progress</span><span class="p">,</span>
+    <span class="n">TaskID</span><span class="p">,</span>
+    <span class="n">TaskProgressColumn</span><span class="p">,</span>
+    <span class="n">TextColumn</span><span class="p">,</span>
+    <span class="n">BarColumn</span><span class="p">,</span>
+    <span class="n">TimeRemainingColumn</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">rich.status</span> <span class="kn">import</span> <span class="n">Status</span>
+<span class="kn">from</span> <span class="nn">rich.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">rich.tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pip_rating.packages</span> <span class="kn">import</span> <span class="n">Package</span>
+    <span class="kn">from</span> <span class="nn">pip_rating.rating</span> <span class="kn">import</span> <span class="n">ScoreBase</span>
+    <span class="kn">from</span> <span class="nn">pip_rating.dependencies</span> <span class="kn">import</span> <span class="n">Dependencies</span>
+
+
+<span class="n">MIN_PACKAGE_NAME</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">FORMATS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;tree&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;only-rating&quot;</span><span class="p">,</span> <span class="s2">&quot;badge&quot;</span><span class="p">]</span>
+<span class="n">BADGE_FLAT_SVG</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; width=&quot;82&quot;</span>
+<span class="s2">     height=&quot;20&quot; role=&quot;img&quot; aria-label=&quot;pip-rating: </span><span class="si">{letter}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    &lt;title&gt;pip-rating: </span><span class="si">{letter}</span><span class="s2">&lt;/title&gt;</span>
+<span class="s2">    &lt;linearGradient id=&quot;s&quot; x2=&quot;0&quot; y2=&quot;100%&quot;&gt;</span>
+<span class="s2">        &lt;stop offset=&quot;0&quot; stop-color=&quot;#bbb&quot; stop-opacity=&quot;.1&quot;/&gt;</span>
+<span class="s2">        &lt;stop offset=&quot;1&quot; stop-opacity=&quot;.1&quot;/&gt;</span>
+<span class="s2">    &lt;/linearGradient&gt;</span>
+<span class="s2">    &lt;clipPath id=&quot;r&quot;&gt;&lt;rect width=&quot;82&quot; height=&quot;20&quot; rx=&quot;3&quot; fill=&quot;#fff&quot;/&gt;&lt;/clipPath&gt;</span>
+<span class="s2">    &lt;g clip-path=&quot;url(#r)&quot;&gt;</span>
+<span class="s2">        &lt;rect width=&quot;65&quot; height=&quot;20&quot; fill=&quot;#555&quot;/&gt;&lt;rect x=&quot;65&quot; width=&quot;17&quot; height=&quot;20&quot; fill=&quot;</span><span class="si">{bgcolor}</span><span class="s2">&quot;/&gt;</span>
+<span class="s2">        &lt;rect width=&quot;82&quot; height=&quot;20&quot; fill=&quot;url(#s)&quot;/&gt;</span>
+<span class="s2">    &lt;/g&gt;</span>
+<span class="s2">    &lt;g fill=&quot;#fff&quot; text-anchor=&quot;middle&quot; font-family=&quot;Verdana,Geneva,DejaVu Sans,sans-serif&quot;</span>
+<span class="s2">       text-rendering=&quot;geometricPrecision&quot; font-size=&quot;110&quot;&gt;</span>
+<span class="s2">       &lt;text aria-hidden=&quot;true&quot; x=&quot;335&quot; y=&quot;150&quot; fill=&quot;#010101&quot; fill-opacity=&quot;.3&quot; transform=&quot;scale(.1)&quot; textLength=&quot;550&quot;&gt;</span>
+<span class="s2">       pip-rating</span>
+<span class="s2">       &lt;/text&gt;</span>
+<span class="s2">       &lt;text x=&quot;335&quot; y=&quot;140&quot; transform=&quot;scale(.1)&quot; fill=&quot;#fff&quot; textLength=&quot;550&quot;&gt;pip-rating&lt;/text&gt;</span>
+<span class="s2">       &lt;text aria-hidden=&quot;true&quot; x=&quot;725&quot; y=&quot;150&quot; fill=&quot;</span><span class="si">{shcolor}</span><span class="s2">&quot; fill-opacity=&quot;.3&quot; transform=&quot;scale(.1)&quot;</span>
+<span class="s2">             textLength=&quot;70&quot;&gt;</span>
+<span class="s2">       </span><span class="si">{letter}</span>
+<span class="s2">       &lt;/text&gt;</span>
+<span class="s2">       &lt;text x=&quot;725&quot; y=&quot;140&quot; transform=&quot;scale(.1)&quot; fill=&quot;</span><span class="si">{color}</span><span class="s2">&quot; textLength=&quot;70&quot;&gt;</span><span class="si">{letter}</span><span class="s2">&lt;/text&gt;</span>
+<span class="s2">    &lt;/g&gt;</span>
+<span class="s2">&lt;/svg&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">BADGE_FLAT_SQUARE_SVG</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; width=&quot;82&quot; height=&quot;20&quot; role=&quot;img&quot;</span>
+<span class="s2">     aria-label=&quot;pip-rating: </span><span class="si">{letter}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    &lt;title&gt;pip-rating: </span><span class="si">{letter}</span><span class="s2">&lt;/title&gt;</span>
+<span class="s2">    &lt;g shape-rendering=&quot;crispEdges&quot;&gt;</span>
+<span class="s2">        &lt;rect width=&quot;65&quot; height=&quot;20&quot; fill=&quot;#555&quot;/&gt;&lt;rect x=&quot;65&quot; width=&quot;17&quot; height=&quot;20&quot; fill=&quot;</span><span class="si">{bgcolor}</span><span class="s2">&quot;/&gt;</span>
+<span class="s2">    &lt;/g&gt;</span>
+<span class="s2">    &lt;g fill=&quot;#fff&quot; text-anchor=&quot;middle&quot; font-family=&quot;Verdana,Geneva,DejaVu Sans,sans-serif&quot;</span>
+<span class="s2">       text-rendering=&quot;geometricPrecision&quot; font-size=&quot;110&quot;&gt;</span>
+<span class="s2">        &lt;text x=&quot;335&quot; y=&quot;140&quot; transform=&quot;scale(.1)&quot; fill=&quot;#fff&quot; textLength=&quot;550&quot;&gt;pip-rating&lt;/text&gt;</span>
+<span class="s2">        &lt;text x=&quot;725&quot; y=&quot;140&quot; transform=&quot;scale(.1)&quot; fill=&quot;</span><span class="si">{color}</span><span class="s2">&quot; textLength=&quot;70&quot;&gt;</span><span class="si">{letter}</span><span class="s2">&lt;/text&gt;</span>
+<span class="s2">    &lt;/g&gt;</span>
+<span class="s2">&lt;/svg&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">BADGE_FOR_THE_BADGE_SVG</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; width=&quot;128.75&quot; height=&quot;28&quot; role=&quot;img&quot;</span>
+<span class="s2">     aria-label=&quot;PIP-RATING: </span><span class="si">{letter}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    &lt;title&gt;PIP-RATING: </span><span class="si">{letter}</span><span class="s2">&lt;/title&gt;</span>
+<span class="s2">    &lt;g shape-rendering=&quot;crispEdges&quot;&gt;</span>
+<span class="s2">        &lt;rect width=&quot;96.5&quot; height=&quot;28&quot; fill=&quot;#555&quot;/&gt;</span>
+<span class="s2">        &lt;rect x=&quot;96.5&quot; width=&quot;32.25&quot; height=&quot;28&quot; fill=&quot;</span><span class="si">{bgcolor}</span><span class="s2">&quot;/&gt;</span>
+<span class="s2">    &lt;/g&gt;</span>
+<span class="s2">    &lt;g fill=&quot;#fff&quot; text-anchor=&quot;middle&quot; font-family=&quot;Verdana,Geneva,DejaVu Sans,sans-serif&quot;</span>
+<span class="s2">       text-rendering=&quot;geometricPrecision&quot; font-size=&quot;100&quot;&gt;</span>
+<span class="s2">        &lt;text transform=&quot;scale(.1)&quot; x=&quot;482.5&quot; y=&quot;175&quot;</span>
+<span class="s2">              textLength=&quot;725&quot; fill=&quot;#fff&quot;&gt;</span>
+<span class="s2">            PIP-RATING</span>
+<span class="s2">        &lt;/text&gt;</span>
+<span class="s2">        &lt;text transform=&quot;scale(.1)&quot; x=&quot;1126.25&quot; y=&quot;175&quot; textLength=&quot;82.5&quot; fill=&quot;</span><span class="si">{color}</span><span class="s2">&quot;</span>
+<span class="s2">              font-weight=&quot;bold&quot;&gt;</span>
+<span class="s2">            </span><span class="si">{letter}</span>
+<span class="s2">        &lt;/text&gt;</span>
+<span class="s2">    &lt;/g&gt;</span>
+<span class="s2">&lt;/svg&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">PIP_RATING_BADGE_COLORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_S_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#007EC6&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_A_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#44CC11&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_B_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#97CA00&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_C_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#FFD700&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_D_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#FFAF00&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_E_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#FF5F00&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PIP_RATING_BADGE_F_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;#E05D44&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">PIP_RATING_BADGES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;flat&quot;</span><span class="p">:</span> <span class="n">BADGE_FLAT_SVG</span><span class="p">,</span>
+    <span class="s2">&quot;flat-square&quot;</span><span class="p">:</span> <span class="n">BADGE_FLAT_SQUARE_SVG</span><span class="p">,</span>
+    <span class="s2">&quot;for-the-badge&quot;</span><span class="p">:</span> <span class="n">BADGE_FOR_THE_BADGE_SVG</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">PIP_RATING_BADGE_DEFAULT_STYLE</span> <span class="o">=</span> <span class="s2">&quot;flat&quot;</span>
+<span class="n">PIP_RATING_BADGE_STYLE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s2">&quot;PIP_RATING_BADGE_STYLE&quot;</span><span class="p">,</span> <span class="n">PIP_RATING_BADGE_DEFAULT_STYLE</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_luminance"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.get_luminance">[docs]</a><span class="k">def</span> <span class="nf">get_luminance</span><span class="p">(</span><span class="n">hex_color</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the luminance of a color as float.&quot;&quot;&quot;</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">hex_color</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">hex_red</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">hex_green</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">hex_blue</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">color</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hex_red</span> <span class="o">*</span> <span class="mf">0.2126</span> <span class="o">+</span> <span class="n">hex_green</span> <span class="o">*</span> <span class="mf">0.7152</span> <span class="o">+</span> <span class="n">hex_blue</span> <span class="o">*</span> <span class="mf">0.0722</span></div>
+
+
+<div class="viewcode-block" id="colorize_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.colorize_score">[docs]</a><span class="k">def</span> <span class="nf">colorize_score</span><span class="p">(</span><span class="n">score</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;ScoreBase&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Colorize the score.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[bold red]</span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">[/bold red]&quot;</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[bold green]+</span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">[/bold green]&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[bold bright_black]</span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">[/bold bright_black]&quot;</span></div>
+
+
+<div class="viewcode-block" id="colorize_rating"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.colorize_rating">[docs]</a><span class="k">def</span> <span class="nf">colorize_rating</span><span class="p">(</span><span class="n">score</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;ScoreBase&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;RatingLetter&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Colorize the rating.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">rating_letter</span> <span class="ow">in</span> <span class="n">RATING_LETTERS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">rating_letter</span><span class="o">.</span><span class="n">score</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rating_letter</span></div>
+
+
+<div class="viewcode-block" id="colorize_rating_package"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.colorize_rating_package">[docs]</a><span class="k">def</span> <span class="nf">colorize_rating_package</span><span class="p">(</span>
+    <span class="n">package</span><span class="p">:</span> <span class="s2">&quot;Package&quot;</span><span class="p">,</span> <span class="n">parent_package</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Colorize the rating of the package.&quot;&quot;&quot;</span>
+    <span class="n">colorized_rating</span> <span class="o">=</span> <span class="n">colorize_rating</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">get_rating_score</span><span class="p">(</span><span class="n">parent_package</span><span class="p">))</span>
+    <span class="n">colorized_global_rating</span> <span class="o">=</span> <span class="n">colorize_rating</span><span class="p">(</span>
+        <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">parent_package</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">colorized_rating</span> <span class="o">&gt;</span> <span class="n">colorized_global_rating</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colorized_rating</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">colorized_global_rating</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colorized_rating</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="add_tree_node"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.add_tree_node">[docs]</a><span class="k">def</span> <span class="nf">add_tree_node</span><span class="p">(</span>
+    <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">,</span>
+    <span class="n">tree</span><span class="p">:</span> <span class="s2">&quot;Tree&quot;</span><span class="p">,</span>
+    <span class="n">package</span><span class="p">:</span> <span class="s2">&quot;Package&quot;</span><span class="p">,</span>
+    <span class="n">parent_package</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">parent_package</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;[bold]:package: </span><span class="si">{</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">colorize_rating_package</span><span class="p">(</span><span class="n">package</span><span class="p">)</span><span class="si">}</span><span class="s2">)[/bold]&quot;</span>
+        <span class="p">)</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">package</span><span class="o">.</span><span class="n">get_node_from_parent</span><span class="p">(</span><span class="n">parent_package</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">packages</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">subpackage</span> <span class="o">=</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">packages</span><span class="p">[</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">subtree_package</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;[bold]</span><span class="si">{</span><span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">colorize_rating_package</span><span class="p">(</span><span class="n">subpackage</span><span class="p">,</span><span class="w"> </span><span class="n">package</span><span class="p">)</span><span class="si">}</span><span class="s2">)[/bold]&quot;</span>
+        <span class="p">)</span>
+        <span class="n">add_tree_node</span><span class="p">(</span><span class="n">dependencies</span><span class="p">,</span> <span class="n">subtree_package</span><span class="p">,</span> <span class="n">subpackage</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RatingLetter"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.RatingLetter">[docs]</a><span class="k">class</span> <span class="nc">RatingLetter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rating letter.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">letter</span> <span class="o">=</span> <span class="n">letter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">score</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">score</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">score</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">score</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">score</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">score</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[bold </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="s2">]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">letter</span><span class="si">}</span><span class="s2">[/bold </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="s2">]&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;RatingLetter </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">letter</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+
+
+<span class="n">RATING_LETTERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;bright_cyan&quot;</span><span class="p">),</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;green3&quot;</span><span class="p">),</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;green_yellow&quot;</span><span class="p">),</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;gold1&quot;</span><span class="p">),</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;orange1&quot;</span><span class="p">),</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;orange_red1&quot;</span><span class="p">),</span>
+    <span class="n">RatingLetter</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;bright_red&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="JsonResults"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.JsonResults">[docs]</a><span class="k">class</span> <span class="nc">JsonResults</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;JSON results&quot;&quot;&quot;</span>
+
+    <span class="n">requirements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">updated_at</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">schema_version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">global_rating_letter</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">global_rating_score</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">packages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results">[docs]</a><span class="k">class</span> <span class="nc">Results</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print pip-ratings results to the terminal.&quot;&quot;&quot;</span>
+
+    <span class="n">_status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Status</span><span class="p">]</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Progress</span><span class="p">]</span>
+    <span class="n">task</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TaskID</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">results_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">to_file</span><span class="p">:</span>
+            <span class="n">results_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">stderr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">&quot;[bold green]Loading...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">results_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_file</span> <span class="o">=</span> <span class="n">to_file</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Status</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress_console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">&quot;[bold green]Waiting...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+
+<div class="viewcode-block" id="Results.processing_package"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.processing_package">[docs]</a>    <span class="k">def</span> <span class="nf">processing_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing package [bold green]</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">[/bold green]...&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.analizing_package"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.analizing_package">[docs]</a>    <span class="k">def</span> <span class="nf">analizing_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">Progress</span><span class="p">(</span>
+                <span class="n">TextColumn</span><span class="p">(</span><span class="s2">&quot;[progress.description]</span><span class="si">{task.description}</span><span class="s2">&quot;</span><span class="p">),</span>
+                <span class="n">BarColumn</span><span class="p">(</span><span class="n">complete_style</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">),</span>
+                <span class="n">TaskProgressColumn</span><span class="p">(),</span>
+                <span class="n">TimeRemainingColumn</span><span class="p">(),</span>
+                <span class="n">console</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">progress_console</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="s2">&quot;Analizing packages...&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">spaces</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">MIN_PACKAGE_NAME</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">package</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Analizing package [bold blue]</span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">[/bold blue]...&quot;</span>
+            <span class="o">+</span> <span class="n">spaces</span><span class="p">,</span>
+            <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.get_global_rating_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.get_global_rating_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_global_rating_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">global_rating_score</span> <span class="o">=</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;[bold green]Analyzed all packages[/bold green]&quot;</span><span class="p">,</span>
+                <span class="n">refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">global_rating_score</span></div>
+
+<div class="viewcode-block" id="Results.show_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.show_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">,</span> <span class="n">format_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;text&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show results depending on the format. Optionally save to a file.</span>
+
+<span class="sd">        :param dependencies: Dependencies</span>
+<span class="sd">        :param format_name: Format name. Choices: FORMATS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">format_name</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_packages_results</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">format_name</span> <span class="o">==</span> <span class="s2">&quot;tree&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_tree_results</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">format_name</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_json_results</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">format_name</span> <span class="o">==</span> <span class="s2">&quot;only-rating&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_only_rating_results</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">format_name</span> <span class="o">==</span> <span class="s2">&quot;badge&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_badge_results</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Format name must be one of </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FORMATS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.show_packages_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.show_packages_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_packages_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">):</span>
+        <span class="n">global_rating_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">req_file</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">package_global_rating_score</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">()</span>
+            <span class="n">package_global_rating_score_letter</span> <span class="o">=</span> <span class="n">colorize_rating</span><span class="p">(</span>
+                <span class="n">package_global_rating_score</span>
+            <span class="p">)</span>
+            <span class="n">rating_score_letter</span> <span class="o">=</span> <span class="n">colorize_rating</span><span class="p">(</span><span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">get_rating_score</span><span class="p">())</span>
+            <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">package_global_rating_score</span><span class="p">:</span>
+                <span class="n">vulnerabilities</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">get_vulnerabilities</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">vulnerabilities</span>
+                <span class="ow">or</span> <span class="n">package_global_rating_score_letter</span> <span class="o">&gt;=</span> <span class="n">rating_score_letter</span>
+            <span class="p">):</span>
+                <span class="n">print_score</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_global_rating_score_letter</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">print_score</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rating_score_letter</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">package_global_rating_score_letter</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;:package: Package [bold blue]</span><span class="si">{</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">[/bold blue]: &quot;</span>
+                <span class="o">+</span> <span class="n">print_score</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">breakdown_scores</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;iso_dt&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;  :black_medium-small_square: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">colorize_score</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">package_global_rating_score</span> <span class="o">&lt;</span> <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">rating_score</span><span class="p">:</span>
+                <span class="n">low_rating_dependences</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pkg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">colorize_rating</span><span class="p">(</span><span class="n">score</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="k">for</span> <span class="n">pkg</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">descendant_rating_scores</span>
+                    <span class="k">if</span> <span class="n">colorize_rating</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rating_score_letter</span>
+                <span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;  :arrow_lower_right: Low rating dependencies: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">low_rating_dependences</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">vulnerabilities</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;  :biohazard: Vulnerabilities found: [bold grey53]&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">vuln</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">vuln</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">vulnerabilities</span><span class="p">])</span><span class="si">}</span><span class="s2">[/bold grey53]&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">show_header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Global rating score: </span><span class="si">{</span><span class="n">colorize_rating</span><span class="p">(</span><span class="n">global_rating_score</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.show_tree_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.show_tree_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_tree_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">):</span>
+        <span class="n">global_rating_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="n">req_file_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">dependencies</span><span class="o">.</span><span class="n">req_file</span><span class="p">)</span> <span class="k">if</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">req_file</span> <span class="k">else</span> <span class="s2">&quot;Packages list&quot;</span>
+        <span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;[bold]</span><span class="si">{</span><span class="n">req_file_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">colorize_rating</span><span class="p">(</span><span class="n">global_rating_score</span><span class="p">)</span><span class="si">}</span><span class="s2">)[/bold]&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">req_file</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">add_tree_node</span><span class="p">(</span><span class="n">dependencies</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.get_json_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.get_json_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_json_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">):</span>
+        <span class="n">global_rating_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="n">packages</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">package</span>
+            <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">req_file</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;requirements&quot;</span><span class="p">:</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">req_file</span><span class="p">,</span>
+            <span class="s2">&quot;updated_at&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;schema_version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+            <span class="s2">&quot;global_rating_letter&quot;</span><span class="p">:</span> <span class="n">colorize_rating</span><span class="p">(</span><span class="n">global_rating_score</span><span class="p">)</span><span class="o">.</span><span class="n">letter</span><span class="p">,</span>
+            <span class="s2">&quot;global_rating_score&quot;</span><span class="p">:</span> <span class="n">global_rating_score</span><span class="p">,</span>
+            <span class="s2">&quot;packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">package</span><span class="o">.</span><span class="n">as_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">],</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="Results.show_json_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.show_json_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_json_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_json_results</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Results.show_only_rating_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.show_only_rating_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_only_rating_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">):</span>
+        <span class="n">global_rating_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colorize_rating</span><span class="p">(</span><span class="n">global_rating_score</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Results.show_badge_results"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.results.Results.show_badge_results">[docs]</a>    <span class="k">def</span> <span class="nf">show_badge_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">:</span> <span class="s2">&quot;Dependencies&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the badge depending on the global rating score.</span>
+<span class="sd">        The badge is printed as a svg image</span>
+
+<span class="sd">        :param dependencies: Dependencies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">letter</span> <span class="o">=</span> <span class="n">colorize_rating</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">dependencies</span><span class="p">))</span><span class="o">.</span><span class="n">letter</span>
+        <span class="n">badge</span> <span class="o">=</span> <span class="n">PIP_RATING_BADGES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">PIP_RATING_BADGE_STYLE</span><span class="p">,</span> <span class="n">PIP_RATING_BADGE_DEFAULT_STYLE</span>
+        <span class="p">)</span>
+        <span class="n">badge_color</span> <span class="o">=</span> <span class="n">PIP_RATING_BADGE_COLORS</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span>
+        <span class="n">luminance</span> <span class="o">=</span> <span class="n">get_luminance</span><span class="p">(</span><span class="n">badge_color</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">luminance</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;fff&quot;</span>
+            <span class="n">shcolor</span> <span class="o">=</span> <span class="s2">&quot;#010101&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#333&quot;</span>
+            <span class="n">shcolor</span> <span class="o">=</span> <span class="s2">&quot;#ccc&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+            <span class="n">badge</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">letter</span><span class="o">=</span><span class="n">letter</span><span class="p">,</span>
+                <span class="n">bgcolor</span><span class="o">=</span><span class="n">badge_color</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                <span class="n">shcolor</span><span class="o">=</span><span class="n">shcolor</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Are the dependencies (and their dependencies) of your project secure and maintained?</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Nekmo&repo=pip-rating&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Nekmo/pip-rating">
+    <img
+    alt="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    src="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">pip-rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github_action.html">GitHub Action</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pip_rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Nekmo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/Nekmo/pip-rating" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="../../_static/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-62276079-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
