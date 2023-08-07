@@ -12,7 +12,7 @@ babel==2.12.1
     # via sphinx
 beautifulsoup4==4.12.2
     # via -r requirements.in
-black==23.3.0
+black==23.7.0
     # via -r requirements-dev.in
 build==0.10.0
     # via -r requirements-dev.in
@@ -20,13 +20,13 @@ bump2version==1.0.1
     # via -r requirements-dev.in
 cachecontrol[filecache]==0.13.1
     # via pip-audit
-certifi==2023.5.7
+certifi==2023.7.22
     # via requests
 cfgv==3.3.1
     # via pre-commit
 charset-normalizer==3.2.0
     # via requests
-click==8.1.4
+click==8.1.6
     # via
     #   black
     #   pipgrip
@@ -41,7 +41,7 @@ cyclonedx-python-lib==4.0.1
     # via pip-audit
 defusedxml==0.7.1
     # via py-serializable
-distlib==0.3.6
+distlib==0.3.7
     # via virtualenv
 docutils==0.20.1
     # via
@@ -54,7 +54,7 @@ filelock==3.12.2
     #   virtualenv
 html5lib==1.1
     # via pip-audit
-identify==2.5.24
+identify==2.5.26
     # via pre-commit
 idna==3.4
     # via requests
@@ -78,7 +78,7 @@ mypy-extensions==1.0.0
     #   mypy
 nodeenv==1.8.0
     # via pre-commit
-packageurl-python==0.11.1
+packageurl-python==0.11.2
     # via cyclonedx-python-lib
 packaging==23.1
     # via
@@ -88,11 +88,11 @@ packaging==23.1
     #   pip-requirements-parser
     #   pipgrip
     #   sphinx
-pathspec==0.11.1
+pathspec==0.11.2
     # via black
 pip-api==0.0.30
     # via pip-audit
-pip-audit==2.6.0
+pip-audit==2.6.1
     # via -r requirements.in
 pip-requirements-parser==32.0.1
     # via pip-audit
@@ -102,7 +102,7 @@ pipgrip==0.10.4
     # via -r requirements.in
 pkginfo==1.7.1
     # via pipgrip
-platformdirs==3.8.1
+platformdirs==3.10.0
     # via
     #   -r requirements.in
     #   black
@@ -111,16 +111,16 @@ pre-commit==3.3.3
     # via -r requirements-dev.in
 py-serializable==0.11.1
     # via cyclonedx-python-lib
-pygments==2.15.1
+pygments==2.16.1
     # via
     #   -r requirements-dev.in
     #   rich
     #   sphinx
-pyparsing==3.1.0
+pyparsing==3.1.1
     # via pip-requirements-parser
 pyproject-hooks==1.0.0
     # via build
-pyyaml==6.0
+pyyaml==6.0.1
     # via pre-commit
 requests==2.31.0
     # via
@@ -129,7 +129,7 @@ requests==2.31.0
     #   codecov
     #   pip-audit
     #   sphinx
-rich==13.4.2
+rich==13.5.2
     # via
     #   -r requirements.in
     #   pip-audit
@@ -143,7 +143,7 @@ sortedcontainers==2.4.0
     # via cyclonedx-python-lib
 soupsieve==2.4.1
     # via beautifulsoup4
-sphinx==7.0.1
+sphinx==7.1.2
     # via
     #   -r requirements-dev.in
     #   sphinx-click
@@ -167,13 +167,13 @@ toml==0.10.2
     #   pipfile
 typing-extensions==4.7.1
     # via mypy
-urllib3==2.0.3
+urllib3==2.0.4
     # via requests
-virtualenv==20.24.0
+virtualenv==20.24.2
     # via pre-commit
 webencodings==0.5.1
     # via html5lib
-wheel==0.40.0
+wheel==0.41.1
     # via pipgrip
 
 # The following packages are considered to be unsafe in a requirements file:
