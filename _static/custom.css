@@ -1,7 +1,0 @@
-#pip-rating div[class*="highlight-"], #pip-rating pre {
-    clear: none;
-}
-
-#pip-rating img[align="right"] {
-    padding-left: 20px;
-}
