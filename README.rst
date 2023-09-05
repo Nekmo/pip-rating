@@ -102,7 +102,7 @@ To analyze one or more packages, you can use the command ``pip-rating analyze-pa
     $ pip-rating analyze-package <package_name>[ <other_package_name>]
 
 ⚡ Github Action
-===============
+================
 Pip-rating can be used as a *Github Action* to check the dependencies of your project in every commit and periodically.
 To use this github action add a file like this to your project in the path ``.github/workflows/pip-rating.yml``:
 
