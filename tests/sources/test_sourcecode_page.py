@@ -7,6 +7,7 @@ from pip_rating.sources.sourcecode_page import (
     get_github_readme,
     search_in_readme,
     SourcecodePage,
+    replace_chars,
 )
 
 
@@ -53,6 +54,17 @@ class TestGetGithubReadme(unittest.TestCase):
                 "GitHub rate limit exceeded. Set GITHUB_TOKEN environment variable to increase the limit.",
                 err=True,
             )
+
+
+class TestReplaceChars(unittest.TestCase):
+    """Test the replace_chars function."""
+
+    def test_replace_chars(self):
+        """Test the replace_chars function."""
+        with self.subTest("Test with dash char"):
+            self.assertEqual("package-name123", replace_chars("package-name123"))
+        with self.subTest("Test with other chars"):
+            self.assertEqual("package-name-123", replace_chars("package_name.123"))
 
 
 class TestSearchInReadme(unittest.TestCase):
