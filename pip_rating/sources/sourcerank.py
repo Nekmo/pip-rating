@@ -82,7 +82,7 @@ class SourceRank(SourceBase):
     def request(self) -> bytes:
         """Request the sourcerank page and return the content"""
         with requests.get(
-            SOURCERANK_URL.format(package_name=self.package_name)
+            SOURCERANK_URL.format(package_name=self.package.real_name)
         ) as response:
             try:
                 response.raise_for_status()

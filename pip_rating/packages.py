@@ -34,6 +34,10 @@ class Package:
         self.nodes = set()
 
     @cached_property
+    def real_name(self) -> str:
+        return self.pypi.package["info"]["name"]
+
+    @cached_property
     def first_node(self) -> Node:
         return next(iter(sorted(self.nodes, key=lambda n: n.depth)))
 
