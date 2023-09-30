@@ -176,7 +176,7 @@ class TestSourceRank(unittest.TestCase):
             sourcerank = SourceRank(mock_package)
             self.assertEqual(SOURCERANK_PAGE, sourcerank.request())
             mock_requests.get.assert_called_once_with(
-                f"https://libraries.io/pypi/{mock_package.name}/sourcerank"
+                f"https://libraries.io/pypi/{mock_package.real_name}/sourcerank"
             )
         mock_requests.reset_mock()
         with self.subTest("Test successful request with 429 error"):
@@ -188,7 +188,11 @@ class TestSourceRank(unittest.TestCase):
             sourcerank = SourceRank(mock_package)
             self.assertEqual(SOURCERANK_PAGE, sourcerank.request())
             mock_requests.get.assert_has_calls(
-                [mock.call(f"https://libraries.io/pypi/{mock_package.name}/sourcerank")]
+                [
+                    mock.call(
+                        f"https://libraries.io/pypi/{mock_package.real_name}/sourcerank"
+                    )
+                ]
                 * 2,
                 any_order=True,
             )
