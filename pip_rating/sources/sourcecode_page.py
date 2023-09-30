@@ -18,9 +18,9 @@ if TYPE_CHECKING:
 GITHUB_REPOSITORY_URL = "https://github.com/([^/]+)/([^/]+).*"
 GITHUB_README_URL = "https://api.github.com/repos/{owner}/{repo}/readme"
 PIP_INSTALL_PATTERNS = [
-    re.compile(r"pip3? +install +(?:-U +|--upgrade +|)([A-Za-z0-9_\-]+)"),
-    re.compile(r"poetry +add +([A-Za-z0-9_\-]+)"),
-    re.compile(r"pipenv +install +([A-Za-z0-9_\-]+)"),
+    re.compile(r"pip3? +install +(?:-U +|--upgrade +|)([A-Za-z0-9_\-.]+)"),
+    re.compile(r"poetry +add +([A-Za-z0-9_\-.]+)"),
+    re.compile(r"pipenv +install +([A-Za-z0-9_\-.]+)"),
 ]
 
 
@@ -81,6 +81,11 @@ class SourcecodeCacheDict(TypedDict):
     sourcecode: Sourcecode
 
 
+def replace_chars(package_name: str):
+    """Replace characters in package name to match the pattern in readme."""
+    return package_name.lower().replace("_", "-").replace(".", "-")
+
+
 def search_in_readme(content: str, package_name: str) -> Optional[bool]:
     """Search for patterns in readme. If found the pattern, check if the package name is package_name.
     If the package name found is package_name, return True, else continues searching. If after all
@@ -93,9 +98,7 @@ def search_in_readme(content: str, package_name: str) -> Optional[bool]:
         for result in results:
             if result.startswith("-"):
                 continue
-            package_in_readme = result.lower().replace(
-                "_", "-"
-            ) == package_name.lower().replace("_", "-")
+            package_in_readme = replace_chars(result) == replace_chars(package_name)
             if package_in_readme:
                 return True
     return package_in_readme
