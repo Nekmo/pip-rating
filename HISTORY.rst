@@ -2,6 +2,11 @@
 History
 =======
 
+0.2.1 (2023-10-01)
+------------------
+
+* Issue #45: Get the real package name from Pypi before request it.
+
 0.2.0 (2023-08-07)
 ------------------
 
