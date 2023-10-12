@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import logging 
 from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict, Optional, Union, List, Tuple, Dict
@@ -11,6 +12,9 @@ from pip_rating._compat import cache
 from pip_rating.sources.audit import Vulnerability
 
 from pip_rating.sources.sourcerank import SourceRankBreakdown
+from pip_rating.utils import parse_iso_datetime
+
+
 
 if TYPE_CHECKING:
     from pip_rating.packages import Package
@@ -138,12 +142,17 @@ class DateBreakdown(BreakdownBase):
         self.breakdown_key = breakdown_key
         self.scores = scores
         self.default = default
+        self.logger = logging.getLogger(__name__)
 
     def get_score(self, package_rating: "PackageRating") -> ScoreValue:
         iso_dt = self.get_breakdown_value(package_rating)
         if not iso_dt:
             return ScoreValue(0)
-        dt = datetime.datetime.fromisoformat(iso_dt)
+        try:
+            dt = parse_iso_datetime(iso_dt)
+        except ValueError:
+            self.logger.warning("Invalid datetime received for package %s: %s", package_rating.package.name, iso_dt)
+            return ScoreValue(0)
         dt_delta = datetime.datetime.now(datetime.timezone.utc) - dt
         for delta, score in self.scores.items():
             if dt_delta < delta:
