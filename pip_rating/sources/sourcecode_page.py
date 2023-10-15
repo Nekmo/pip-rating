@@ -112,7 +112,7 @@ class SourcecodePage(SourceBase):
         super().__init__(package.name)
 
     def get_cache_data(self) -> SourcecodeCacheDict:
-        project_urls = self.package.pypi.package["info"].get("project_urls", {})
+        project_urls = self.package.pypi.package["info"].get("project_urls") or {}
         content = ""
         for url in project_urls.values():
             github_match = re.match(GITHUB_REPOSITORY_URL, url)
