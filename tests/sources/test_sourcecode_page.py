@@ -110,26 +110,45 @@ class TestSourcecodePage(unittest.TestCase):
         self, mock_get_github_readme: MagicMock, mock_datetime: MagicMock
     ):
         """Test the get_cache_data method."""
-        mock_get_github_readme.return_value = "pip install repo"
-        mock_package = Mock()
-        mock_package.name = "repo"
-        mock_package.pypi.package = {
-            "info": {"project_urls": {"Source": "https://github.com/owner/repo"}}
-        }
-        cache_dict = SourcecodePage(mock_package).get_cache_data()
-        self.assertEqual(
-            {
-                "package_name": "repo",
-                "updated_at": mock_datetime.datetime.now.return_value.isoformat.return_value,
-                "source": "github",
-                "sourcecode": {
-                    "package_in_readme": True,
-                    "readme_content": mock_get_github_readme.return_value,
+        with self.subTest("Test package in readme"):
+            mock_get_github_readme.return_value = "pip install repo"
+            mock_package = Mock()
+            mock_package.name = "repo"
+            mock_package.pypi.package = {
+                "info": {"project_urls": {"Source": "https://github.com/owner/repo"}}
+            }
+            cache_dict = SourcecodePage(mock_package).get_cache_data()
+            self.assertEqual(
+                {
+                    "package_name": "repo",
+                    "updated_at": mock_datetime.datetime.now.return_value.isoformat.return_value,
+                    "source": "github",
+                    "sourcecode": {
+                        "package_in_readme": True,
+                        "readme_content": mock_get_github_readme.return_value,
+                    },
                 },
-            },
-            cache_dict,
-        )
-        mock_get_github_readme.assert_called_once_with("owner", "repo")
+                cache_dict,
+            )
+            mock_get_github_readme.assert_called_once_with("owner", "repo")
+        with self.subTest("Test missing project urls in package"):
+            mock_package = Mock()
+            mock_package.name = "repo"
+            mock_package.pypi.package = {"info": {"project_urls": None}}
+            cache_dict = SourcecodePage(mock_package).get_cache_data()
+            self.assertEqual(
+                {
+                    "package_name": "repo",
+                    "updated_at": mock_datetime.datetime.now.return_value.isoformat.return_value,
+                    "source": "github",
+                    "sourcecode": {
+                        "package_in_readme": None,
+                        "readme_content": "",
+                    },
+                },
+                cache_dict,
+            )
+            mock_get_github_readme.assert_called_once_with("owner", "repo")
 
     @patch(
         "pip_rating.sources.sourcecode_page.SourceBase.is_cache_expired",
