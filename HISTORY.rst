@@ -2,6 +2,12 @@
 History
 =======
 
+0.2.2 (2023-10-15)
+------------------
+
+* Issue #46: Error ISO dateformat with Python 3.10 and previous versions.
+* Issue #49: AttributeError: 'NoneType' object has no attribute 'values' in sourcecode_page.py
+
 0.2.1 (2023-10-01)
 ------------------
 
