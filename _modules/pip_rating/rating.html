@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pip_rating.rating &#8212; pip-rating 0.2.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=677304e0" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=227644f7"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+    <link rel="canonical" href="http://docs.nekmo.org/pip-rating/_modules/pip_rating/rating.html"/>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pip_rating.rating</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">platformdirs</span> <span class="kn">import</span> <span class="n">user_cache_dir</span>
+<span class="kn">from</span> <span class="nn">pip_rating</span> <span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">pip_rating._compat</span> <span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span> <span class="nn">pip_rating.sources.audit</span> <span class="kn">import</span> <span class="n">Vulnerability</span>
+
+<span class="kn">from</span> <span class="nn">pip_rating.sources.sourcerank</span> <span class="kn">import</span> <span class="n">SourceRankBreakdown</span>
+<span class="kn">from</span> <span class="nn">pip_rating.utils</span> <span class="kn">import</span> <span class="n">parse_iso_datetime</span>
+
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pip_rating.packages</span> <span class="kn">import</span> <span class="n">Package</span>
+
+
+<span class="n">RATING_CACHE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">user_cache_dir</span><span class="p">())</span> <span class="o">/</span> <span class="s2">&quot;pip-rating&quot;</span> <span class="o">/</span> <span class="s2">&quot;rating&quot;</span>
+<span class="n">MAX_CACHE_AGE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PypiPackage"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PypiPackage">[docs]</a><span class="k">class</span> <span class="nc">PypiPackage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">latest_upload_iso_dt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">first_upload_iso_dt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SourcecodePage"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.SourcecodePage">[docs]</a><span class="k">class</span> <span class="nc">SourcecodePage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">package_in_readme</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PackageRatingParams"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRatingParams">[docs]</a><span class="k">class</span> <span class="nc">PackageRatingParams</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">sourcerank_breakdown</span><span class="p">:</span> <span class="n">SourceRankBreakdown</span>
+    <span class="n">pypi_package</span><span class="p">:</span> <span class="n">PypiPackage</span>
+    <span class="n">sourcecode_page</span><span class="p">:</span> <span class="n">SourcecodePage</span></div>
+
+
+<div class="viewcode-block" id="PackageRatingCache"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRatingCache">[docs]</a><span class="k">class</span> <span class="nc">PackageRatingCache</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">package_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">updated_at</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">schema_version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">PackageRatingParams</span></div>
+
+
+<div class="viewcode-block" id="ScoreBase"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.ScoreBase">[docs]</a><span class="k">class</span> <span class="nc">ScoreBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;ScoreBase&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="fm">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ScoreValue"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.ScoreValue">[docs]</a><span class="k">class</span> <span class="nc">ScoreValue</span><span class="p">(</span><span class="n">ScoreBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;ScoreBase&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScoreBase&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ScoreValue</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Max</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span> <span class="o">+</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="Max"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.Max">[docs]</a><span class="k">class</span> <span class="nc">Max</span><span class="p">(</span><span class="n">ScoreBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">current_score</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_score</span> <span class="o">=</span> <span class="n">max_score</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">=</span> <span class="n">current_score</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">ScoreBase</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ScoreValue</span><span class="p">):</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_score</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Max</span><span class="p">)</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">max_score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_score</span><span class="p">:</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">current_score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span>
+            <span class="k">return</span> <span class="n">other</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Max</span><span class="p">)</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">max_score</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_score</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_score</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">current_score</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_score</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_score</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Max(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_score</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Max current: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_score</span><span class="si">}</span><span class="s2"> max: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_score</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+
+
+<div class="viewcode-block" id="BreakdownBase"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.BreakdownBase">[docs]</a><span class="k">class</span> <span class="nc">BreakdownBase</span><span class="p">:</span>
+    <span class="n">breakdown_key</span><span class="p">:</span> <span class="nb">str</span>
+
+<div class="viewcode-block" id="BreakdownBase.get_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.BreakdownBase.get_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_rating</span><span class="p">:</span> <span class="s2">&quot;PackageRating&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScoreBase</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="BreakdownBase.get_breakdown_value"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.BreakdownBase.get_breakdown_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_breakdown_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">package_rating</span><span class="p">:</span> <span class="s2">&quot;PackageRating&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">package_rating</span><span class="o">.</span><span class="n">params</span>
+        <span class="k">for</span> <span class="n">subkey</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">breakdown_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">subkey</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">value</span></div></div>
+
+
+<div class="viewcode-block" id="PackageBreakdown"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageBreakdown">[docs]</a><span class="k">class</span> <span class="nc">PackageBreakdown</span><span class="p">(</span><span class="n">BreakdownBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">breakdown_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Max</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakdown_key</span> <span class="o">=</span> <span class="n">breakdown_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_score</span> <span class="o">=</span> <span class="n">score</span>
+
+<div class="viewcode-block" id="PackageBreakdown.get_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageBreakdown.get_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_rating</span><span class="p">:</span> <span class="s2">&quot;PackageRating&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScoreValue</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_breakdown_value</span><span class="p">(</span><span class="n">package_rating</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_score</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># the default is 0</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot calculate score for boolean value&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DateBreakdown"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.DateBreakdown">[docs]</a><span class="k">class</span> <span class="nc">DateBreakdown</span><span class="p">(</span><span class="n">BreakdownBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">breakdown_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">default</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakdown_key</span> <span class="o">=</span> <span class="n">breakdown_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DateBreakdown.get_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.DateBreakdown.get_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_rating</span><span class="p">:</span> <span class="s2">&quot;PackageRating&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScoreValue</span><span class="p">:</span>
+        <span class="n">iso_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_breakdown_value</span><span class="p">(</span><span class="n">package_rating</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">iso_dt</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">parse_iso_datetime</span><span class="p">(</span><span class="n">iso_dt</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid datetime received for package </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">package_rating</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">iso_dt</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">dt_delta</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">dt</span>
+        <span class="k">for</span> <span class="n">delta</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dt_delta</span> <span class="o">&lt;</span> <span class="n">delta</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="NullBoolBreakdown"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.NullBoolBreakdown">[docs]</a><span class="k">class</span> <span class="nc">NullBoolBreakdown</span><span class="p">(</span><span class="n">BreakdownBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">breakdown_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scores</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">ScoreBase</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakdown_key</span> <span class="o">=</span> <span class="n">breakdown_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span>
+
+<div class="viewcode-block" id="NullBoolBreakdown.get_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.NullBoolBreakdown.get_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_rating</span><span class="p">:</span> <span class="s2">&quot;PackageRating&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScoreBase</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_breakdown_value</span><span class="p">(</span><span class="n">package_rating</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="n">value</span><span class="p">]</span></div></div>
+
+
+<span class="n">BREAKDOWN_SCORES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.basic_info_present&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.source_repository_present&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.readme_present&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.license_present&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.has_multiple_versions&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.dependent_projects&quot;</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.dependent_repositories&quot;</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.stars&quot;</span><span class="p">),</span>
+    <span class="n">PackageBreakdown</span><span class="p">(</span><span class="s2">&quot;sourcerank_breakdown.contributors&quot;</span><span class="p">),</span>
+    <span class="n">DateBreakdown</span><span class="p">(</span>
+        <span class="s2">&quot;pypi_package.latest_upload_iso_dt&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span> <span class="o">*</span> <span class="mi">4</span><span class="p">):</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span> <span class="o">*</span> <span class="mi">6</span><span class="p">):</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span><span class="p">):</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span> <span class="o">+</span> <span class="p">(</span><span class="mi">30</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)):</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span> <span class="o">*</span> <span class="mi">3</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span> <span class="o">*</span> <span class="mi">4</span><span class="p">):</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">default</span><span class="o">=-</span><span class="mi">4</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">DateBreakdown</span><span class="p">(</span>
+        <span class="s2">&quot;pypi_package.first_upload_iso_dt&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span> <span class="n">Max</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">180</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">360</span><span class="p">):</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">360</span> <span class="o">*</span> <span class="mi">2</span><span class="p">):</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">360</span> <span class="o">*</span> <span class="mi">4</span><span class="p">):</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">NullBoolBreakdown</span><span class="p">(</span>
+        <span class="s2">&quot;sourcecode_page.package_in_readme&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="kc">True</span><span class="p">:</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kc">False</span><span class="p">:</span> <span class="n">Max</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="kc">None</span><span class="p">:</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)},</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="PackageRatingJson"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRatingJson">[docs]</a><span class="k">class</span> <span class="nc">PackageRatingJson</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">rating_score</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">global_rating_score</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">vulnerabilities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Vulnerability</span><span class="p">]</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">PackageRatingParams</span></div>
+
+
+<div class="viewcode-block" id="PackageRating"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating">[docs]</a><span class="k">class</span> <span class="nc">PackageRating</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">:</span> <span class="s2">&quot;Package&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PackageRatingParams</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">package</span> <span class="o">=</span> <span class="n">package</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cache_expired</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params_from_package</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_to_cache</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params_from_cache</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span> <span class="n">PackageRatingParams</span> <span class="o">=</span> <span class="n">params</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_cache_expired</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span>
+            <span class="o">&lt;</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">MAX_CACHE_AGE</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cache_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RATING_CACHE_DIR</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span>
+
+<div class="viewcode-block" id="PackageRating.get_from_cache"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.get_from_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_from_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PackageRatingCache</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;schema_version&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">__version__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="PackageRating.save_to_cache"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.save_to_cache">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PackageRatingCache</span><span class="p">:</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;updated_at&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;schema_version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params_from_package</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_path</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_path</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cache</span></div>
+
+<div class="viewcode-block" id="PackageRating.get_params_from_cache"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.get_params_from_cache">[docs]</a>    <span class="k">def</span> <span class="nf">get_params_from_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PackageRatingParams</span><span class="p">:</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_from_cache</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cache</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PackageRating.get_params_from_package"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.get_params_from_package">[docs]</a>    <span class="k">def</span> <span class="nf">get_params_from_package</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PackageRatingParams</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;sourcerank_breakdown&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">sourcerank</span><span class="o">.</span><span class="n">breakdown</span><span class="p">,</span>
+            <span class="s2">&quot;pypi_package&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;latest_upload_iso_dt&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">latest_upload_iso_dt</span><span class="p">,</span>
+                <span class="s2">&quot;first_upload_iso_dt&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">first_upload_iso_dt</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;sourcecode_page&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;package_in_readme&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">sourcecode_page</span><span class="o">.</span><span class="n">package_in_readme</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span></div>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">breakdown_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ScoreBase</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">breakdown</span><span class="o">.</span><span class="n">breakdown_key</span><span class="p">,</span> <span class="n">breakdown</span><span class="o">.</span><span class="n">get_score</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">breakdown</span> <span class="ow">in</span> <span class="n">BREAKDOWN_SCORES</span>
+        <span class="p">]</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">descendant_rating_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">package</span><span class="o">.</span><span class="n">rating</span><span class="o">.</span><span class="n">get_rating_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">get_descendant_packages</span><span class="p">()</span>
+        <span class="p">]</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">rating_score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">breakdown_scores</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">ScoreValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="n">score</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PackageRating.get_vulnerabilities"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.get_vulnerabilities">[docs]</a>    <span class="nd">@cache</span>
+    <span class="k">def</span> <span class="nf">get_vulnerabilities</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_package</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Vulnerability&quot;</span><span class="p">]:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">from_package</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">get_node_from_parent</span><span class="p">(</span><span class="n">from_package</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">from_package</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">first_node</span>
+        <span class="c1"># get_audit requires a node, so we only call it if we have one and this is used</span>
+        <span class="c1"># instead of the package&#39;s own rating score</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">get_audit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">vulnerabilities</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="PackageRating.get_rating_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.get_rating_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_rating_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_package</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">analizing_package</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">total_size</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_vulnerabilities</span><span class="p">(</span><span class="n">from_package</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rating_score</span></div>
+
+<div class="viewcode-block" id="PackageRating.get_global_rating_score"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.get_global_rating_score">[docs]</a>    <span class="k">def</span> <span class="nf">get_global_rating_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_package</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Optional&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rating_score</span><span class="p">(</span><span class="n">from_package</span><span class="p">)]</span>
+            <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descendant_rating_scores</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="PackageRating.as_json"><a class="viewcode-back" href="../../pip_rating.html#pip_rating.rating.PackageRating.as_json">[docs]</a>    <span class="k">def</span> <span class="nf">as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_package</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PackageRatingJson</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;rating_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rating_score</span><span class="p">(</span><span class="n">from_package</span><span class="p">),</span>
+            <span class="s2">&quot;global_rating_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_rating_score</span><span class="p">(</span><span class="n">from_package</span><span class="p">),</span>
+            <span class="s2">&quot;vulnerabilities&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vulnerabilities</span><span class="p">(</span><span class="n">from_package</span><span class="p">),</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+        <span class="p">}</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Are the dependencies (and their dependencies) of your project secure and maintained?</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Nekmo&repo=pip-rating&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Nekmo/pip-rating">
+    <img
+    alt="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    src="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">pip-rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github_action.html">GitHub Action</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pip_rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Nekmo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/Nekmo/pip-rating" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="../../_static/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-62276079-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Welcome to pip-rating’s documentation! &#8212; pip-rating 0.2.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=677304e0" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=227644f7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pip-rating" href="readme.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+    <link rel="canonical" href="http://docs.nekmo.org/pip-rating/index.html"/>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="welcome-to-pip-rating-s-documentation">
+<h1>Welcome to pip-rating’s documentation!<a class="headerlink" href="#welcome-to-pip-rating-s-documentation" title="Permalink to this heading">¶</a></h1>
+<p>Check the health of your project’s requirements and get a rating for each dependency.</p>
+<p>To <strong>install</strong> pip-rating, run this command in your terminal:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>pip-rating
+</pre></div>
+</div>
+<section id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pip-rating</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#usage">❓ Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#github-action">⚡ Github Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#features">💡 Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#thanks">❤️ Thanks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#other-releases">Other releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#scores-breakdown">Scores breakdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#ratings">Ratings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#sources">Sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#pip-rating">pip-rating</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#pip-rating-analyze-file">analyze-file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#pip-rating-analyze-package">analyze-package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#formats">Formats</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#text">Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#tree">Tree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#json">json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#only-rating">Only-rating</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html#badge">Badge</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#output-to-file">Output to file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#ignore-packages">Ignore packages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="github_action.html">GitHub Action</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#what-is-pip-rating-used-for">What is pip-rating used for?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#what-is-the-idea-behind-this-project">What is the idea behind this project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#why-does-my-package-have-a-low-rate">Why does my package have a low rate?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#why-the-github-limit-is-exceeded">why the github limit is exceeded?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#i-am-having-errors-with-pip-rating-how-can-i-report-them">I am having errors with Pip-rating. How can I report them?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pip_rating</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.html">pip_rating package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating.dependencies">pip_rating.dependencies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating.exceptions">pip_rating.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating.management">pip_rating.management module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating.packages">pip_rating.packages module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating.rating">pip_rating.rating module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating.results">pip_rating.results module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.html#module-pip_rating">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#tips">Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="authors.html#development-lead">Development Lead</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id1">0.2.2 (2023-10-15)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id2">0.2.1 (2023-10-01)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id3">0.2.0 (2023-08-07)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id4">0.1.0 (2023-07-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id5">0.0.0 (2023-06-30)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="#">
+    <img class="logo" src="_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Are the dependencies (and their dependencies) of your project secure and maintained?</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Nekmo&repo=pip-rating&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Nekmo/pip-rating">
+    <img
+    alt="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    src="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pip-rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="github_action.html">GitHub Action</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pip_rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="readme.html" title="next chapter">pip-rating</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Nekmo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/Nekmo/pip-rating" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="_static/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-62276079-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>

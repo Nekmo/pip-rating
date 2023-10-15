@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pip_rating package &#8212; pip-rating 0.2.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=677304e0" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=227644f7"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pip_rating.req_files package" href="pip_rating.req_files.html" />
+    <link rel="prev" title="pip_rating" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+    <link rel="canonical" href="http://docs.nekmo.org/pip-rating/pip_rating.html"/>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pip-rating-package">
+<h1>pip_rating package<a class="headerlink" href="#pip-rating-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pip_rating.req_files.html">pip_rating.req_files package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.base">pip_rating.req_files.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.base.ReqFileBase"><code class="docutils literal notranslate"><span class="pre">ReqFileBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.base.ReqFileBase.find_in_directory"><code class="docutils literal notranslate"><span class="pre">ReqFileBase.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.base.ReqFileBase.get_dependencies"><code class="docutils literal notranslate"><span class="pre">ReqFileBase.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.base.ReqFileBase.is_valid"><code class="docutils literal notranslate"><span class="pre">ReqFileBase.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.package_list">pip_rating.req_files.package_list module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.package_list.PackageList"><code class="docutils literal notranslate"><span class="pre">PackageList</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.package_list.PackageList.find_in_directory"><code class="docutils literal notranslate"><span class="pre">PackageList.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.package_list.PackageList.get_dependencies"><code class="docutils literal notranslate"><span class="pre">PackageList.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.package_list.PackageList.is_valid"><code class="docutils literal notranslate"><span class="pre">PackageList.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.pipfile">pip_rating.req_files.pipfile module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pipfile.PipfileReqFile"><code class="docutils literal notranslate"><span class="pre">PipfileReqFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pipfile.PipfileReqFile.find_in_directory"><code class="docutils literal notranslate"><span class="pre">PipfileReqFile.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pipfile.PipfileReqFile.get_dependencies"><code class="docutils literal notranslate"><span class="pre">PipfileReqFile.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pipfile.PipfileReqFile.is_valid"><code class="docutils literal notranslate"><span class="pre">PipfileReqFile.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.pyproject">pip_rating.req_files.pyproject module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pyproject.PyprojectReqFile"><code class="docutils literal notranslate"><span class="pre">PyprojectReqFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pyproject.PyprojectReqFile.find_in_directory"><code class="docutils literal notranslate"><span class="pre">PyprojectReqFile.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pyproject.PyprojectReqFile.get_dependencies"><code class="docutils literal notranslate"><span class="pre">PyprojectReqFile.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pyproject.PyprojectReqFile.is_valid"><code class="docutils literal notranslate"><span class="pre">PyprojectReqFile.is_valid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.pyproject.poetry_version"><code class="docutils literal notranslate"><span class="pre">poetry_version()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.requirements">pip_rating.req_files.requirements module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.requirements.RequirementsReqFile"><code class="docutils literal notranslate"><span class="pre">RequirementsReqFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.requirements.RequirementsReqFile.find_in_directory"><code class="docutils literal notranslate"><span class="pre">RequirementsReqFile.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.requirements.RequirementsReqFile.get_dependencies"><code class="docutils literal notranslate"><span class="pre">RequirementsReqFile.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.requirements.RequirementsReqFile.is_valid"><code class="docutils literal notranslate"><span class="pre">RequirementsReqFile.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.setupcfg">pip_rating.req_files.setupcfg module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setupcfg.SetupcfgReqFile"><code class="docutils literal notranslate"><span class="pre">SetupcfgReqFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setupcfg.SetupcfgReqFile.find_in_directory"><code class="docutils literal notranslate"><span class="pre">SetupcfgReqFile.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setupcfg.SetupcfgReqFile.get_dependencies"><code class="docutils literal notranslate"><span class="pre">SetupcfgReqFile.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setupcfg.SetupcfgReqFile.is_valid"><code class="docutils literal notranslate"><span class="pre">SetupcfgReqFile.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files.setuppy">pip_rating.req_files.setuppy module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setuppy.SetuppyReqFile"><code class="docutils literal notranslate"><span class="pre">SetuppyReqFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setuppy.SetuppyReqFile.find_in_directory"><code class="docutils literal notranslate"><span class="pre">SetuppyReqFile.find_in_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setuppy.SetuppyReqFile.get_dependencies"><code class="docutils literal notranslate"><span class="pre">SetuppyReqFile.get_dependencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.setuppy.SetuppyReqFile.is_valid"><code class="docutils literal notranslate"><span class="pre">SetuppyReqFile.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.req_files.html#module-pip_rating.req_files">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.find_in_directory"><code class="docutils literal notranslate"><span class="pre">find_in_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.get_req_file_cls"><code class="docutils literal notranslate"><span class="pre">get_req_file_cls()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pip_rating.sources.html">pip_rating.sources package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#module-pip_rating.sources.audit">pip_rating.sources.audit module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit"><code class="docutils literal notranslate"><span class="pre">Audit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit.cache_file"><code class="docutils literal notranslate"><span class="pre">Audit.cache_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit.get_cache_data"><code class="docutils literal notranslate"><span class="pre">Audit.get_cache_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit.is_vulnerable"><code class="docutils literal notranslate"><span class="pre">Audit.is_vulnerable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit.source_name"><code class="docutils literal notranslate"><span class="pre">Audit.source_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit.vulnerabilities"><code class="docutils literal notranslate"><span class="pre">Audit.vulnerabilities</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability"><code class="docutils literal notranslate"><span class="pre">Vulnerability</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability.aliases"><code class="docutils literal notranslate"><span class="pre">Vulnerability.aliases</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability.description"><code class="docutils literal notranslate"><span class="pre">Vulnerability.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability.fix_versions"><code class="docutils literal notranslate"><span class="pre">Vulnerability.fix_versions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability.id"><code class="docutils literal notranslate"><span class="pre">Vulnerability.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability.published_iso_dt"><code class="docutils literal notranslate"><span class="pre">Vulnerability.published_iso_dt</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.vulns_to_dict"><code class="docutils literal notranslate"><span class="pre">vulns_to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#module-pip_rating.sources.base">pip_rating.sources.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase"><code class="docutils literal notranslate"><span class="pre">SourceBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.cache_dir"><code class="docutils literal notranslate"><span class="pre">SourceBase.cache_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.cache_file"><code class="docutils literal notranslate"><span class="pre">SourceBase.cache_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.get_cache_data"><code class="docutils literal notranslate"><span class="pre">SourceBase.get_cache_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.get_from_cache"><code class="docutils literal notranslate"><span class="pre">SourceBase.get_from_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.is_cache_expired"><code class="docutils literal notranslate"><span class="pre">SourceBase.is_cache_expired</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.max_cache_age"><code class="docutils literal notranslate"><span class="pre">SourceBase.max_cache_age</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.save_to_cache"><code class="docutils literal notranslate"><span class="pre">SourceBase.save_to_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.base.SourceBase.source_name"><code class="docutils literal notranslate"><span class="pre">SourceBase.source_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#module-pip_rating.sources.pypi">pip_rating.sources.pypi module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.author"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.author_email"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.author_email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.bugtrack_url"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.bugtrack_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.classifiers"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.classifiers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.description"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.description_content_type"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.description_content_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.docs_url"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.docs_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.download_url"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.download_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.downloads"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.downloads</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.home_page"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.home_page</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.keywords"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.keywords</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.license"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.license</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.maintainer"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.maintainer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.maintainer_email"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.maintainer_email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.name"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.package_url"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.package_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.platform"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.platform</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.project_url"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.project_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.project_urls"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.project_urls</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.release_url"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.release_url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.requires_dist"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.requires_dist</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.requires_python"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.requires_python</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.summary"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.summary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.version"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.yanked"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.yanked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PyPackageInfo.yanked_reason"><code class="docutils literal notranslate"><span class="pre">PyPackageInfo.yanked_reason</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi"><code class="docutils literal notranslate"><span class="pre">Pypi</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.first_upload"><code class="docutils literal notranslate"><span class="pre">Pypi.first_upload</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.first_upload_iso_dt"><code class="docutils literal notranslate"><span class="pre">Pypi.first_upload_iso_dt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.get_cache_data"><code class="docutils literal notranslate"><span class="pre">Pypi.get_cache_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.get_package"><code class="docutils literal notranslate"><span class="pre">Pypi.get_package()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.latest_upload"><code class="docutils literal notranslate"><span class="pre">Pypi.latest_upload</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.latest_upload_iso_dt"><code class="docutils literal notranslate"><span class="pre">Pypi.latest_upload_iso_dt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.package"><code class="docutils literal notranslate"><span class="pre">Pypi.package</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.source_name"><code class="docutils literal notranslate"><span class="pre">Pypi.source_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi.uploads"><code class="docutils literal notranslate"><span class="pre">Pypi.uploads</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiCacheDict"><code class="docutils literal notranslate"><span class="pre">PypiCacheDict</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiCacheDict.package"><code class="docutils literal notranslate"><span class="pre">PypiCacheDict.package</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiCacheDict.package_name"><code class="docutils literal notranslate"><span class="pre">PypiCacheDict.package_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiCacheDict.updated_at"><code class="docutils literal notranslate"><span class="pre">PypiCacheDict.updated_at</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackage"><code class="docutils literal notranslate"><span class="pre">PypiPackage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackage.info"><code class="docutils literal notranslate"><span class="pre">PypiPackage.info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackage.last_serial"><code class="docutils literal notranslate"><span class="pre">PypiPackage.last_serial</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackage.releases"><code class="docutils literal notranslate"><span class="pre">PypiPackage.releases</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.comment_text"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.comment_text</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.digests"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.digests</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.downloads"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.downloads</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.filename"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.filename</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.has_sig"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.has_sig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.md5_digest"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.md5_digest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.packagetype"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.packagetype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.python_version"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.python_version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.requires_python"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.requires_python</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.size"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.upload_time"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.upload_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.upload_time_iso_8601"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.upload_time_iso_8601</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.url"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.url</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.yanked"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.yanked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.PypiPackageReleaseUpload.yanked_reason"><code class="docutils literal notranslate"><span class="pre">PypiPackageReleaseUpload.yanked_reason</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#module-pip_rating.sources.sourcecode_page">pip_rating.sources.sourcecode_page module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.Sourcecode"><code class="docutils literal notranslate"><span class="pre">Sourcecode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.Sourcecode.package_in_readme"><code class="docutils literal notranslate"><span class="pre">Sourcecode.package_in_readme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.Sourcecode.readme_content"><code class="docutils literal notranslate"><span class="pre">Sourcecode.readme_content</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodeCacheDict"><code class="docutils literal notranslate"><span class="pre">SourcecodeCacheDict</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodeCacheDict.package_name"><code class="docutils literal notranslate"><span class="pre">SourcecodeCacheDict.package_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodeCacheDict.source"><code class="docutils literal notranslate"><span class="pre">SourcecodeCacheDict.source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodeCacheDict.sourcecode"><code class="docutils literal notranslate"><span class="pre">SourcecodeCacheDict.sourcecode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodeCacheDict.updated_at"><code class="docutils literal notranslate"><span class="pre">SourcecodeCacheDict.updated_at</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodePage"><code class="docutils literal notranslate"><span class="pre">SourcecodePage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodePage.get_cache_data"><code class="docutils literal notranslate"><span class="pre">SourcecodePage.get_cache_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodePage.package_in_readme"><code class="docutils literal notranslate"><span class="pre">SourcecodePage.package_in_readme</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodePage.source_name"><code class="docutils literal notranslate"><span class="pre">SourcecodePage.source_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.get_github_readme"><code class="docutils literal notranslate"><span class="pre">get_github_readme()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.replace_chars"><code class="docutils literal notranslate"><span class="pre">replace_chars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.search_in_readme"><code class="docutils literal notranslate"><span class="pre">search_in_readme()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#module-pip_rating.sources.sourcerank">pip_rating.sources.sourcerank module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank"><code class="docutils literal notranslate"><span class="pre">SourceRank</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank.breakdown"><code class="docutils literal notranslate"><span class="pre">SourceRank.breakdown</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank.get_breakdown"><code class="docutils literal notranslate"><span class="pre">SourceRank.get_breakdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank.get_cache_data"><code class="docutils literal notranslate"><span class="pre">SourceRank.get_cache_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank.request"><code class="docutils literal notranslate"><span class="pre">SourceRank.request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank.source_name"><code class="docutils literal notranslate"><span class="pre">SourceRank.source_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.basic_info_present"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.basic_info_present</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.contributors"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.contributors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.dependent_projects"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.dependent_projects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.dependent_repositories"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.dependent_repositories</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.follows_semver"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.follows_semver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.has_multiple_versions"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.has_multiple_versions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.is_1_or_greater"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.is_1_or_greater</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.librariesio_subscribers"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.librariesio_subscribers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.license_present"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.license_present</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.not_brand_new"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.not_brand_new</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.readme_present"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.readme_present</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.recent_release"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.recent_release</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.source_repository_present"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.source_repository_present</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.stars"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.stars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown.total"><code class="docutils literal notranslate"><span class="pre">SourceRankBreakdown.total</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankCacheDict"><code class="docutils literal notranslate"><span class="pre">SourceRankCacheDict</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankCacheDict.breakdown"><code class="docutils literal notranslate"><span class="pre">SourceRankCacheDict.breakdown</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankCacheDict.package_name"><code class="docutils literal notranslate"><span class="pre">SourceRankCacheDict.package_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankCacheDict.updated_at"><code class="docutils literal notranslate"><span class="pre">SourceRankCacheDict.updated_at</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pip_rating.sources.html#module-pip_rating.sources">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-pip_rating.dependencies">
+<span id="pip-rating-dependencies-module"></span><h2>pip_rating.dependencies module<a class="headerlink" href="#module-pip_rating.dependencies" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.dependencies.</span></span><span class="sig-name descname"><span class="pre">Dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.results.Results" title="pip_rating.results.Results"><span class="pre">Results</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">req_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pip_rating.req_files.html#pip_rating.req_files.base.ReqFileBase" title="pip_rating.req_files.base.ReqFileBase"><span class="pre">ReqFileBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_index_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_packages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/dependencies.html#Dependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.dependencies.Dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Dependencies class. This class is responsible for getting the packages tree.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.add_node_package">
+<span class="sig-name descname"><span class="pre">add_node_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pip_rating/dependencies.html#Dependencies.add_node_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.dependencies.Dependencies.add_node_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the package as a node to the packages’ dict.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.dependencies_tree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dependencies_tree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Node</span></em><a class="headerlink" href="#pip_rating.dependencies.Dependencies.dependencies_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dependencies tree.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.get_global_rating_score">
+<span class="sig-name descname"><span class="pre">get_global_rating_score</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/dependencies.html#Dependencies.get_global_rating_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.dependencies.Dependencies.get_global_rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.get_packages">
+<span class="sig-name descname"><span class="pre">get_packages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/dependencies.html#Dependencies.get_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.dependencies.Dependencies.get_packages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.package_source">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">package_source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">PackageSource</span></em><a class="headerlink" href="#pip_rating.dependencies.Dependencies.package_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe requirements, and discover dependencies on demand.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.total_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_size</span></span><a class="headerlink" href="#pip_rating.dependencies.Dependencies.total_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.dependencies.Dependencies.version_solution">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">version_solution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SolverResult</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PartialSolution</span></em><a class="headerlink" href="#pip_rating.dependencies.Dependencies.version_solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the version solution for the packages. The version solver that finds a
+set of package versions that satisfy the root package’s dependencies.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.dependencies.DependenciesVersionSolver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.dependencies.</span></span><span class="sig-name descname"><span class="pre">DependenciesVersionSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.results.Results" title="pip_rating.results.Results"><span class="pre">Results</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PackageSource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/dependencies.html#DependenciesVersionSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.dependencies.DependenciesVersionSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">VersionSolver</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-pip_rating.exceptions">
+<span id="pip-rating-exceptions-module"></span><h2>pip_rating.exceptions module<a class="headerlink" href="#module-pip_rating.exceptions" title="Permalink to this heading">¶</a></h2>
+<p>Exceptions for pip-rating.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.exceptions.</span></span><span class="sig-name descname"><span class="pre">RequirementsRatingError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/exceptions.html#RequirementsRatingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingError.body">
+<span class="sig-name descname"><span class="pre">body</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingError.body" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingError.exit_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingInvalidFile">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.exceptions.</span></span><span class="sig-name descname"><span class="pre">RequirementsRatingInvalidFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/exceptions.html#RequirementsRatingInvalidFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingInvalidFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.exceptions.RequirementsRatingError" title="pip_rating.exceptions.RequirementsRatingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequirementsRatingError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingInvalidFile.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingInvalidFile.exit_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingMissingReqFile">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.exceptions.</span></span><span class="sig-name descname"><span class="pre">RequirementsRatingMissingReqFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/exceptions.html#RequirementsRatingMissingReqFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingMissingReqFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.exceptions.RequirementsRatingError" title="pip_rating.exceptions.RequirementsRatingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequirementsRatingError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingMissingReqFile.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingMissingReqFile.exit_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingParseError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.exceptions.</span></span><span class="sig-name descname"><span class="pre">RequirementsRatingParseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/exceptions.html#RequirementsRatingParseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingParseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.exceptions.RequirementsRatingError" title="pip_rating.exceptions.RequirementsRatingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequirementsRatingError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.exceptions.RequirementsRatingParseError.exit_code">
+<span class="sig-name descname"><span class="pre">exit_code</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#pip_rating.exceptions.RequirementsRatingParseError.exit_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.exceptions.catch">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.exceptions.</span></span><span class="sig-name descname"><span class="pre">catch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/exceptions.html#catch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.exceptions.catch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-pip_rating.management">
+<span id="pip-rating-management-module"></span><h2>pip_rating.management module<a class="headerlink" href="#module-pip_rating.management" title="Permalink to this heading">¶</a></h2>
+<p>Console script for pip-rating.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.management.common_options">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.management.</span></span><span class="sig-name descname"><span class="pre">common_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/management.html#common_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.management.common_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.management.is_last_version">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.management.</span></span><span class="sig-name descname"><span class="pre">is_last_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pip_rating/management.html#is_last_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.management.is_last_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.management.manage">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.management.</span></span><span class="sig-name descname"><span class="pre">manage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/management.html#manage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.management.manage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry point for the console script.</p>
+</dd></dl>
+
+</section>
+<section id="module-pip_rating.packages">
+<span id="pip-rating-packages-module"></span><h2>pip_rating.packages module<a class="headerlink" href="#module-pip_rating.packages" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.packages.Package">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.packages.</span></span><span class="sig-name descname"><span class="pre">Package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/packages.html#Package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/packages.html#Package.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package.add_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.as_json">
+<span class="sig-name descname"><span class="pre">as_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.packages.PackageJson" title="pip_rating.packages.PackageJson"><span class="pre">PackageJson</span></a></span></span><a class="reference internal" href="_modules/pip_rating/packages.html#Package.as_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package.as_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.first_node">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">first_node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Node</span></em><a class="headerlink" href="#pip_rating.packages.Package.first_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.first_node_with_version">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">first_node_with_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.packages.Package.first_node_with_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.get_audit">
+<span class="sig-name descname"><span class="pre">get_audit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Node</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Audit" title="pip_rating.sources.audit.Audit"><span class="pre">Audit</span></a></span></span><a class="reference internal" href="_modules/pip_rating/packages.html#Package.get_audit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package.get_audit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.get_child_packages">
+<span class="sig-name descname"><span class="pre">get_child_packages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pip_rating/packages.html#Package.get_child_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package.get_child_packages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.get_descendant_packages">
+<span class="sig-name descname"><span class="pre">get_descendant_packages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pip_rating/packages.html#Package.get_descendant_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package.get_descendant_packages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.get_node_from_parent">
+<span class="sig-name descname"><span class="pre">get_node_from_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Node</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pip_rating/packages.html#Package.get_node_from_parent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.Package.get_node_from_parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given this package and a parent package, return the node in the package that
+is a descendant of the parent package</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.nodes">
+<span class="sig-name descname"><span class="pre">nodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Node</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.packages.Package.nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.pypi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pypi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.pypi.Pypi" title="pip_rating.sources.pypi.Pypi"><span class="pre">Pypi</span></a></em><a class="headerlink" href="#pip_rating.packages.Package.pypi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.rating">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rating</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.PackageRating" title="pip_rating.rating.PackageRating"><span class="pre">PackageRating</span></a></em><a class="headerlink" href="#pip_rating.packages.Package.rating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.real_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">real_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.packages.Package.real_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.sourcecode_page">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sourcecode_page</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcecode_page.SourcecodePage" title="pip_rating.sources.sourcecode_page.SourcecodePage"><span class="pre">SourcecodePage</span></a></em><a class="headerlink" href="#pip_rating.packages.Package.sourcecode_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.packages.Package.sourcerank">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sourcerank</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRank" title="pip_rating.sources.sourcerank.SourceRank"><span class="pre">SourceRank</span></a></em><a class="headerlink" href="#pip_rating.packages.Package.sourcerank" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.packages.</span></span><span class="sig-name descname"><span class="pre">PackageJson</span></span><a class="reference internal" href="_modules/pip_rating/packages.html#PackageJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.packages.PackageJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.audit_vulnerabilities">
+<span class="sig-name descname"><span class="pre">audit_vulnerabilities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability" title="pip_rating.sources.audit.Vulnerability"><span class="pre">Vulnerability</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.packages.PackageJson.audit_vulnerabilities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.dependencies">
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pip_rating.packages.PackageJson" title="pip_rating.packages.PackageJson"><span class="pre">PackageJson</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.packages.PackageJson.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.packages.PackageJson.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.pypi_package">
+<span class="sig-name descname"><span class="pre">pypi_package</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.PypiPackage" title="pip_rating.rating.PypiPackage"><span class="pre">PypiPackage</span></a></em><a class="headerlink" href="#pip_rating.packages.PackageJson.pypi_package" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.rating">
+<span class="sig-name descname"><span class="pre">rating</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.PackageRatingJson" title="pip_rating.rating.PackageRatingJson"><span class="pre">PackageRatingJson</span></a></em><a class="headerlink" href="#pip_rating.packages.PackageJson.rating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.sourcerank_breakdown">
+<span class="sig-name descname"><span class="pre">sourcerank_breakdown</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown" title="pip_rating.sources.sourcerank.SourceRankBreakdown"><span class="pre">SourceRankBreakdown</span></a></em><a class="headerlink" href="#pip_rating.packages.PackageJson.sourcerank_breakdown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.packages.PackageJson.version">
+<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.packages.PackageJson.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pip_rating.rating">
+<span id="pip-rating-rating-module"></span><h2>pip_rating.rating module<a class="headerlink" href="#module-pip_rating.rating" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.BreakdownBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">BreakdownBase</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#BreakdownBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.BreakdownBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.BreakdownBase.breakdown_key">
+<span class="sig-name descname"><span class="pre">breakdown_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.rating.BreakdownBase.breakdown_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.BreakdownBase.get_breakdown_value">
+<span class="sig-name descname"><span class="pre">get_breakdown_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.PackageRating" title="pip_rating.rating.PackageRating"><span class="pre">PackageRating</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#BreakdownBase.get_breakdown_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.BreakdownBase.get_breakdown_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.BreakdownBase.get_score">
+<span class="sig-name descname"><span class="pre">get_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.PackageRating" title="pip_rating.rating.PackageRating"><span class="pre">PackageRating</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><span class="pre">ScoreBase</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#BreakdownBase.get_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.BreakdownBase.get_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.DateBreakdown">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">DateBreakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakdown_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">timedelta</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/rating.html#DateBreakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.DateBreakdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.rating.BreakdownBase" title="pip_rating.rating.BreakdownBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BreakdownBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.DateBreakdown.get_score">
+<span class="sig-name descname"><span class="pre">get_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.PackageRating" title="pip_rating.rating.PackageRating"><span class="pre">PackageRating</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.ScoreValue" title="pip_rating.rating.ScoreValue"><span class="pre">ScoreValue</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#DateBreakdown.get_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.DateBreakdown.get_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.Max">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">Max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/rating.html#Max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.Max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScoreBase</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.NullBoolBreakdown">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">NullBoolBreakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakdown_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><span class="pre">ScoreBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/rating.html#NullBoolBreakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.NullBoolBreakdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.rating.BreakdownBase" title="pip_rating.rating.BreakdownBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BreakdownBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.NullBoolBreakdown.get_score">
+<span class="sig-name descname"><span class="pre">get_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.PackageRating" title="pip_rating.rating.PackageRating"><span class="pre">PackageRating</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><span class="pre">ScoreBase</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#NullBoolBreakdown.get_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.NullBoolBreakdown.get_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageBreakdown">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">PackageBreakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakdown_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.Max" title="pip_rating.rating.Max"><span class="pre">Max</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageBreakdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageBreakdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.rating.BreakdownBase" title="pip_rating.rating.BreakdownBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BreakdownBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageBreakdown.get_score">
+<span class="sig-name descname"><span class="pre">get_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.PackageRating" title="pip_rating.rating.PackageRating"><span class="pre">PackageRating</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.ScoreValue" title="pip_rating.rating.ScoreValue"><span class="pre">ScoreValue</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageBreakdown.get_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageBreakdown.get_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">PackageRating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.PackageRatingParams" title="pip_rating.rating.PackageRatingParams"><span class="pre">PackageRatingParams</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.as_json">
+<span class="sig-name descname"><span class="pre">as_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.PackageRatingJson" title="pip_rating.rating.PackageRatingJson"><span class="pre">PackageRatingJson</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.as_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.as_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.breakdown_scores">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">breakdown_scores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><span class="pre">ScoreBase</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.rating.PackageRating.breakdown_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.cache_path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#pip_rating.rating.PackageRating.cache_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.descendant_rating_scores">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">descendant_rating_scores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.rating.PackageRating.descendant_rating_scores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.get_from_cache">
+<span class="sig-name descname"><span class="pre">get_from_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.PackageRatingCache" title="pip_rating.rating.PackageRatingCache"><span class="pre">PackageRatingCache</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.get_from_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.get_from_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.get_global_rating_score">
+<span class="sig-name descname"><span class="pre">get_global_rating_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.get_global_rating_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.get_global_rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.get_params_from_cache">
+<span class="sig-name descname"><span class="pre">get_params_from_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.PackageRatingParams" title="pip_rating.rating.PackageRatingParams"><span class="pre">PackageRatingParams</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.get_params_from_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.get_params_from_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.get_params_from_package">
+<span class="sig-name descname"><span class="pre">get_params_from_package</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.PackageRatingParams" title="pip_rating.rating.PackageRatingParams"><span class="pre">PackageRatingParams</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.get_params_from_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.get_params_from_package" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.get_rating_score">
+<span class="sig-name descname"><span class="pre">get_rating_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.get_rating_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.get_rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.get_vulnerabilities">
+<span class="sig-name descname"><span class="pre">get_vulnerabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability" title="pip_rating.sources.audit.Vulnerability"><span class="pre">Vulnerability</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.get_vulnerabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.get_vulnerabilities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.is_cache_expired">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_cache_expired</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pip_rating.rating.PackageRating.is_cache_expired" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.rating_score">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rating_score</span></span><a class="headerlink" href="#pip_rating.rating.PackageRating.rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRating.save_to_cache">
+<span class="sig-name descname"><span class="pre">save_to_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.rating.PackageRatingCache" title="pip_rating.rating.PackageRatingCache"><span class="pre">PackageRatingCache</span></a></span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRating.save_to_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRating.save_to_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingCache">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">PackageRatingCache</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRatingCache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRatingCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingCache.package_name">
+<span class="sig-name descname"><span class="pre">package_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.rating.PackageRatingCache.package_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingCache.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.PackageRatingParams" title="pip_rating.rating.PackageRatingParams"><span class="pre">PackageRatingParams</span></a></em><a class="headerlink" href="#pip_rating.rating.PackageRatingCache.params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingCache.schema_version">
+<span class="sig-name descname"><span class="pre">schema_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.rating.PackageRatingCache.schema_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingCache.updated_at">
+<span class="sig-name descname"><span class="pre">updated_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.rating.PackageRatingCache.updated_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingJson">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">PackageRatingJson</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRatingJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRatingJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingJson.global_rating_score">
+<span class="sig-name descname"><span class="pre">global_rating_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pip_rating.rating.PackageRatingJson.global_rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingJson.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.PackageRatingParams" title="pip_rating.rating.PackageRatingParams"><span class="pre">PackageRatingParams</span></a></em><a class="headerlink" href="#pip_rating.rating.PackageRatingJson.params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingJson.rating_score">
+<span class="sig-name descname"><span class="pre">rating_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pip_rating.rating.PackageRatingJson.rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingJson.vulnerabilities">
+<span class="sig-name descname"><span class="pre">vulnerabilities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.audit.Vulnerability" title="pip_rating.sources.audit.Vulnerability"><span class="pre">Vulnerability</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.rating.PackageRatingJson.vulnerabilities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingParams">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">PackageRatingParams</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PackageRatingParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PackageRatingParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingParams.pypi_package">
+<span class="sig-name descname"><span class="pre">pypi_package</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.PypiPackage" title="pip_rating.rating.PypiPackage"><span class="pre">PypiPackage</span></a></em><a class="headerlink" href="#pip_rating.rating.PackageRatingParams.pypi_package" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingParams.sourcecode_page">
+<span class="sig-name descname"><span class="pre">sourcecode_page</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pip_rating.rating.SourcecodePage" title="pip_rating.rating.SourcecodePage"><span class="pre">SourcecodePage</span></a></em><a class="headerlink" href="#pip_rating.rating.PackageRatingParams.sourcecode_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PackageRatingParams.sourcerank_breakdown">
+<span class="sig-name descname"><span class="pre">sourcerank_breakdown</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pip_rating.sources.html#pip_rating.sources.sourcerank.SourceRankBreakdown" title="pip_rating.sources.sourcerank.SourceRankBreakdown"><span class="pre">SourceRankBreakdown</span></a></em><a class="headerlink" href="#pip_rating.rating.PackageRatingParams.sourcerank_breakdown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.PypiPackage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">PypiPackage</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#PypiPackage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.PypiPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PypiPackage.first_upload_iso_dt">
+<span class="sig-name descname"><span class="pre">first_upload_iso_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pip_rating.rating.PypiPackage.first_upload_iso_dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.PypiPackage.latest_upload_iso_dt">
+<span class="sig-name descname"><span class="pre">latest_upload_iso_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pip_rating.rating.PypiPackage.latest_upload_iso_dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.ScoreBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">ScoreBase</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#ScoreBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.ScoreBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.ScoreValue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">ScoreValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/rating.html#ScoreValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.ScoreValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScoreBase</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.rating.SourcecodePage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.rating.</span></span><span class="sig-name descname"><span class="pre">SourcecodePage</span></span><a class="reference internal" href="_modules/pip_rating/rating.html#SourcecodePage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.rating.SourcecodePage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.rating.SourcecodePage.package_in_readme">
+<span class="sig-name descname"><span class="pre">package_in_readme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pip_rating.rating.SourcecodePage.package_in_readme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pip_rating.results">
+<span id="pip-rating-results-module"></span><h2>pip_rating.results module<a class="headerlink" href="#module-pip_rating.results" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">JsonResults</span></span><a class="reference internal" href="_modules/pip_rating/results.html#JsonResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.JsonResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>JSON results</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults.global_rating_letter">
+<span class="sig-name descname"><span class="pre">global_rating_letter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.results.JsonResults.global_rating_letter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults.global_rating_score">
+<span class="sig-name descname"><span class="pre">global_rating_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pip_rating.results.JsonResults.global_rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults.packages">
+<span class="sig-name descname"><span class="pre">packages</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.results.JsonResults.packages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults.requirements">
+<span class="sig-name descname"><span class="pre">requirements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pip_rating.results.JsonResults.requirements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults.schema_version">
+<span class="sig-name descname"><span class="pre">schema_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.results.JsonResults.schema_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.JsonResults.updated_at">
+<span class="sig-name descname"><span class="pre">updated_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pip_rating.results.JsonResults.updated_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.results.RatingLetter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">RatingLetter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">letter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#RatingLetter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.RatingLetter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Rating letter.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pip_rating.results.Results">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">Results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Print pip-ratings results to the terminal.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.analizing_package">
+<span class="sig-name descname"><span class="pre">analizing_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.analizing_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.analizing_package" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.get_global_rating_score">
+<span class="sig-name descname"><span class="pre">get_global_rating_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/pip_rating/results.html#Results.get_global_rating_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.get_global_rating_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.get_json_results">
+<span class="sig-name descname"><span class="pre">get_json_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.get_json_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.get_json_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.processing_package">
+<span class="sig-name descname"><span class="pre">processing_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.processing_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.processing_package" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.Results.progress">
+<span class="sig-name descname"><span class="pre">progress</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Progress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pip_rating.results.Results.progress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.show_badge_results">
+<span class="sig-name descname"><span class="pre">show_badge_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pip_rating/results.html#Results.show_badge_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.show_badge_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the badge depending on the global rating score.
+The badge is printed as a svg image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dependencies</strong> – Dependencies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.show_json_results">
+<span class="sig-name descname"><span class="pre">show_json_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.show_json_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.show_json_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.show_only_rating_results">
+<span class="sig-name descname"><span class="pre">show_only_rating_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.show_only_rating_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.show_only_rating_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.show_packages_results">
+<span class="sig-name descname"><span class="pre">show_packages_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.show_packages_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.show_packages_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.show_results">
+<span class="sig-name descname"><span class="pre">show_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.show_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.show_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show results depending on the format. Optionally save to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dependencies</strong> – Dependencies</p></li>
+<li><p><strong>format_name</strong> – Format name. Choices: FORMATS</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pip_rating.results.Results.show_tree_results">
+<span class="sig-name descname"><span class="pre">show_tree_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#Results.show_tree_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.Results.show_tree_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pip_rating.results.Results.status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Status</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pip_rating.results.Results.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pip_rating.results.Results.task">
+<span class="sig-name descname"><span class="pre">task</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TaskID</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pip_rating.results.Results.task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.results.add_tree_node">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">add_tree_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.dependencies.Dependencies" title="pip_rating.dependencies.Dependencies"><span class="pre">Dependencies</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pip_rating/results.html#add_tree_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.add_tree_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.results.colorize_rating">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">colorize_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><span class="pre">ScoreBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pip_rating.results.RatingLetter" title="pip_rating.results.RatingLetter"><span class="pre">RatingLetter</span></a></span></span><a class="reference internal" href="_modules/pip_rating/results.html#colorize_rating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.colorize_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize the rating.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.results.colorize_rating_package">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">colorize_rating_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.packages.Package" title="pip_rating.packages.Package"><span class="pre">Package</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pip_rating/results.html#colorize_rating_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.colorize_rating_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize the rating of the package.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.results.colorize_score">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">colorize_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pip_rating.rating.ScoreBase" title="pip_rating.rating.ScoreBase"><span class="pre">ScoreBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/pip_rating/results.html#colorize_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.colorize_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize the score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pip_rating.results.get_luminance">
+<span class="sig-prename descclassname"><span class="pre">pip_rating.results.</span></span><span class="sig-name descname"><span class="pre">get_luminance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/pip_rating/results.html#get_luminance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pip_rating.results.get_luminance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the luminance of a color as float.</p>
+</dd></dl>
+
+</section>
+<section id="module-pip_rating">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pip_rating" title="Permalink to this heading">¶</a></h2>
+<p>Top-level package for pip-rating.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Are the dependencies (and their dependencies) of your project secure and maintained?</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Nekmo&repo=pip-rating&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Nekmo/pip-rating">
+    <img
+    alt="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    src="https://codecov.io/github/Nekmo/pip-rating/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pip-rating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="github_action.html">GitHub Action</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">pip_rating</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pip_rating package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating.dependencies">pip_rating.dependencies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating.exceptions">pip_rating.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating.management">pip_rating.management module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating.packages">pip_rating.packages module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating.rating">pip_rating.rating module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating.results">pip_rating.results module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-pip_rating">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">pip_rating</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">pip_rating</a></li>
+      <li>Next: <a href="pip_rating.req_files.html" title="next chapter">pip_rating.req_files package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Nekmo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/pip_rating.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/Nekmo/pip-rating" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="_static/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-62276079-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
