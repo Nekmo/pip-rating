@@ -19,10 +19,10 @@ if TYPE_CHECKING:
 class PackageJson(TypedDict):
     name: str
     version: str
-    sourcerank_breakdown: "SourceRankBreakdown"
-    pypi_package: "PypiPackage"
+    sourcerank_breakdown: Optional["SourceRankBreakdown"]
+    pypi_package: Optional["PypiPackage"]
     audit_vulnerabilities: List[Vulnerability]
-    rating: PackageRatingJson
+    rating: Optional[PackageRatingJson]
     dependencies: List["PackageJson"]
 
 
@@ -98,18 +98,29 @@ class Package:
 
     def as_json(self, from_package: Optional["Package"] = None) -> PackageJson:
         node = self.get_node_from_parent(from_package)
-        return {
-            "name": self.name,
-            "version": node.version,
-            "sourcerank_breakdown": self.sourcerank.breakdown,
-            "pypi_package": self.pypi.package,
-            "audit_vulnerabilities": self.get_audit(node).vulnerabilities,
-            "rating": self.rating.as_json(from_package),
-            "dependencies": [
-                self.dependencies.packages[subnode.name].as_json(self)
-                for subnode in node.children
-            ],
-        }
+        try:
+            return {
+                "name": self.name,
+                "version": node.version,
+                "sourcerank_breakdown": self.sourcerank.breakdown,
+                "pypi_package": self.pypi.package,
+                "audit_vulnerabilities": self.get_audit(node).vulnerabilities,
+                "rating": self.rating.as_json(from_package),
+                "dependencies": [
+                    self.dependencies.packages[subnode.name].as_json(self)
+                    for subnode in node.children
+                ],
+            }
+        except RequirementsRatingMissingPackage:
+            return {
+                "name": self.name,
+                "version": node.version,
+                "sourcerank_breakdown": None,
+                "pypi_package": None,
+                "audit_vulnerabilities": [],
+                "rating": None,
+                "dependencies": [],
+            }
 
     def __repr__(self) -> str:
         return f"<Package {self.name}>"
