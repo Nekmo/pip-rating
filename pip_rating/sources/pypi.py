@@ -5,6 +5,7 @@ from typing import TypedDict, Optional, List, Dict
 
 import requests
 
+from pip_rating.exceptions import RequirementsRatingMissingPackage
 from pip_rating.sources.base import SourceBase
 
 URL = "https://pypi.org/pypi/{package_name}/json"
@@ -114,5 +115,10 @@ class Pypi(SourceBase):
 
     def get_package(self) -> PypiPackage:
         with requests.get(URL.format(package_name=self.package_name)) as response:
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except requests.HTTPError as e:
+                if e.response is not None and e.response.status_code == 404:
+                    raise RequirementsRatingMissingPackage(self.package_name)
+                raise e
             return response.json()

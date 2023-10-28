@@ -38,6 +38,12 @@ class RequirementsRatingMissingReqFile(RequirementsRatingError):
         super().__init__(f"Missing requirements file in {directory}")
 
 
+class RequirementsRatingMissingPackage(RequirementsRatingError):
+    def __init__(self, package_name: str):
+        self.package_name = package_name
+        super().__init__(f"Missing package {package_name}")
+
+
 def catch(fn):
     def wrap(*args, **kwargs):
         console = Console(stderr=True)

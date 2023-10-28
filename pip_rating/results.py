@@ -96,6 +96,7 @@ PIP_RATING_BADGE_COLORS = {
     "D": os.environ.get("PIP_RATING_BADGE_D_COLOR") or "#FFAF00",
     "E": os.environ.get("PIP_RATING_BADGE_E_COLOR") or "#FF5F00",
     "F": os.environ.get("PIP_RATING_BADGE_F_COLOR") or "#E05D44",
+    "?": os.environ.get("PIP_RATING_BADGE_F_COLOR") or "#262424",
 }
 PIP_RATING_BADGES = {
     "flat": BADGE_FLAT_SVG,
@@ -126,8 +127,10 @@ def colorize_score(score: Union["ScoreBase", int]) -> str:
     return f"[bold bright_black]{score}[/bold bright_black]"
 
 
-def colorize_rating(score: Union["ScoreBase", int]) -> "RatingLetter":
+def colorize_rating(score: Union["ScoreBase", int, None]) -> "RatingLetter":
     """Colorize the rating."""
+    if score is None:
+        return RatingLetter("?", 0, "bright_black")
     for rating_letter in RATING_LETTERS:
         if max(0, int(score)) >= rating_letter.score:
             return rating_letter
@@ -137,6 +140,8 @@ def colorize_rating_package(
     package: "Package", parent_package: Optional["Package"] = None
 ) -> str:
     """Colorize the rating of the package."""
+    if package.rating is None:
+        return "[bold bright_black]?[/bold bright_black]"
     colorized_rating = colorize_rating(package.rating.get_rating_score(parent_package))
     colorized_global_rating = colorize_rating(
         package.rating.get_global_rating_score(parent_package)
@@ -306,7 +311,7 @@ class Results:
     def show_packages_results(self, dependencies: "Dependencies"):
         global_rating_score = self.get_global_rating_score(dependencies)
         for package in dependencies.packages.values():
-            if package.name not in dependencies.req_file:
+            if package.name not in dependencies.req_file or not package.rating:
                 continue
             package_global_rating_score = package.rating.get_global_rating_score()
             package_global_rating_score_letter = colorize_rating(

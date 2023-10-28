@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Iterator, Set, Optional, TypedDict, List
 
 from anytree import Node
 
+from pip_rating.exceptions import RequirementsRatingMissingPackage
 from pip_rating.rating import PackageRating, PackageRatingJson
 from pip_rating.sources.audit import Audit, Vulnerability
 from pip_rating.sources.pypi import Pypi
@@ -61,8 +62,11 @@ class Package:
         return Audit(self.name, node.version)
 
     @cached_property
-    def rating(self) -> "PackageRating":
-        return PackageRating(self)
+    def rating(self) -> Optional["PackageRating"]:
+        try:
+            return PackageRating(self)
+        except RequirementsRatingMissingPackage:
+            return None
 
     def get_node_from_parent(
         self, from_package: Optional["Package"] = None
