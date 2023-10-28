@@ -20,9 +20,24 @@ if TYPE_CHECKING:
 
 
 COMMENT_REGEX = re.compile(r"(#.*)")
+PACKAGE_NAME_REGEX = re.compile(
+    r"([A-Z0-9]|[A-Z0-9][A-Z0-9._-]*[A-Z0-9])", re.IGNORECASE
+)
 version_resolver_threads = os.environ.get(
     "VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2)
 )
+
+
+def get_package_name(value: str) -> str:
+    """Get the package name from the given value.
+
+    :param value: The value to get the package name from.
+    :return: The package name. If the value is not a package name, the value will be returned.
+    """
+    r = PACKAGE_NAME_REGEX.search(value)
+    if r:
+        return r.group(1)
+    return value
 
 
 class DependenciesVersionSolver(VersionSolver):
@@ -80,8 +95,7 @@ class Dependencies:
             pre=self.pre,
         )
 
-    @cached_property
-    def version_solution(self) -> Union[SolverResult, PartialSolution]:
+    def _get_version_solution(self) -> Union[SolverResult, PartialSolution]:
         """Get the version solution for the packages. The version solver that finds a
         set of package versions that satisfy the root package's dependencies.
         """
@@ -89,6 +103,8 @@ class Dependencies:
             self.results, self.package_source, threads=version_resolver_threads
         )
         for root_dependency in self.req_file:
+            if get_package_name(root_dependency) in self.ignore_packages:
+                continue
             self.package_source.root_dep(root_dependency)
         try:
             return solver.solve()
@@ -96,7 +112,28 @@ class Dependencies:
             if "Failed to download/build wheel" not in str(e):
                 # only continue handling expected RuntimeErrors
                 raise
-            return solver.solution
+            # Remove the failed package from the package source
+            r = re.match("Failed to download/build wheel for (.+)", str(e))
+            failed_package_name = r.group(1)
+            failed_package_name = get_package_name(failed_package_name)
+            if failed_package_name in self.ignore_packages:
+                # The package is already in the ignore packages list. This is probably a bug.
+                raise RuntimeError(
+                    "An already ignored packet has been used. It can't be ignored again. "
+                    "This is probably a programming error."
+                )
+            self.ignore_packages.append(failed_package_name)
+            # Clear the cached package_source property
+            del self.__dict__["package_source"]
+            # Retry the version solver without the failed package
+            return self._get_version_solution()
+
+    @cached_property
+    def version_solution(self) -> Union[SolverResult, PartialSolution]:
+        """Get the version solution for the packages. The version solver that finds a
+        set of package versions that satisfy the root package's dependencies.
+        """
+        return self._get_version_solution()
 
     @cached_property
     def dependencies_tree(self) -> Node:
