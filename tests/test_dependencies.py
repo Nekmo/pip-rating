@@ -1,6 +1,6 @@
 import setuptools  # noqa: F401
 import unittest
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import patch, MagicMock, Mock, call
 
 from pip_rating.dependencies import (
     DependenciesVersionSolver,
@@ -107,7 +107,7 @@ class TestDependencies(unittest.TestCase):
         """Test the method version_solution."""
         mock_results = Mock()
         mock_req_file = Mock()
-        mock_root_dependency = Mock()
+        mock_root_dependency = "mock_root_dependency"
         mock_req_file.__iter__ = Mock(return_value=iter([mock_root_dependency]))
         cache_dir = "cache_dir"
         index_url = "index_url"
@@ -130,21 +130,33 @@ class TestDependencies(unittest.TestCase):
         mock_version_solver.reset_mock()
         mock_package_source.reset_mock()
         with self.subTest("Test failed to download the wheel"):
-            mock_version_solver.return_value.solve.side_effect = RuntimeError(
-                "Failed to download/build wheel"
-            )
+            mock_solve = Mock()
+            mock_version_solver.return_value.solve.side_effect = [
+                RuntimeError(
+                    f"Failed to download/build wheel for {mock_root_dependency}"
+                ),
+                # The second call is to return the mock_solve because now the failed package is ignored.
+                mock_solve,
+            ]
             dependencies = Dependencies(
                 mock_results, mock_req_file, cache_dir, index_url, extra_index_url
             )
-            self.assertEqual(
-                mock_version_solver.return_value.solution, dependencies.version_solution
+            self.assertEqual(mock_solve, dependencies.version_solution)
+            # This is called twice because the first time it fails to download the wheel.
+            mock_version_solver.assert_has_calls(
+                [
+                    call(
+                        mock_results,
+                        dependencies.package_source,
+                        threads=version_resolver_threads,
+                    )
+                ]
+                * 2,
+                any_order=True,
             )
-            mock_version_solver.assert_called_once_with(
-                mock_results,
-                dependencies.package_source,
-                threads=version_resolver_threads,
-            )
+            # root_dep is called only once because the second time it ignores the failed package.
             mock_package_source.root_dep.assert_called_once_with(mock_root_dependency)
+            self.assertEqual([mock_root_dependency], dependencies.ignore_packages)
         with self.subTest("Test RuntimeError"):
             mock_version_solver.return_value.solve.side_effect = RuntimeError("Error")
             dependencies = Dependencies(

@@ -20,9 +20,7 @@ if TYPE_CHECKING:
 
 
 COMMENT_REGEX = re.compile(r"(#.*)")
-PACKAGE_NAME_REGEX = re.compile(
-    r"([A-Z0-9]|[A-Z0-9][A-Z0-9._-]*[A-Z0-9])", re.IGNORECASE
-)
+PACKAGE_NAME_REGEX = re.compile(r"([A-Z0-9][A-Z0-9._-]*[A-Z0-9])", re.IGNORECASE)
 version_resolver_threads = os.environ.get(
     "VERSION_RESOLVER_THREADS", max(8, cpu_count() * 2)
 )
@@ -124,7 +122,8 @@ class Dependencies:
                 )
             self.ignore_packages.append(failed_package_name)
             # Clear the cached package_source property
-            del self.__dict__["package_source"]
+            if "package_source" in self.__dict__:
+                del self.__dict__["package_source"]
             # Retry the version solver without the failed package
             return self._get_version_solution()
 
