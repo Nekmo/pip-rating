@@ -46,6 +46,11 @@ class TestColorizeRating(unittest.TestCase):
             self.assertEqual("F", colorize_rating(ScoreValue(-1)).letter)
         with self.subTest("Test above 0"):
             self.assertIn("E", colorize_rating(ScoreValue(5)).letter)
+        with self.subTest("Test with undefined rating"):
+            self.assertIn(
+                "?",
+                colorize_rating(None).letter,
+            )
 
 
 class TestColorizeRatingPackage(unittest.TestCase):
@@ -68,6 +73,11 @@ class TestColorizeRatingPackage(unittest.TestCase):
             mock_colorize_rating.side_effect = ["E", "E"]
             self.assertIn(
                 "E", colorize_rating_package(mock_package, mock_parent_package)
+            )
+        with self.subTest("Test with undefined rating"):
+            mock_colorize_rating.side_effect = ["?", "?"]
+            self.assertIn(
+                "?", colorize_rating_package(mock_package, mock_parent_package)
             )
 
 
@@ -259,8 +269,13 @@ class TestResults(unittest.TestCase):
         mock_package.rating.breakdown_scores = [("key", 5)]
         mock_package.rating.get_vulnerabilities.return_value = [{"id": "CVE-2020-0001"}]
         mock_package.name = "name"
-        mock_dependencies.packages = {"name": mock_package}
-        mock_dependencies.req_file = ["name"]
+        mock_ignore_package = MagicMock()
+        mock_ignore_package.rating = None
+        mock_dependencies.packages = {
+            "name": mock_package,
+            "ignored": mock_ignore_package,
+        }
+        mock_dependencies.req_file = ["name", "ignored"]
         test_results = Results()
         test_results.results_console = Mock()
         test_results.show_packages_results(mock_dependencies)
