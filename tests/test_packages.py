@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, PropertyMock
 
+from pip_rating.exceptions import RequirementsRatingMissingPackage
 from pip_rating.packages import Package
 
 
@@ -162,23 +163,44 @@ class TestPackage(unittest.TestCase):
         mock_dependencies = Mock()
         mock_dependencies.packages = {"dependency": mock_dependency}
         name = "name"
-        package = Package(mock_dependencies, name)
-        package.nodes = {mock_node}
-        self.assertEqual(
-            {
-                "name": name,
-                "version": mock_node.version,
-                "sourcerank_breakdown": mock_sourcerank.breakdown,
-                "pypi_package": mock_pypi.package,
-                "audit_vulnerabilities": mock_get_audit.return_value.vulnerabilities,
-                "rating": mock_rating.as_json.return_value,
-                "dependencies": [mock_dependency.as_json.return_value],
-            },
-            package.as_json(),
-        )
-        mock_get_audit.assert_called_once_with(mock_node)
-        mock_rating.as_json.assert_called_once_with(None)
-        mock_dependency.as_json.assert_called_once_with(package)
+        with self.subTest("Test package JSON data"):
+            package = Package(mock_dependencies, name)
+            package.nodes = {mock_node}
+            self.assertEqual(
+                {
+                    "name": name,
+                    "version": mock_node.version,
+                    "sourcerank_breakdown": mock_sourcerank.breakdown,
+                    "pypi_package": mock_pypi.package,
+                    "audit_vulnerabilities": mock_get_audit.return_value.vulnerabilities,
+                    "rating": mock_rating.as_json.return_value,
+                    "dependencies": [mock_dependency.as_json.return_value],
+                },
+                package.as_json(),
+            )
+            mock_get_audit.assert_called_once_with(mock_node)
+            mock_rating.as_json.assert_called_once_with(None)
+            mock_dependency.as_json.assert_called_once_with(package)
+        with self.subTest("Test missing package JSON data"):
+            package = Package(mock_dependencies, name)
+            type(package).pypi = PropertyMock(
+                side_effect=RequirementsRatingMissingPackage(None)
+            )  # noqa
+            package.nodes = {mock_node}
+            self.assertEqual(
+                {
+                    "name": name,
+                    "version": mock_node.version,
+                    "sourcerank_breakdown": None,
+                    "pypi_package": None,
+                    "audit_vulnerabilities": [],
+                    "rating": None,
+                    "dependencies": [],
+                },
+                package.as_json(),
+            )
+            mock_get_audit.assert_called_once_with(mock_node)
+            mock_rating.as_json.assert_called_once_with(None)
 
     def test_repr(self):
         """Test the __repr__ method of Package."""
